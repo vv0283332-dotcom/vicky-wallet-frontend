@@ -486,3 +486,107 @@ function openProfile() {
 function closeProfile() {
   document.getElementById("profilePanel").classList.add("hidden");
 }
+
+function editProfile() {
+  if (!currentUser) return;
+
+  document.getElementById("editFullName").value =
+    currentUser.full_name || "";
+
+  document.getElementById("editEmail").value =
+    currentUser.email || "";
+
+  document.getElementById("editCurrency").value =
+    currentUser.currency || "USD";
+
+  document.getElementById("currentPassword").value = "";
+  document.getElementById("newPassword").value = "";
+
+  document.getElementById("profileEditMessage").textContent = "";
+
+  document.getElementById("editProfileForm").classList.remove("hidden");
+}
+
+async function saveProfile() {
+  const button = document.getElementById("saveProfileButton");
+  const message = document.getElementById("profileEditMessage");
+
+  const full_name =
+    document.getElementById("editFullName").value.trim();
+
+  const email =
+    document.getElementById("editEmail").value.trim();
+
+  const currency =
+    document.getElementById("editCurrency").value;
+
+  const current_password =
+    document.getElementById("currentPassword").value;
+
+  const new_password =
+    document.getElementById("newPassword").value;
+
+  message.textContent = "";
+
+  if (!full_name) {
+    message.textContent = "Full name is required.";
+    return;
+  }
+
+  if (!email || !email.includes("@")) {
+    message.textContent = "Enter a valid email.";
+    return;
+  }
+
+  if (new_password && new_password.length < 8) {
+    message.textContent =
+      "New password must contain at least 8 characters.";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Saving...";
+
+  try {
+    const data = await apiRequest("/auth/profile", {
+      method: "PATCH",
+      body: JSON.stringify({
+        full_name,
+        email,
+        currency,
+        current_password,
+        new_password
+      })
+    });
+
+    if (!data.token || !data.user) {
+      throw new Error("Invalid server response.");
+    }
+
+    token = data.token;
+    currentUser = data.user;
+
+    localStorage.setItem("vicky_wallet_token", token);
+
+    document.getElementById("profileEditMessage").textContent =
+      "Profile updated successfully.";
+
+    document.getElementById("editProfileForm")
+      .classList.add("hidden");
+
+    openProfile();
+
+    setDashboardMessage(
+      "Profile updated successfully.",
+      "success"
+    );
+
+    await loadBalance();
+
+  } catch (error) {
+    message.textContent = error.message;
+  } finally {
+    button.disabled = false;
+    button.textContent = "Save Changes";
+  }
+}

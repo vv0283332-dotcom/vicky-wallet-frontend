@@ -446,3 +446,39 @@ footer {
     width: auto;
   }
 }
+
+.edit-profile-form {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #f7f7f7;
+}
+
+.edit-profile-form h3,
+.edit-profile-form h4 {
+  margin-top: 0;
+}
+
+.edit-profile-form input,
+.edit-profile-form select {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
+
+.edit-profile-form hr {
+  border: 0;
+  border-top: 1px solid #ddd;
+  margin: 18px 0;
+}
+
+.secondary {
+  width: 100%;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#profileEditMessage {
+  margin-top: 12px;
+  font-size: 14px;
+}

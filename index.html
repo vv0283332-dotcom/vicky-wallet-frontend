@@ -120,7 +120,61 @@
           </div>
         </div>
 
-        <button class="primary" onclick="closeProfile()">Close Profile</button>
+        <button class="primary" onclick="editProfile()">✏️ Edit Profile</button>
+        <button class="secondary" onclick="closeProfile()">Close Profile</button>
+
+        <div id="editProfileForm" class="edit-profile-form hidden">
+
+          <h3>Edit Profile</h3>
+
+          <input
+            id="editFullName"
+            type="text"
+            placeholder="Full name"
+          >
+
+          <input
+            id="editEmail"
+            type="email"
+            placeholder="Email"
+          >
+
+          <select id="editCurrency">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="NGN">NGN</option>
+            <option value="GHS">GHS</option>
+            <option value="XOF">XOF</option>
+          </select>
+
+          <hr>
+
+          <h4>Change Password</h4>
+
+          <input
+            id="currentPassword"
+            type="password"
+            placeholder="Current password"
+          >
+
+          <input
+            id="newPassword"
+            type="password"
+            minlength="8"
+            placeholder="New password (optional)"
+          >
+
+          <button
+            id="saveProfileButton"
+            class="primary"
+            onclick="saveProfile()"
+          >
+            Save Changes
+          </button>
+
+          <div id="profileEditMessage"></div>
+        </div>
       </div>
 
       <div class="balance-card">
