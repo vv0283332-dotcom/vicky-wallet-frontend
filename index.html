@@ -79,6 +79,48 @@
           <span>Welcome back</span>
           <h2 id="userName">User</h2>
         </div>
+
+        <button class="profile-button" onclick="openProfile()">
+          👤 Profile
+        </button>
+      </div>
+
+      <div id="profilePanel" class="profile-panel hidden">
+        <div class="profile-header">
+          <h2>My Profile</h2>
+          <button class="close-profile" onclick="closeProfile()">×</button>
+        </div>
+
+        <div class="profile-avatar" id="profileAvatar">V</div>
+
+        <div class="profile-info">
+          <div>
+            <span>Full Name</span>
+            <strong id="profileName">-</strong>
+          </div>
+
+          <div>
+            <span>Email</span>
+            <strong id="profileEmail">-</strong>
+          </div>
+
+          <div>
+            <span>Currency</span>
+            <strong id="profileCurrency">-</strong>
+          </div>
+
+          <div>
+            <span>Account ID</span>
+            <strong id="profileId">-</strong>
+          </div>
+
+          <div>
+            <span>Member Since</span>
+            <strong id="profileCreated">-</strong>
+          </div>
+        </div>
+
+        <button class="primary" onclick="closeProfile()">Close Profile</button>
       </div>
 
       <div class="balance-card">

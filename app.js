@@ -442,3 +442,47 @@ window.addEventListener("load", () => {
     showAuth();
   }
 });
+
+function openProfile() {
+  if (!currentUser) {
+    setMessage("Please log in first.", "error");
+    return;
+  }
+
+  const panel = document.getElementById("profilePanel");
+
+  document.getElementById("profileName").textContent =
+    currentUser.full_name || "Not available";
+
+  document.getElementById("profileEmail").textContent =
+    currentUser.email || "Not available";
+
+  document.getElementById("profileCurrency").textContent =
+    currentUser.currency ||
+    currentUser.preferred_currency ||
+    "USD";
+
+  document.getElementById("profileId").textContent =
+    currentUser.id || "Not available";
+
+  const created = currentUser.created_at;
+
+  document.getElementById("profileCreated").textContent =
+    created
+      ? new Date(created).toLocaleDateString()
+      : "Not available";
+
+  const name =
+    currentUser.full_name ||
+    currentUser.email ||
+    "V";
+
+  document.getElementById("profileAvatar").textContent =
+    name.charAt(0).toUpperCase();
+
+  panel.classList.remove("hidden");
+}
+
+function closeProfile() {
+  document.getElementById("profilePanel").classList.add("hidden");
+}
