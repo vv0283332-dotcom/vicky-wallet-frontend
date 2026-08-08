@@ -80,9 +80,15 @@
           <h2 id="userName">User</h2>
         </div>
 
-        <button class="profile-button" onclick="openProfile()">
-          👤 Profile
-        </button>
+        <div class="welcome-actions">
+          <button class="profile-button" onclick="openProfile()">
+            👤 Profile
+          </button>
+
+          <button id="ownerButton" class="owner-button hidden" onclick="openOwnerDashboard()">
+            👑 Owner
+          </button>
+        </div>
       </div>
 
       <div id="profilePanel" class="profile-panel hidden">
@@ -222,6 +228,77 @@
           <p class="empty">No transactions yet.</p>
         </div>
       </div>
+
+      <section id="ownerDashboard" class="owner-dashboard hidden">
+
+        <div class="owner-header">
+          <div>
+            <span>Vicky Wallet</span>
+            <h2>👑 Owner Dashboard</h2>
+          </div>
+
+          <button onclick="closeOwnerDashboard()">Close</button>
+        </div>
+
+        <div id="ownerMessage"></div>
+
+        <div class="owner-stats">
+
+          <div class="owner-stat">
+            <span>Total Users</span>
+            <strong id="adminUsers">0</strong>
+          </div>
+
+          <div class="owner-stat">
+            <span>Total Balance</span>
+            <strong id="adminBalance">0.00</strong>
+          </div>
+
+          <div class="owner-stat">
+            <span>Transactions</span>
+            <strong id="adminTransactions">0</strong>
+          </div>
+
+          <div class="owner-stat">
+            <span>Deposits</span>
+            <strong id="adminDeposits">0.00</strong>
+          </div>
+
+          <div class="owner-stat">
+            <span>Withdrawals</span>
+            <strong id="adminWithdrawals">0.00</strong>
+          </div>
+
+          <div class="owner-stat">
+            <span>Transfers</span>
+            <strong id="adminTransfers">0.00</strong>
+          </div>
+
+        </div>
+
+        <div class="card owner-section">
+          <div class="section-title">
+            <h2>Users</h2>
+            <button onclick="loadAdminUsers()">Refresh</button>
+          </div>
+
+          <div id="adminUsersList">
+            <p class="empty">Loading users...</p>
+          </div>
+        </div>
+
+        <div class="card owner-section">
+          <div class="section-title">
+            <h2>Recent Transactions</h2>
+            <button onclick="loadAdminTransactions()">Refresh</button>
+          </div>
+
+          <div id="adminTransactionsList">
+            <p class="empty">Loading transactions...</p>
+          </div>
+        </div>
+
+      </section>
 
     </section>
 

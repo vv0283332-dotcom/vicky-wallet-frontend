@@ -482,3 +482,111 @@ footer {
   margin-top: 12px;
   font-size: 14px;
 }
+
+.welcome-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.owner-button {
+  width: auto;
+  min-width: 90px;
+  padding: 10px 14px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.owner-dashboard {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 35px rgba(0,0,0,.12);
+}
+
+.owner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.owner-header h2 {
+  margin: 4px 0 0;
+}
+
+.owner-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.owner-stat {
+  padding: 18px;
+  border-radius: 14px;
+  background: #f7f7f7;
+}
+
+.owner-stat span {
+  display: block;
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 8px;
+}
+
+.owner-stat strong {
+  font-size: 22px;
+}
+
+.owner-section {
+  margin-top: 18px;
+}
+
+.admin-user,
+.admin-transaction {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-user:last-child,
+.admin-transaction:last-child {
+  border-bottom: 0;
+}
+
+.admin-user small,
+.admin-transaction small {
+  display: block;
+  color: #777;
+  margin-top: 4px;
+}
+
+@media (max-width: 650px) {
+  .welcome-actions {
+    width: 100%;
+  }
+
+  .welcome-actions button {
+    flex: 1;
+  }
+
+  .owner-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .admin-user,
+  .admin-transaction {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 400px) {
+  .owner-stats {
+    grid-template-columns: 1fr;
+  }
+}

@@ -129,6 +129,8 @@ async function login(event) {
     currentUser = data.user;
 
     showDashboard();
+    await checkOwnerAccess();
+    await checkOwnerAccess();
 
     setDashboardMessage("Login successful.", "success");
 
@@ -177,6 +179,8 @@ async function register(event) {
     currentUser = data.user;
 
     showDashboard();
+    await checkOwnerAccess();
+    await checkOwnerAccess();
 
     setDashboardMessage(
       "Account created successfully.",
@@ -217,6 +221,8 @@ async function loadCurrentUser() {
     currentUser = data.user;
 
     showDashboard();
+    await checkOwnerAccess();
+    await checkOwnerAccess();
 
     await loadBalance();
     await loadTransactions();
@@ -589,4 +595,128 @@ async function saveProfile() {
     button.disabled = false;
     button.textContent = "Save Changes";
   }
+}
+
+async function checkOwnerAccess() {
+  const button = document.getElementById("ownerButton");
+
+  if (!button || !token || !currentUser) {
+    return;
+  }
+
+  try {
+    await apiRequest("/admin/stats");
+    button.classList.remove("hidden");
+  } catch {
+    button.classList.add("hidden");
+  }
+}
+
+async function openOwnerDashboard() {
+  const panel = document.getElementById("ownerDashboard");
+
+  if (!panel) return;
+
+  panel.classList.remove("hidden");
+
+  document.getElementById("ownerMessage").textContent =
+    "Loading owner dashboard...";
+
+  try {
+    await loadAdminStats();
+    await loadAdminUsers();
+    await loadAdminTransactions();
+
+    document.getElementById("ownerMessage").textContent =
+      "Owner dashboard loaded.";
+  } catch (error) {
+    document.getElementById("ownerMessage").textContent =
+      error.message || "Unable to load owner dashboard.";
+  }
+}
+
+function closeOwnerDashboard() {
+  document.getElementById("ownerDashboard")
+    .classList.add("hidden");
+}
+
+async function loadAdminStats() {
+  const data = await apiRequest("/admin/stats");
+
+  document.getElementById("adminUsers").textContent =
+    data.users ?? 0;
+
+  document.getElementById("adminBalance").textContent =
+    Number(data.total_balance || 0).toFixed(2);
+
+  document.getElementById("adminTransactions").textContent =
+    data.transactions ?? 0;
+
+  document.getElementById("adminDeposits").textContent =
+    Number(data.deposits?.total || 0).toFixed(2);
+
+  document.getElementById("adminWithdrawals").textContent =
+    Number(data.withdrawals?.total || 0).toFixed(2);
+
+  document.getElementById("adminTransfers").textContent =
+    Number(data.transfers?.total || 0).toFixed(2);
+}
+
+async function loadAdminUsers() {
+  const box = document.getElementById("adminUsersList");
+
+  const data = await apiRequest("/admin/users?limit=100");
+
+  if (!data.users || data.users.length === 0) {
+    box.innerHTML = '<p class="empty">No users found.</p>';
+    return;
+  }
+
+  box.innerHTML = data.users.map(user => `
+    <div class="admin-user">
+      <div>
+        <strong>${escapeHtml(user.full_name)}</strong>
+        <small>${escapeHtml(user.email)}</small>
+      </div>
+
+      <div>
+        <strong>${Number(user.balance).toFixed(2)} ${escapeHtml(user.currency)}</strong>
+        <small>${new Date(user.created_at).toLocaleDateString()}</small>
+      </div>
+    </div>
+  `).join("");
+}
+
+async function loadAdminTransactions() {
+  const box = document.getElementById("adminTransactionsList");
+
+  const data = await apiRequest("/admin/transactions?limit=100");
+
+  if (!data.transactions || data.transactions.length === 0) {
+    box.innerHTML = '<p class="empty">No transactions found.</p>';
+    return;
+  }
+
+  box.innerHTML = data.transactions.map(item => `
+    <div class="admin-transaction">
+      <div>
+        <strong>${escapeHtml(item.type)}</strong>
+        <small>${escapeHtml(item.email || "")}</small>
+      </div>
+
+      <div>
+        <strong>${Number(item.amount).toFixed(2)} ${escapeHtml(item.currency)}</strong>
+        <small>${new Date(item.created_at).toLocaleString()}</small>
+      </div>
+    </div>
+  `).join("");
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
