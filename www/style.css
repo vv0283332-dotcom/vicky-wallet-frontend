@@ -415,3 +415,34 @@ footer {
     width: 100%;
   }
 }
+
+.welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.welcome > div:first-child {
+  flex: 1;
+}
+
+.profile-button {
+  width: auto;
+  min-width: 100px;
+  padding: 10px 14px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+@media (max-width: 500px) {
+  .welcome {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .profile-button {
+    width: auto;
+  }
+}
