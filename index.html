@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vicky Wallet</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <header class="topbar">
+    <div>
+      <h1>Vicky Wallet</h1>
+      <p>Simple. Secure. Yours.</p>
+    </div>
+    <button id="logoutBtn" class="logout hidden" onclick="logout()">Logout</button>
+  </header>
+
+  <main>
+
+    <section id="authSection" class="card">
+
+      <div class="tabs">
+        <button id="loginTab" class="tab active" onclick="showLogin()">Login</button>
+        <button id="registerTab" class="tab" onclick="showRegister()">Register</button>
+      </div>
+
+      <div id="message"></div>
+
+      <form id="loginForm" onsubmit="login(event)">
+        <h2>Welcome back</h2>
+
+        <label>Email</label>
+        <input id="loginEmail" type="email" required placeholder="you@example.com">
+
+        <label>Password</label>
+        <input id="loginPassword" type="password" required placeholder="Your password">
+
+        <button id="loginButton" class="primary" type="submit">
+          Login
+        </button>
+      </form>
+
+      <form id="registerForm" class="hidden" onsubmit="register(event)">
+        <h2>Create your account</h2>
+
+        <label>Full name</label>
+        <input id="fullName" type="text" required placeholder="Your full name">
+
+        <label>Email</label>
+        <input id="registerEmail" type="email" required placeholder="you@example.com">
+
+        <label>Password</label>
+        <input id="registerPassword" type="password" minlength="8" required placeholder="At least 8 characters">
+
+        <label>Currency</label>
+        <select id="currency">
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+          <option value="NGN">NGN</option>
+          <option value="XOF">XOF</option>
+          <option value="GHS">GHS</option>
+        </select>
+
+        <button id="registerButton" class="primary" type="submit">
+          Create Account
+        </button>
+      </form>
+
+    </section>
+
+    <section id="dashboard" class="hidden">
+
+      <div class="welcome">
+        <div>
+          <span>Welcome back</span>
+          <h2 id="userName">User</h2>
+        </div>
+      </div>
+
+      <div class="balance-card">
+        <span>Available Balance</span>
+        <div id="balance">$0.00</div>
+        <small id="currencyLabel">USD</small>
+        <button onclick="loadBalance()">Refresh</button>
+      </div>
+
+      <div id="dashboardMessage"></div>
+
+      <div class="actions">
+
+        <div class="card action-card">
+          <h3>Deposit</h3>
+          <input id="depositAmount" type="number" min="0.01" step="0.01" placeholder="Amount">
+          <input id="depositDescription" type="text" placeholder="Description (optional)">
+          <button class="primary" onclick="deposit()">Deposit</button>
+        </div>
+
+        <div class="card action-card">
+          <h3>Withdraw</h3>
+          <input id="withdrawAmount" type="number" min="0.01" step="0.01" placeholder="Amount">
+          <input id="withdrawDescription" type="text" placeholder="Description (optional)">
+          <button class="primary" onclick="withdraw()">Withdraw</button>
+        </div>
+
+        <div class="card action-card transfer-card">
+          <h3>Transfer</h3>
+          <input id="recipientEmail" type="email" placeholder="Recipient email">
+          <input id="transferAmount" type="number" min="0.01" step="0.01" placeholder="Amount">
+          <input id="transferDescription" type="text" placeholder="Description (optional)">
+          <button class="primary" onclick="transfer()">Send Money</button>
+        </div>
+
+      </div>
+
+      <div class="card transactions-card">
+        <div class="section-title">
+          <h2>Recent Transactions</h2>
+          <button onclick="loadTransactions()">Refresh</button>
+        </div>
+
+        <div id="transactions">
+          <p class="empty">No transactions yet.</p>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2026 Vicky Wallet</p>
+  </footer>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
