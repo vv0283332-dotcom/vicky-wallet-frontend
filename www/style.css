@@ -590,3 +590,33 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+/* Put owner name and Profile button on the same row */
+.welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.welcome > div {
+  flex: 1;
+}
+
+.profile-button {
+  width: auto !important;
+  min-width: 120px;
+  flex-shrink: 0;
+  margin: 0 !important;
+}
+
+@media (max-width: 600px) {
+  .welcome {
+    flex-wrap: nowrap;
+  }
+
+  .profile-button {
+    min-width: 105px;
+    padding: 10px 12px;
+  }
+}
