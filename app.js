@@ -130,7 +130,6 @@ async function login(event) {
 
     showDashboard();
     await checkOwnerAccess();
-    await checkOwnerAccess();
 
     setDashboardMessage("Login successful.", "success");
 
@@ -180,7 +179,6 @@ async function register(event) {
 
     showDashboard();
     await checkOwnerAccess();
-    await checkOwnerAccess();
 
     setDashboardMessage(
       "Account created successfully.",
@@ -221,7 +219,6 @@ async function loadCurrentUser() {
     currentUser = data.user;
 
     showDashboard();
-    await checkOwnerAccess();
     await checkOwnerAccess();
 
     await loadBalance();
@@ -712,11 +709,3 @@ async function loadAdminTransactions() {
   `).join("");
 }
 
-function escapeHtml(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
