@@ -1,3 +1,20 @@
+
+function showLoginScreen() {
+  const auth = $("auth");
+  const dashboard = $("dashboard");
+
+  if (auth) auth.classList.remove("hidden");
+  if (dashboard) dashboard.classList.add("hidden");
+}
+
+function showDashboardScreen() {
+  const auth = $("auth");
+  const dashboard = $("dashboard");
+
+  if (auth) auth.classList.add("hidden");
+  if (dashboard) dashboard.classList.remove("hidden");
+}
+
 const API = "https://vicky-wallet-api-iqm3.onrender.com";
 
 let token = localStorage.getItem("vicky_wallet_token");
@@ -201,7 +218,7 @@ async function register(event) {
 
 function showDashboard() {
   $("authSection").classList.add("hidden");
-  $("dashboard").classList.remove("hidden");
+  showDashboardScreen();
   $("logoutBtn").classList.remove("hidden");
 
   if (currentUser) {
@@ -1022,3 +1039,16 @@ function setActiveBottomNav(index) {
     item.classList.toggle("active", i === index);
   });
 }
+
+
+// Vicky Pay authentication gate.
+// Dashboard is never displayed until a valid session is restored.
+document.addEventListener("DOMContentLoaded", () => {
+  const token =
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
+
+  if (!token) {
+    showLoginScreen();
+  }
+});
