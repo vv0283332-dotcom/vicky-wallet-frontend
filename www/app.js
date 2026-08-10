@@ -854,3 +854,150 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
+
+/* =========================================================
+   VICKY WALLET — TRANSACTION DASHBOARD CONTROLS
+   ========================================================= */
+
+(function setupTransactionDashboard() {
+  const setup = () => {
+    const dashboard = document.getElementById("dashboard");
+    const transactions = document.getElementById("transactions");
+
+    if (!dashboard || !transactions) return;
+
+    if (!document.getElementById("vickyTransactionToolbar")) {
+      const toolbar = document.createElement("div");
+      toolbar.id = "vickyTransactionToolbar";
+      toolbar.className = "vicky-transaction-toolbar";
+
+      toolbar.innerHTML = `
+        <div class="vicky-transaction-title">Transactions</div>
+
+        <input
+          id="vickyTransactionSearch"
+          class="vicky-transaction-search"
+          type="search"
+          placeholder="Search transactions..."
+          autocomplete="off"
+        >
+
+        <div class="vicky-transaction-filters">
+          <button class="vicky-transaction-filter active" data-filter="all">
+            All
+          </button>
+          <button class="vicky-transaction-filter" data-filter="in">
+            Money In
+          </button>
+          <button class="vicky-transaction-filter" data-filter="out">
+            Money Out
+          </button>
+        </div>
+      `;
+
+      transactions.parentNode.insertBefore(toolbar, transactions);
+
+      let currentFilter = "all";
+
+      const applyFilters = () => {
+        const search =
+          String(
+            document.getElementById("vickyTransactionSearch")?.value || ""
+          )
+            .trim()
+            .toLowerCase();
+
+        transactions.querySelectorAll(".transaction").forEach((item) => {
+          const text = String(item.textContent || "").toLowerCase();
+
+          const isOut =
+            /withdraw|sent|transfer.?out|debit|payment/.test(text);
+
+          const isIn =
+            /deposit|received|credit|money.?in/.test(text);
+
+          let matchesFilter = true;
+
+          if (currentFilter === "in") {
+            matchesFilter = isIn && !isOut;
+          }
+
+          if (currentFilter === "out") {
+            matchesFilter = isOut;
+          }
+
+          const matchesSearch =
+            !search || text.includes(search);
+
+          item.style.display =
+            matchesFilter && matchesSearch
+              ? ""
+              : "none";
+        });
+      };
+
+      toolbar.querySelectorAll(".vicky-transaction-filter")
+        .forEach((button) => {
+          button.addEventListener("click", () => {
+            currentFilter = button.dataset.filter || "all";
+
+            toolbar
+              .querySelectorAll(".vicky-transaction-filter")
+              .forEach((b) => b.classList.remove("active"));
+
+            button.classList.add("active");
+            applyFilters();
+          });
+        });
+
+      document
+        .getElementById("vickyTransactionSearch")
+        ?.addEventListener("input", applyFilters);
+
+      const observer = new MutationObserver(() => {
+        transactions
+          .querySelectorAll(".transaction")
+          .forEach((item) => {
+            const text = String(item.textContent || "").toLowerCase();
+
+            if (
+              !item.querySelector(".vicky-tx-status") &&
+              text
+            ) {
+              let status = "completed";
+
+              if (/pending/.test(text)) status = "pending";
+              if (/processing/.test(text)) status = "processing";
+              if (/failed|failure|error/.test(text)) status = "failed";
+              if (/cancelled|canceled/.test(text)) status = "cancelled";
+
+              const badge = document.createElement("span");
+              badge.className = `vicky-tx-status ${status}`;
+              badge.textContent = status;
+
+              const target =
+                item.querySelector("div:last-child") || item;
+
+              target.appendChild(badge);
+            }
+          });
+
+        applyFilters();
+      });
+
+      observer.observe(transactions, {
+        childList: true,
+        subtree: true
+      });
+
+      applyFilters();
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setup);
+  } else {
+    setup();
+  }
+})();
+

@@ -727,3 +727,182 @@ body {
   }
 }
 
+
+/* =========================================================
+   VICKY WALLET — FULL DASHBOARD UI
+   ========================================================= */
+
+#dashboard {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
+}
+
+#dashboard .transactions-card {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#dashboard .transactions-card > * {
+  flex-shrink: 0;
+}
+
+#dashboard #transactions {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 4px 24px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* Transaction toolbar */
+
+.vicky-transaction-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  flex-wrap: wrap;
+}
+
+.vicky-transaction-title {
+  margin-right: auto;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.vicky-transaction-search {
+  width: min(220px, 100%);
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(128,128,128,.25);
+  border-radius: 12px;
+  background: rgba(128,128,128,.08);
+  color: inherit;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.vicky-transaction-search:focus {
+  border-color: currentColor;
+}
+
+.vicky-transaction-filters {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.vicky-transaction-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.vicky-transaction-filter {
+  border: 1px solid rgba(128,128,128,.25);
+  background: rgba(128,128,128,.07);
+  color: inherit;
+  border-radius: 999px;
+  padding: 7px 13px;
+  font-size: .82rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.vicky-transaction-filter.active {
+  background: currentColor;
+  color: Canvas;
+}
+
+/* Transaction cards */
+
+#dashboard .transaction {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 68px;
+  margin: 7px 0;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(128,128,128,.075);
+  border: 1px solid rgba(128,128,128,.13);
+  box-sizing: border-box;
+  transition: transform .15s ease, background .15s ease;
+}
+
+#dashboard .transaction:active {
+  transform: scale(.985);
+}
+
+#dashboard .transaction strong {
+  font-weight: 800;
+}
+
+#dashboard .transaction small {
+  opacity: .7;
+}
+
+.vicky-tx-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 4px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.vicky-tx-status.completed {
+  background: rgba(34,197,94,.14);
+}
+
+.vicky-tx-status.pending,
+.vicky-tx-status.processing {
+  background: rgba(234,179,8,.16);
+}
+
+.vicky-tx-status.failed,
+.vicky-tx-status.cancelled {
+  background: rgba(239,68,68,.14);
+}
+
+.vicky-tx-empty {
+  text-align: center;
+  padding: 40px 20px;
+  opacity: .65;
+}
+
+@media (max-width: 600px) {
+  #dashboard {
+    height: 100dvh;
+  }
+
+  .vicky-transaction-toolbar {
+    padding: 8px 0;
+  }
+
+  .vicky-transaction-search {
+    width: 100%;
+  }
+
+  #dashboard .transaction {
+    min-height: 64px;
+    padding: 11px 12px;
+    border-radius: 14px;
+  }
+}
+
