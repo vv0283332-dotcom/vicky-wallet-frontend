@@ -84,7 +84,17 @@
         </div>
 
         <div class="vicky-top-actions">
-          <button class="vicky-icon-btn" onclick="openProfile()" aria-label="Profile">
+          <button
+  id="notificationButton"
+  class="vicky-icon-btn notification-button"
+  onclick="toggleNotifications()"
+  aria-label="Notifications"
+>
+  🔔
+  <span id="notificationBadge" class="notification-badge hidden">0</span>
+</button>
+
+<button class="vicky-icon-btn" onclick="openProfile()" aria-label="Profile">
             👤
           </button>
 
@@ -95,6 +105,29 @@
             aria-label="Owner"
           >
             👑
+          </button>
+        </div>
+      </div>
+
+      <div id="notificationPanel" class="notification-panel hidden">
+        <div class="notification-header">
+          <div>
+            <h2>Notifications</h2>
+            <small id="notificationSummary">No new notifications</small>
+          </div>
+          <button class="close-profile" onclick="toggleNotifications()">×</button>
+        </div>
+
+        <div id="notificationsList" class="notifications-list">
+          <p class="empty">No notifications yet.</p>
+        </div>
+
+        <div class="notification-footer">
+          <button
+            class="secondary"
+            onclick="markAllNotificationsRead()"
+          >
+            Mark all as read
           </button>
         </div>
       </div>

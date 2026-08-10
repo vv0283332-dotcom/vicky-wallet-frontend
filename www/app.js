@@ -19,6 +19,7 @@ const API = "https://vicky-wallet-api-iqm3.onrender.com";
 
 let token = localStorage.getItem("vicky_wallet_token");
 let currentUser = null;
+let notificationTimer = null;
 
 const $ = (id) => document.getElementById(id);
 
@@ -154,6 +155,7 @@ async function login(event) {
 
     await loadBalance();
     await loadTransactions();
+    startNotificationPolling();
 
   } catch (error) {
     setMessage(error.message, "error");
@@ -348,6 +350,141 @@ async function withdraw() {
   }
 }
 
+
+async function loadNotifications() {
+  if (!token || !currentUser) return;
+
+  try {
+    const data = await apiRequest("/notifications?limit=50");
+    const notifications = data.notifications || [];
+    const unread = Number(data.unread_count || 0);
+
+    const badge = $("notificationBadge");
+    const list = $("notificationsList");
+    const summary = $("notificationSummary");
+
+    if (badge) {
+      badge.textContent = unread > 99 ? "99+" : String(unread);
+      badge.classList.toggle("hidden", unread === 0);
+    }
+
+    if (summary) {
+      summary.textContent =
+        unread === 0
+          ? "No new notifications"
+          : `${unread} unread notification${unread === 1 ? "" : "s"}`;
+    }
+
+    if (!list) return;
+
+    if (!notifications.length) {
+      list.innerHTML =
+        '<p class="empty">No notifications yet.</p>';
+      return;
+    }
+
+    list.innerHTML = notifications.map(notification => {
+      const unreadClass =
+        Number(notification.read) === 0
+          ? " notification-unread"
+          : "";
+
+      const iconMap = {
+        login: "🔐",
+        account: "🎉",
+        transfer_sent: "💸",
+        transfer_received: "📥",
+        deposit: "💰",
+        deposit_completed: "✅",
+        withdrawal: "💳",
+        profile: "👤",
+        activity: "🔔"
+      };
+
+      const icon =
+        iconMap[notification.type] || "🔔";
+
+      const date = notification.created_at
+        ? new Date(notification.created_at).toLocaleString()
+        : "";
+
+      return `
+        <button
+          class="notification-item${unreadClass}"
+          onclick="readNotification('${escapeHtml(notification.id)}')"
+        >
+          <span class="notification-icon">${icon}</span>
+          <span class="notification-content">
+            <strong>${escapeHtml(notification.title)}</strong>
+            <span>${escapeHtml(notification.message)}</span>
+            <small>${escapeHtml(date)}</small>
+          </span>
+        </button>
+      `;
+    }).join("");
+
+  } catch (error) {
+    console.error("Notification load error:", error);
+  }
+}
+
+function toggleNotifications() {
+  const panel = $("notificationPanel");
+  if (!panel) return;
+
+  panel.classList.toggle("hidden");
+
+  if (!panel.classList.contains("hidden")) {
+    loadNotifications();
+  }
+}
+
+async function readNotification(notificationId) {
+  try {
+    await apiRequest(
+      `/notifications/${encodeURIComponent(notificationId)}/read`,
+      { method: "PATCH" }
+    );
+
+    await loadNotifications();
+  } catch (error) {
+    console.error("Notification read error:", error);
+  }
+}
+
+async function markAllNotificationsRead() {
+  try {
+    await apiRequest("/notifications/read-all", {
+      method: "POST"
+    });
+
+    await loadNotifications();
+  } catch (error) {
+    setDashboardMessage(
+      error.message || "Unable to update notifications.",
+      "error"
+    );
+  }
+}
+
+function startNotificationPolling() {
+  stopNotificationPolling();
+
+  loadNotifications();
+
+  notificationTimer = setInterval(() => {
+    if (token && currentUser) {
+      loadNotifications();
+    }
+  }, 15000);
+}
+
+function stopNotificationPolling() {
+  if (notificationTimer) {
+    clearInterval(notificationTimer);
+    notificationTimer = null;
+  }
+}
 
 function getMyAccountId() {
   return (
