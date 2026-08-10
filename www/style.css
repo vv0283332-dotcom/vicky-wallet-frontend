@@ -906,3 +906,248 @@ body {
   }
 }
 
+
+/* =========================================================
+   VICKY WALLET — MOBILE FINTECH DASHBOARD
+   ========================================================= */
+
+:root {
+  --vicky-green: #00a86b;
+  --vicky-green-dark: #008f5b;
+  --vicky-green-soft: #e8f8f1;
+  --vicky-bg: #f5f7f8;
+  --vicky-card: #ffffff;
+  --vicky-text: #17201c;
+  --vicky-muted: #78817d;
+}
+
+.vicky-dashboard {
+  background: var(--vicky-bg);
+  color: var(--vicky-text);
+  box-sizing: border-box;
+  padding: 16px;
+  gap: 14px;
+}
+
+.vicky-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.vicky-user {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.vicky-user small {
+  color: var(--vicky-muted);
+  font-size: 12px;
+}
+
+.vicky-user h2 {
+  margin: 2px 0 0;
+  font-size: 18px;
+}
+
+.vicky-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--vicky-green);
+  color: white;
+  font-weight: 900;
+  font-size: 19px;
+}
+
+.vicky-top-actions {
+  display: flex;
+  gap: 7px;
+}
+
+.vicky-icon-btn {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 3px 12px rgba(0,0,0,.07);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.vicky-balance-card {
+  flex-shrink: 0;
+  border-radius: 20px;
+  padding: 20px;
+  color: white;
+  background: linear-gradient(135deg, #00a86b, #008f5b);
+  box-shadow: 0 10px 25px rgba(0,168,107,.20);
+}
+
+.vicky-balance-top,
+.vicky-balance-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vicky-balance-top span,
+.vicky-balance-bottom {
+  opacity: .9;
+  font-size: 13px;
+}
+
+.vicky-balance-top button {
+  border: 0;
+  background: rgba(255,255,255,.16);
+  color: white;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.vicky-balance {
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: -.8px;
+  margin: 14px 0;
+}
+
+.vicky-balance-bottom {
+  font-weight: 700;
+}
+
+.vicky-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.vicky-quick-actions button {
+  border: 0;
+  background: white;
+  border-radius: 15px;
+  padding: 12px 5px;
+  box-shadow: 0 3px 12px rgba(0,0,0,.045);
+  cursor: pointer;
+  color: var(--vicky-text);
+}
+
+.vicky-quick-actions span {
+  display: grid;
+  place-items: center;
+  margin: auto auto 6px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--vicky-green-soft);
+  color: var(--vicky-green-dark);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.vicky-quick-actions strong {
+  font-size: 11px;
+}
+
+.vicky-action-panels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.vicky-action-panels .card {
+  margin: 0;
+}
+
+.vicky-transactions-card {
+  min-height: 0;
+  flex: 1 1 0;
+  overflow: hidden;
+  background: white;
+  border-radius: 18px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 3px 15px rgba(0,0,0,.045);
+}
+
+.vicky-transactions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  padding-bottom: 10px;
+}
+
+.vicky-transactions-header small {
+  color: var(--vicky-muted);
+  font-size: 11px;
+}
+
+.vicky-transactions-header h2 {
+  margin: 2px 0 0;
+  font-size: 17px;
+}
+
+.vicky-transactions-header button {
+  border: 0;
+  background: transparent;
+  color: var(--vicky-green-dark);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.vicky-transactions-card #transactions {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 2px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.vicky-transactions-card .transaction {
+  background: #fafbfb;
+  border: 1px solid #edf0ef;
+  border-radius: 14px;
+}
+
+@media (max-width: 760px) {
+
+  .vicky-dashboard {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .vicky-balance {
+    font-size: 30px;
+  }
+
+  .vicky-action-panels {
+    display: none;
+  }
+
+  .vicky-transactions-card {
+    flex: 1 1 0;
+  }
+
+}
+
+@media (min-width: 761px) {
+
+  .vicky-dashboard {
+    max-width: 1100px;
+    margin: auto;
+  }
+
+}
+

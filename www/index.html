@@ -72,21 +72,29 @@
 
     </section>
 
-    <section id="dashboard" class="hidden">
+    <section id="dashboard" class="hidden vicky-dashboard">
 
-      <div class="welcome">
-        <div>
-          <span>Welcome back</span>
-          <h2 id="userName">User</h2>
+      <div class="vicky-topbar">
+        <div class="vicky-user">
+          <div class="vicky-avatar" id="dashboardAvatar">V</div>
+          <div>
+            <small>Welcome back</small>
+            <h2 id="userName">User</h2>
+          </div>
         </div>
 
-        <div class="welcome-actions">
-          <button class="profile-button" onclick="openProfile()">
-            👤 Profile
+        <div class="vicky-top-actions">
+          <button class="vicky-icon-btn" onclick="openProfile()" aria-label="Profile">
+            👤
           </button>
 
-          <button id="ownerButton" class="owner-button hidden" onclick="openOwnerDashboard()">
-            👑 Owner
+          <button
+            id="ownerButton"
+            class="vicky-icon-btn owner-button hidden"
+            onclick="openOwnerDashboard()"
+            aria-label="Owner"
+          >
+            👑
           </button>
         </div>
       </div>
@@ -104,22 +112,18 @@
             <span>Full Name</span>
             <strong id="profileName">-</strong>
           </div>
-
           <div>
             <span>Email</span>
             <strong id="profileEmail">-</strong>
           </div>
-
           <div>
             <span>Currency</span>
             <strong id="profileCurrency">-</strong>
           </div>
-
           <div>
             <span>Account ID</span>
             <strong id="profileId">-</strong>
           </div>
-
           <div>
             <span>Member Since</span>
             <strong id="profileCreated">-</strong>
@@ -130,20 +134,10 @@
         <button class="secondary" onclick="closeProfile()">Close Profile</button>
 
         <div id="editProfileForm" class="edit-profile-form hidden">
-
           <h3>Edit Profile</h3>
 
-          <input
-            id="editFullName"
-            type="text"
-            placeholder="Full name"
-          >
-
-          <input
-            id="editEmail"
-            type="email"
-            placeholder="Email"
-          >
+          <input id="editFullName" type="text" placeholder="Full name">
+          <input id="editEmail" type="email" placeholder="Email">
 
           <select id="editCurrency">
             <option value="USD">USD</option>
@@ -171,11 +165,7 @@
             placeholder="New password (optional)"
           >
 
-          <button
-            id="saveProfileButton"
-            class="primary"
-            onclick="saveProfile()"
-          >
+          <button id="saveProfileButton" class="primary" onclick="saveProfile()">
             Save Changes
           </button>
 
@@ -183,29 +173,86 @@
         </div>
       </div>
 
-      <div class="balance-card">
-        <span>Available Balance</span>
-        <div id="balance">$0.00</div>
-        <small id="currencyLabel">USD</small>
-        <button onclick="loadBalance()">Refresh</button>
+      <div class="vicky-balance-card">
+        <div class="vicky-balance-top">
+          <span>Total Balance</span>
+          <button onclick="loadBalance()">↻</button>
+        </div>
+
+        <div id="balance" class="vicky-balance">0.00</div>
+
+        <div class="vicky-balance-bottom">
+          <span id="currencyLabel">USD</span>
+          <span>Vicky Wallet</span>
+        </div>
       </div>
 
       <div id="dashboardMessage"></div>
 
-      <div class="actions">
+      <div class="vicky-quick-actions">
+
+        <button onclick="deposit()">
+          <span>＋</span>
+          <strong>Deposit</strong>
+        </button>
+
+        <button onclick="withdraw()">
+          <span>↗</span>
+          <strong>Withdraw</strong>
+        </button>
+
+        <button onclick="transfer()">
+          <span>⇄</span>
+          <strong>Transfer</strong>
+        </button>
+
+        <button onclick="loadTransactions()">
+          <span>↻</span>
+          <strong>History</strong>
+        </button>
+
+      </div>
+
+      <div class="vicky-action-panels">
 
         <div class="card action-card">
-          <h3>Deposit</h3>
-          <input id="depositAmount" type="number" min="0.01" step="0.01" placeholder="Amount">
-          <input id="depositDescription" type="text" placeholder="Description (optional)">
-          <button class="primary" onclick="deposit()">Deposit</button>
+          <h3>Deposit Money</h3>
+
+          <input
+            id="depositAmount"
+            type="number"
+            min="0.01"
+            step="0.01"
+            placeholder="Amount"
+          >
+
+          <input
+            id="depositDescription"
+            type="text"
+            placeholder="Description (optional)"
+          >
+
+          <button class="primary" onclick="deposit()">Continue Deposit</button>
         </div>
 
         <div class="card action-card">
-          <h3>Withdraw</h3>
-          <input id="withdrawAmount" type="number" min="0.01" step="0.01" placeholder="Amount">
-          <input id="withdrawDescription" type="text" placeholder="Description (optional)">
-          <button class="primary" onclick="withdraw()">Withdraw</button>
+          <h3>Withdraw Money</h3>
+
+          <input
+            id="withdrawAmount"
+            type="number"
+            min="0.01"
+            step="0.01"
+            placeholder="Amount"
+          >
+
+          <input
+            id="withdrawDescription"
+            type="text"
+            placeholder="Description (optional)"
+          >
+
+          <button class="primary" onclick="withdraw()">Continue Withdrawal</button>
         </div>
 
         <div class="card action-card transfer-card">
@@ -220,17 +267,15 @@
           <input
             id="recipientAccountId"
             type="text"
-            placeholder="Recipient Account ID (e.g. VW-12345678)"
+            placeholder="Recipient Account ID"
             maxlength="11"
             autocomplete="off"
             oninput="clearRecipientPreview()"
           >
 
-          <button
-            type="button"
-            class="secondary"
-            onclick="findRecipient()"
-          >Find Recipient</button>
+          <button type="button" class="secondary" onclick="findRecipient()">
+            Find Recipient
+          </button>
 
           <div id="recipientPreview" class="recipient-preview hidden"></div>
 
@@ -253,15 +298,21 @@
 
       </div>
 
-      <div class="card transactions-card">
-        <div class="section-title">
-          <h2>Recent Transactions</h2>
-          <button onclick="loadTransactions()">Refresh</button>
+      <div class="vicky-transactions-card">
+
+        <div class="vicky-transactions-header">
+          <div>
+            <small>Wallet activity</small>
+            <h2>Recent Transactions</h2>
+          </div>
+
+          <button onclick="loadTransactions()">See all</button>
         </div>
 
         <div id="transactions">
           <p class="empty">No transactions yet.</p>
         </div>
+
       </div>
 
       <section id="ownerDashboard" class="owner-dashboard hidden">
@@ -278,7 +329,6 @@
         <div id="ownerMessage"></div>
 
         <div class="owner-stats">
-
           <div class="owner-stat">
             <span>Total Users</span>
             <strong id="adminUsers">0</strong>
@@ -308,7 +358,6 @@
             <span>Transfers</span>
             <strong id="adminTransfers">0.00</strong>
           </div>
-
         </div>
 
         <div class="card owner-section">
@@ -334,6 +383,8 @@
         </div>
 
       </section>
+
+    </section>
 
     </section>
 
