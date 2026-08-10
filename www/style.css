@@ -1944,3 +1944,23 @@ body {
     width: min(100%, 560px);
   }
 }
+
+
+/* Vicky Pay authentication screen separation */
+#dashboard.hidden {
+  display: none !important;
+}
+
+#auth.hidden {
+  display: none !important;
+}
+
+#auth:not(.hidden) {
+  display: block !important;
+  width: 100%;
+}
+
+#dashboard:not(.hidden) {
+  display: block !important;
+  width: 100%;
+}
