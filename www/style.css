@@ -1615,3 +1615,291 @@ footer {
   }
 }
 
+
+/* =========================================================
+   VICKY WALLET — CLASSIC PROFESSIONAL BANKING UI
+   ========================================================= */
+
+:root {
+  --vw-primary: #173b7a;
+  --vw-primary-dark: #102d5c;
+  --vw-accent: #2563eb;
+  --vw-bg: #f4f6f9;
+  --vw-card: #ffffff;
+  --vw-text: #172033;
+  --vw-muted: #6b7280;
+  --vw-border: #e5e7eb;
+  --vw-success: #16803c;
+  --vw-danger: #c62828;
+  --vw-shadow: 0 4px 18px rgba(20, 35, 60, .07);
+  --vw-radius: 16px;
+}
+
+/* Page */
+html,
+body {
+  background: var(--vw-bg) !important;
+  color: var(--vw-text) !important;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif !important;
+}
+
+/* Main dashboard */
+#dashboard {
+  width: min(1100px, 100%) !important;
+  margin: 0 auto !important;
+  padding: 24px 18px 100px !important;
+}
+
+/* Header */
+.welcome {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  margin-bottom: 22px !important;
+}
+
+.welcome span {
+  color: var(--vw-muted) !important;
+  font-size: 13px !important;
+}
+
+.welcome h2 {
+  margin: 4px 0 0 !important;
+  color: var(--vw-text) !important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
+}
+
+/* Balance */
+.balance-card {
+  position: relative !important;
+  background: linear-gradient(
+    135deg,
+    var(--vw-primary),
+    var(--vw-primary-dark)
+  ) !important;
+  color: white !important;
+  border-radius: 20px !important;
+  padding: 28px !important;
+  margin-bottom: 22px !important;
+  box-shadow: 0 10px 28px rgba(23, 59, 122, .20) !important;
+}
+
+.balance-card span {
+  color: rgba(255,255,255,.72) !important;
+  font-size: 13px !important;
+}
+
+.balance-card #balance {
+  margin: 8px 0 !important;
+  font-size: clamp(32px, 7vw, 48px) !important;
+  font-weight: 750 !important;
+  letter-spacing: -1px !important;
+}
+
+.balance-card small {
+  color: rgba(255,255,255,.75) !important;
+}
+
+.balance-card button {
+  position: absolute !important;
+  right: 20px !important;
+  bottom: 20px !important;
+  background: rgba(255,255,255,.12) !important;
+  border: 1px solid rgba(255,255,255,.25) !important;
+  color: white !important;
+  border-radius: 9px !important;
+  padding: 8px 12px !important;
+}
+
+/* Action cards */
+.actions {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px !important;
+  margin-bottom: 22px !important;
+}
+
+.action-card,
+.transactions-card,
+.owner-section {
+  background: var(--vw-card) !important;
+  border: 1px solid var(--vw-border) !important;
+  border-radius: var(--vw-radius) !important;
+  box-shadow: var(--vw-shadow) !important;
+}
+
+.action-card {
+  padding: 20px !important;
+}
+
+.action-card h3 {
+  margin-top: 0 !important;
+  color: var(--vw-text) !important;
+  font-size: 17px !important;
+}
+
+/* Inputs */
+#dashboard input,
+#dashboard select {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background: #f9fafb !important;
+  border: 1px solid var(--vw-border) !important;
+  border-radius: 10px !important;
+  padding: 12px 13px !important;
+  color: var(--vw-text) !important;
+  outline: none !important;
+}
+
+#dashboard input:focus,
+#dashboard select:focus {
+  border-color: var(--vw-accent) !important;
+  background: white !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.10) !important;
+}
+
+/* Buttons */
+#dashboard button {
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  transition: .18s ease !important;
+}
+
+#dashboard button:hover {
+  transform: translateY(-1px);
+}
+
+#dashboard .primary {
+  background: var(--vw-primary) !important;
+  color: white !important;
+  border: none !important;
+}
+
+#dashboard .secondary {
+  background: #eef2f7 !important;
+  color: var(--vw-primary) !important;
+  border: 1px solid var(--vw-border) !important;
+}
+
+/* Transactions */
+.transactions-card {
+  padding: 20px !important;
+}
+
+.section-title {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+.section-title h2 {
+  margin: 0 !important;
+  font-size: 19px !important;
+  color: var(--vw-text) !important;
+}
+
+.transaction {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 15px !important;
+  padding: 15px 4px !important;
+  border-bottom: 1px solid var(--vw-border) !important;
+}
+
+.transaction:last-child {
+  border-bottom: none !important;
+}
+
+.transaction strong {
+  color: var(--vw-text) !important;
+}
+
+.transaction small,
+.transaction span {
+  color: var(--vw-muted) !important;
+}
+
+/* Account ID */
+.account-id-box {
+  background: #f6f8fb !important;
+  border: 1px solid var(--vw-border) !important;
+  border-radius: 10px !important;
+  padding: 12px !important;
+}
+
+/* Profile */
+.profile-panel {
+  background: white !important;
+  border: 1px solid var(--vw-border) !important;
+  border-radius: var(--vw-radius) !important;
+  box-shadow: var(--vw-shadow) !important;
+}
+
+/* Owner dashboard */
+.owner-dashboard {
+  background: var(--vw-bg) !important;
+}
+
+.owner-stat {
+  background: white !important;
+  border: 1px solid var(--vw-border) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--vw-shadow) !important;
+}
+
+/* Normal scrolling */
+html,
+body {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  height: auto !important;
+  min-height: 100% !important;
+}
+
+#dashboard {
+  height: auto !important;
+  min-height: 100vh !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Mobile */
+@media (max-width: 800px) {
+  #dashboard {
+    padding: 18px 14px 100px !important;
+  }
+
+  .actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  .welcome h2 {
+    font-size: 21px !important;
+  }
+
+  .balance-card {
+    padding: 22px !important;
+  }
+
+  .transaction {
+    align-items: flex-start !important;
+  }
+}
+
+@media (min-width: 801px) {
+  .transfer-card {
+    grid-column: span 1 !important;
+  }
+}
+
