@@ -1,0 +1,12 @@
+node_modules/
+backups/
+*.backup
+*.before-*
+android/keystore.properties
+.env
+.env.*
+!.env.example
+dist/
+build/
+.DS_Store
+*.profile-backup

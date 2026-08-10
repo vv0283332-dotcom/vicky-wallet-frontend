@@ -620,3 +620,53 @@ footer {
     padding: 10px 12px;
   }
 }
+
+.account-id-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.account-id-box span {
+  width: 100%;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.account-id-box strong {
+  flex: 1;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+
+.account-id-box button {
+  padding: 8px 12px;
+}
+
+.recipient-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  background: rgba(0, 128, 0, 0.08);
+}
+
+.recipient-preview strong {
+  font-size: 13px;
+}
+
+.recipient-preview span {
+  font-weight: 600;
+}
+
+.recipient-preview small {
+  opacity: 0.7;
+}
+

@@ -129,6 +129,7 @@ async function login(event) {
     currentUser = data.user;
 
     showDashboard();
+    updateDashboardAccountId();
     await checkOwnerAccess();
     await checkOwnerAccess();
 
@@ -179,6 +180,7 @@ async function register(event) {
     currentUser = data.user;
 
     showDashboard();
+    updateDashboardAccountId();
     await checkOwnerAccess();
     await checkOwnerAccess();
 
@@ -221,6 +223,7 @@ async function loadCurrentUser() {
     currentUser = data.user;
 
     showDashboard();
+    updateDashboardAccountId();
     await checkOwnerAccess();
     await checkOwnerAccess();
 
@@ -328,18 +331,131 @@ async function withdraw() {
   }
 }
 
+
+function getMyAccountId() {
+  return (
+    currentUser?.account_id ||
+    currentUser?.accountId ||
+    ""
+  ).toUpperCase();
+}
+
+function updateDashboardAccountId() {
+  const accountId = getMyAccountId();
+  const el = $("dashboardAccountId");
+
+  if (el) {
+    el.textContent = accountId || "Unavailable";
+  }
+}
+
+async function copyAccountId() {
+  const accountId = getMyAccountId();
+
+  if (!accountId) {
+    setDashboardMessage(
+      "Your Account ID is not available.",
+      "error"
+    );
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(accountId);
+
+    setDashboardMessage(
+      `Account ID ${accountId} copied.`,
+      "success"
+    );
+  } catch {
+    setDashboardMessage(
+      "Could not copy Account ID.",
+      "error"
+    );
+  }
+}
+
+function clearRecipientPreview() {
+  const box = $("recipientPreview");
+
+  if (!box) return;
+
+  box.classList.add("hidden");
+  box.innerHTML = "";
+}
+
+async function findRecipient() {
+  const input = $("recipientAccountId");
+
+  if (!input) return;
+
+  const accountId = input.value.trim().toUpperCase();
+  input.value = accountId;
+
+  if (!/^VW-[0-9]{8}$/.test(accountId)) {
+    setDashboardMessage(
+      "Enter a valid Account ID, e.g. VW-12345678.",
+      "error"
+    );
+    return;
+  }
+
+  if (accountId === getMyAccountId()) {
+    setDashboardMessage(
+      "You cannot send money to your own account.",
+      "error"
+    );
+    return;
+  }
+
+  try {
+    const recipient = await apiRequest(
+      `/wallet/recipient/${encodeURIComponent(accountId)}`
+    );
+
+    const box = $("recipientPreview");
+
+    if (box) {
+      box.innerHTML = `
+        <strong>Recipient verified ✓</strong>
+        <span>${recipient.full_name}</span>
+        <small>${recipient.account_id} · ${recipient.currency}</small>
+      `;
+
+      box.classList.remove("hidden");
+    }
+
+    setDashboardMessage(
+      `Recipient verified: ${recipient.full_name}`,
+      "success"
+    );
+
+    return recipient;
+
+  } catch (error) {
+    clearRecipientPreview();
+
+    setDashboardMessage(
+      error.message || "Recipient not found.",
+      "error"
+    );
+
+    return null;
+  }
+}
+
 async function transfer() {
-  const recipient_email =
-    $("recipientEmail").value.trim();
+  const recipientAccountId =
+    $("recipientAccountId").value.trim().toUpperCase();
 
   const value = $("transferAmount").value;
 
   const description =
     $("transferDescription").value.trim();
 
-  if (!recipient_email) {
+  if (!/^VW-[0-9]{8}$/.test(recipientAccountId)) {
     setDashboardMessage(
-      "Enter the recipient email.",
+      "Enter a valid recipient Account ID, e.g. VW-12345678.",
       "error"
     );
     return;
@@ -354,18 +470,32 @@ async function transfer() {
   }
 
   try {
+    const recipient = await apiRequest(
+      `/wallet/recipient/${encodeURIComponent(recipientAccountId)}`
+    );
+
+    const confirmed = window.confirm(
+      `Send ${Number(value).toFixed(2)} ${recipient.currency} to ${recipient.full_name} (${recipient.account_id})?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
     const data = await apiRequest("/wallet/transfer", {
       method: "POST",
       body: JSON.stringify({
-        recipient_email,
+        recipient_account_id: recipientAccountId,
         amount: Number(value),
         description
       })
     });
 
-    $("recipientEmail").value = "";
+    $("recipientAccountId").value = "";
     $("transferAmount").value = "";
     $("transferDescription").value = "";
+
+    clearRecipientPreview();
 
     setDashboardMessage(
       data.message || "Transfer successful.",
@@ -376,9 +506,13 @@ async function transfer() {
     await loadTransactions();
 
   } catch (error) {
-    setDashboardMessage(error.message, "error");
+    setDashboardMessage(
+      error.message || "Transfer failed.",
+      "error"
+    );
   }
 }
+
 
 async function loadTransactions() {
   try {
