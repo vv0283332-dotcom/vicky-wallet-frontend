@@ -1903,3 +1903,44 @@ body {
   }
 }
 
+
+/* Narrow, centered classic banking dashboard */
+#dashboard {
+  width: min(100%, 520px);
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+#dashboard .welcome,
+#dashboard .balance-card,
+#dashboard .actions,
+#dashboard .transactions-card,
+#dashboard .profile-panel {
+  width: 100%;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+#dashboard .actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#dashboard .action-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#dashboard .transactions-card {
+  margin-top: 16px;
+}
+
+@media (min-width: 768px) {
+  #dashboard {
+    width: min(100%, 560px);
+  }
+}
