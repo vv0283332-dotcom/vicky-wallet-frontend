@@ -1001,3 +1001,24 @@ function escapeHtml(value) {
   }
 })();
 
+
+
+function scrollToDashboard() {
+  const dashboard = document.getElementById("dashboard");
+  if (dashboard) dashboard.scrollIntoView({ behavior: "smooth", block: "start" });
+  setActiveBottomNav(0);
+}
+
+function scrollToTransactions() {
+  const transactions = document.querySelector(".transactions-card");
+  if (transactions) {
+    transactions.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  setActiveBottomNav(1);
+}
+
+function setActiveBottomNav(index) {
+  document.querySelectorAll(".bottom-nav-item").forEach((item, i) => {
+    item.classList.toggle("active", i === index);
+  });
+}
