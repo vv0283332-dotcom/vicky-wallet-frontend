@@ -1,6 +1,6 @@
 
 function showLoginScreen() {
-  const auth = $("auth");
+  const auth = $("authSection");
   const dashboard = $("dashboard");
 
   if (auth) auth.classList.remove("hidden");
@@ -8,7 +8,7 @@ function showLoginScreen() {
 }
 
 function showDashboardScreen() {
-  const auth = $("auth");
+  const auth = $("authSection");
   const dashboard = $("dashboard");
 
   if (auth) auth.classList.add("hidden");
