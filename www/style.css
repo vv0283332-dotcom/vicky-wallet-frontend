@@ -670,3 +670,60 @@ footer {
   opacity: 0.7;
 }
 
+
+/* ==================== FULL-SCREEN WALLET DASHBOARD ==================== */
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  min-height: 100vh;
+}
+
+#dashboard {
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#dashboard > * {
+  box-sizing: border-box;
+}
+
+#dashboard .transactions-card {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#dashboard #transactions {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+#dashboard #transactions::-webkit-scrollbar {
+  width: 5px;
+}
+
+@media (max-width: 768px) {
+  #dashboard {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+}
+
