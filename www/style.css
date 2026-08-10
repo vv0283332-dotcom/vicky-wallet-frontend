@@ -1964,3 +1964,45 @@ body {
   display: block !important;
   width: 100%;
 }
+
+
+/* =========================================================
+   VICKY PAY AUTHENTICATION SCREEN
+   Login/Register and Dashboard are separate screens.
+   ========================================================= */
+
+#auth {
+  display: block;
+  width: 100%;
+}
+
+#auth.hidden {
+  display: none !important;
+}
+
+#dashboard {
+  display: block;
+  width: 100%;
+}
+
+#dashboard.hidden {
+  display: none !important;
+}
+
+/* Never allow the dashboard to appear while logged out. */
+body.logged-out #dashboard {
+  display: none !important;
+}
+
+body.logged-out #auth {
+  display: block !important;
+}
+
+/* Never show authentication screen after login. */
+body.logged-in #auth {
+  display: none !important;
+}
+
+body.logged-in #dashboard {
+  display: block !important;
+}

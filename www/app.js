@@ -1052,3 +1052,21 @@ document.addEventListener("DOMContentLoaded", () => {
     showLoginScreen();
   }
 });
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const token =
+    localStorage.getItem("token") ||
+    sessionStorage.getItem("token");
+
+  if (!token) {
+    showLoginScreen();
+    return;
+  }
+
+  /*
+   * Token exists, so the existing application can restore
+   * the authenticated dashboard.
+   */
+  showDashboardScreen();
+});
