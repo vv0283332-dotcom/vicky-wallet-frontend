@@ -269,7 +269,7 @@ async function deposit() {
   }
 
   try {
-    const data = await apiRequest("/wallet/deposit", {
+    const data = await apiRequest("/payments/deposit", {
       method: "POST",
       body: JSON.stringify({
         amount: Number(value),
