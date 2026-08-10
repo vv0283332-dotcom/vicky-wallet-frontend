@@ -1494,3 +1494,43 @@ body {
   height: 0;
 }
 
+
+/* =========================================================
+   ENABLE NORMAL DASHBOARD SCROLLING
+   ========================================================= */
+
+html,
+body {
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#dashboard {
+  height: auto;
+  min-height: 100vh;
+  max-height: none;
+  overflow: visible;
+  padding-bottom: 100px;
+}
+
+#dashboard .transactions-card,
+#dashboard .actions,
+#dashboard .owner-dashboard,
+#dashboard .owner-section {
+  overflow: visible;
+  max-height: none;
+}
+
+/* Keep bottom navigation visible while the page scrolls */
+#dashboard::after {
+  position: fixed;
+  bottom: 0;
+}
+
+/* Prevent content from being hidden behind bottom navigation */
+#dashboard {
+  padding-bottom: 110px;
+}
+
