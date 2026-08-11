@@ -283,49 +283,37 @@ async function loadBalance() {
   }
 }
 
-function openMoneyPanel(panel) {
+function toggleMoneyPanel(panel) {
   const panels = [
     $("depositPanel"),
     $("withdrawPanel"),
     $("transferPanel")
   ];
 
-  panels.forEach((item) => {
-    if (item) item.classList.remove("money-panel-open");
-  });
-
   const target = $(panel);
 
-  if (target) {
-    target.classList.add("money-panel-open");
-    target.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
+  if (!target) {
+    console.error("Money panel not found:", panel);
+    return;
   }
-}
 
-function toggleMoneyPanel(panel) {
-  const target = $(panel);
+  const wasOpen = target.classList.contains("money-panel-open");
 
-  if (!target) return;
-
-  const isOpen = target.classList.contains("money-panel-open");
-
-  [
-    $("depositPanel"),
-    $("withdrawPanel"),
-    $("transferPanel")
-  ].forEach((item) => {
-    if (item) item.classList.remove("money-panel-open");
+  panels.forEach((item) => {
+    if (item) {
+      item.classList.remove("money-panel-open");
+    }
   });
 
-  if (!isOpen) {
+  if (!wasOpen) {
     target.classList.add("money-panel-open");
-    target.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
+
+    setTimeout(() => {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }, 50);
   }
 }
 

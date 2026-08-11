@@ -2226,3 +2226,52 @@ body.logged-in #dashboard {
   }
 }
 
+
+/* ===== FINAL VICKY PAY COLLAPSIBLE ACTION SYSTEM ===== */
+
+/* Override every previous action-panel rule */
+.vicky-action-panels {
+  display: block !important;
+  width: 100%;
+  margin: 15px 0 !important;
+}
+
+.vicky-action-panels .collapsible-panel {
+  display: none !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.vicky-action-panels .collapsible-panel.money-panel-open {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  animation: vickyMoneyOpen .2s ease-out;
+}
+
+@keyframes vickyMoneyOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .vicky-action-panels {
+    display: block !important;
+  }
+
+  .vicky-action-panels .collapsible-panel {
+    margin: 12px 0 !important;
+  }
+}
+
