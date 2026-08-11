@@ -1267,14 +1267,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 function openMoneyScreen(screenId) {
   const dashboard = $("dashboard");
 
-  document.querySelectorAll(".vicky-screen").forEach((screen) => {
-    screen.classList.remove("active");
-  });
+  const screens = [
+    "depositScreen",
+    "withdrawScreen",
+    "transferScreen",
+    "historyScreen"
+  ];
 
+  // Hide dashboard
   if (dashboard) {
     dashboard.classList.add("hidden");
     dashboard.setAttribute("aria-hidden", "true");
   }
+
+  // Hide every money screen
+  screens.forEach((id) => {
+    const screen = $(id);
+
+    if (screen) {
+      screen.classList.add("hidden");
+      screen.classList.remove("active");
+      screen.setAttribute("aria-hidden", "true");
+    }
+  });
 
   const screen = $(screenId);
 
@@ -1283,19 +1298,50 @@ function openMoneyScreen(screenId) {
     return;
   }
 
+  // Show selected screen
+  screen.classList.remove("hidden");
   screen.classList.add("active");
+  screen.setAttribute("aria-hidden", "false");
 
+  // Update withdraw balance
+  if (screenId === "withdrawScreen") {
+    const balance = $("balance");
+    const currency = $("currencyLabel");
+    const available = $("withdrawAvailableBalance");
+
+    if (available && balance) {
+      available.textContent =
+        `${balance.textContent.trim()} ${currency?.textContent || ""}`.trim();
+    }
+
+    $("withdrawAmount")?.focus();
+  }
+
+  // Update transfer account ID
   if (screenId === "transferScreen") {
-    const account = getMyAccountId();
-    const accountElement = $("screenAccountId");
+    const dashboardAccount = $("dashboardAccountId");
+    const transferAccount = $("transferScreenAccountId");
 
-    if (accountElement) {
-      accountElement.textContent = account || "-";
+    if (dashboardAccount && transferAccount) {
+      transferAccount.textContent =
+        dashboardAccount.textContent.trim() || "-";
+    }
+
+    $("transferAmount")?.focus();
+  }
+
+  // Load history
+  if (screenId === "historyScreen") {
+    if (typeof loadScreenTransactions === "function") {
+      loadScreenTransactions();
+    } else if (typeof loadTransactions === "function") {
+      loadTransactions();
     }
   }
 
-  if (screenId === "historyScreen") {
-    loadScreenTransactions();
+  // Deposit amount gets focus
+  if (screenId === "depositScreen") {
+    $("depositAmount")?.focus();
   }
 
   window.scrollTo({
@@ -1304,22 +1350,37 @@ function openMoneyScreen(screenId) {
   });
 }
 
-
 function closeMoneyScreen() {
-  document.querySelectorAll(".vicky-screen").forEach((screen) => {
-    screen.classList.remove("active");
+  const screens = [
+    "depositScreen",
+    "withdrawScreen",
+    "transferScreen",
+    "historyScreen"
+  ];
+
+  screens.forEach((id) => {
+    const screen = $(id);
+
+    if (screen) {
+      screen.classList.add("hidden");
+      screen.classList.remove("active");
+      screen.setAttribute("aria-hidden", "true");
+    }
   });
 
-  if (token && currentUser) {
-    const dashboard = $("dashboard");
+  const dashboard = $("dashboard");
 
-    if (dashboard) {
-      dashboard.classList.remove("hidden");
-      dashboard.setAttribute("aria-hidden", "false");
-    }
+  if (dashboard && token && currentUser) {
+    dashboard.classList.remove("hidden");
+    dashboard.classList.remove("active");
+    dashboard.setAttribute("aria-hidden", "false");
   }
-}
 
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
 
 async function screenDeposit() {
   const amount = Number($("screenDepositAmount")?.value);
