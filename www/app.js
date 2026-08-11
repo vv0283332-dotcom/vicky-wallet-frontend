@@ -543,19 +543,29 @@ function stopNotificationPolling() {
 }
 
 function getMyAccountId() {
-  return (
-    currentUser?.account_id ||
-    currentUser?.accountId ||
-    ""
-  ).toUpperCase();
+  const id =
+    currentUser?.account_id ??
+    currentUser?.accountId ??
+    "";
+
+  return String(id).trim().toUpperCase();
 }
 
 function updateDashboardAccountId() {
   const accountId = getMyAccountId();
-  const el = $("dashboardAccountId");
 
-  if (el) {
-    el.textContent = accountId || "Unavailable";
+  const elements = [
+    $("dashboardAccountId"),
+    $("screenAccountId"),
+    $("myAccountId")
+  ].filter(Boolean);
+
+  for (const el of elements) {
+    if ("value" in el && el.tagName !== "SPAN" && el.tagName !== "DIV") {
+      el.value = accountId || "Unavailable";
+    } else {
+      el.textContent = accountId || "Unavailable";
+    }
   }
 }
 
