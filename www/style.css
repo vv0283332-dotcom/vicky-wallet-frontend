@@ -2275,3 +2275,161 @@ body.logged-in #dashboard {
   }
 }
 
+
+/* ===== VICKY PAY SEPARATE MONEY SCREENS ===== */
+
+.vicky-screen {
+  display: none;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  background: var(--vw-bg, #f5f7f9);
+}
+
+.vicky-screen.active {
+  display: block;
+}
+
+.vicky-screen-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.vicky-back {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  border-radius: 50% !important;
+  border: 0 !important;
+  cursor: pointer;
+  font-size: 22px;
+}
+
+.vicky-screen-card {
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 5px 25px rgba(0,0,0,.06);
+}
+
+.vicky-screen-card input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 52px;
+  margin: 8px 0;
+  padding: 0 15px;
+  border-radius: 12px;
+}
+
+.vicky-screen-card .primary {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+  .vicky-screen {
+    padding: 12px;
+  }
+
+  .vicky-screen-card {
+    padding: 18px;
+  }
+}
+
+
+/* =========================================================
+   VICKY PAY — SEPARATE FULL SCREENS
+   ========================================================= */
+
+.vicky-screen {
+  display: none !important;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow-y: auto;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  background: var(--vw-bg, #f5f7f9);
+}
+
+.vicky-screen.active {
+  display: block !important;
+}
+
+.vicky-screen-header {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.vicky-screen-header h2 {
+  margin: 2px 0 0;
+}
+
+.vicky-back {
+  width: 46px !important;
+  height: 46px !important;
+  min-width: 46px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  font-size: 24px !important;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(0,0,0,.08);
+}
+
+.vicky-screen-card {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 22px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 5px 25px rgba(0,0,0,.06);
+}
+
+.vicky-screen-card input {
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  box-sizing: border-box;
+  margin: 10px 0;
+  padding: 0 15px;
+  border: 1px solid #dfe4e8;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+.vicky-screen-card .primary {
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  margin-top: 14px;
+}
+
+.vicky-screen .account-id-box {
+  margin: 12px 0;
+}
+
+@media (max-width: 600px) {
+  .vicky-screen {
+    padding: 12px;
+  }
+
+  .vicky-screen-card {
+    padding: 18px;
+    border-radius: 16px;
+  }
+}
+

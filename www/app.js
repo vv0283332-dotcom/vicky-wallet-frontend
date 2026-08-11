@@ -1249,3 +1249,303 @@ document.addEventListener("DOMContentLoaded", async () => {
    */
   showDashboardScreen();
 });
+
+/* =========================================================
+   VICKY PAY — SEPARATE MONEY SCREENS
+   ========================================================= */
+
+function openMoneyScreen(screenId) {
+  const dashboard = $("dashboard");
+
+  document.querySelectorAll(".vicky-screen").forEach((screen) => {
+    screen.classList.remove("active");
+  });
+
+  if (dashboard) {
+    dashboard.classList.add("hidden");
+    dashboard.setAttribute("aria-hidden", "true");
+  }
+
+  const screen = $(screenId);
+
+  if (!screen) {
+    console.error("Screen not found:", screenId);
+    return;
+  }
+
+  screen.classList.add("active");
+
+  if (screenId === "transferScreen") {
+    const account = getMyAccountId();
+    const accountElement = $("screenAccountId");
+
+    if (accountElement) {
+      accountElement.textContent = account || "-";
+    }
+  }
+
+  if (screenId === "historyScreen") {
+    loadScreenTransactions();
+  }
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+
+function closeMoneyScreen() {
+  document.querySelectorAll(".vicky-screen").forEach((screen) => {
+    screen.classList.remove("active");
+  });
+
+  if (token && currentUser) {
+    const dashboard = $("dashboard");
+
+    if (dashboard) {
+      dashboard.classList.remove("hidden");
+      dashboard.setAttribute("aria-hidden", "false");
+    }
+  }
+}
+
+
+async function screenDeposit() {
+  const amount = Number($("screenDepositAmount")?.value);
+  const description =
+    $("screenDepositDescription")?.value.trim() || "";
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    alert("Enter a valid deposit amount.");
+    return;
+  }
+
+  try {
+    const data = await apiRequest("/payments/deposit", {
+      method: "POST",
+      body: JSON.stringify({
+        amount,
+        description
+      })
+    });
+
+    /*
+     * Real Flutterwave deposit:
+     * send the user to the secure checkout page.
+     */
+    if (data.checkout_url) {
+      window.location.href = data.checkout_url;
+      return;
+    }
+
+    alert(data.message || "Deposit initialized.");
+
+  } catch (error) {
+    alert(error.message || "Unable to start deposit.");
+  }
+}
+
+
+async function screenWithdraw() {
+  const amount = Number($("screenWithdrawAmount")?.value);
+  const description =
+    $("screenWithdrawDescription")?.value.trim() || "";
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    alert("Enter a valid withdrawal amount.");
+    return;
+  }
+
+  try {
+    const data = await apiRequest("/wallet/withdraw", {
+      method: "POST",
+      body: JSON.stringify({
+        amount,
+        description
+      })
+    });
+
+    alert(data.message || "Withdrawal successful.");
+
+    if ($("screenWithdrawAmount")) {
+      $("screenWithdrawAmount").value = "";
+    }
+
+    if ($("screenWithdrawDescription")) {
+      $("screenWithdrawDescription").value = "";
+    }
+
+    await loadBalance();
+    await loadTransactions();
+
+  } catch (error) {
+    alert(error.message || "Withdrawal failed.");
+  }
+}
+
+
+async function screenFindRecipient() {
+  const input = $("screenRecipientAccountId");
+  const box = $("screenRecipientPreview");
+
+  if (!input || !box) return;
+
+  const accountId = input.value.trim().toUpperCase();
+
+  input.value = accountId;
+
+  if (!/^VW-[0-9]{8}$/.test(accountId)) {
+    alert("Enter a valid Account ID, e.g. VW-12345678.");
+    return;
+  }
+
+  if (accountId === getMyAccountId()) {
+    alert("You cannot send money to your own account.");
+    return;
+  }
+
+  try {
+    const recipient = await apiRequest(
+      `/wallet/recipient/${encodeURIComponent(accountId)}`
+    );
+
+    box.innerHTML = `
+      <strong>Recipient verified ✓</strong>
+      <span>${escapeHtml(recipient.full_name)}</span>
+      <small>
+        ${escapeHtml(recipient.account_id)}
+        · ${escapeHtml(recipient.currency)}
+      </small>
+    `;
+
+    box.classList.remove("hidden");
+
+  } catch (error) {
+    box.classList.add("hidden");
+    box.innerHTML = "";
+    alert(error.message || "Recipient not found.");
+  }
+}
+
+
+async function screenTransfer() {
+  const recipientAccountId =
+    $("screenRecipientAccountId")?.value.trim().toUpperCase();
+
+  const amount =
+    Number($("screenTransferAmount")?.value);
+
+  const description =
+    $("screenTransferDescription")?.value.trim() || "";
+
+  if (!/^VW-[0-9]{8}$/.test(recipientAccountId || "")) {
+    alert("Enter a valid recipient Account ID.");
+    return;
+  }
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    alert("Enter a valid transfer amount.");
+    return;
+  }
+
+  try {
+    const recipient = await apiRequest(
+      `/wallet/recipient/${encodeURIComponent(recipientAccountId)}`
+    );
+
+    const confirmed = window.confirm(
+      `Send ${amount.toFixed(2)} ${recipient.currency} to ${recipient.full_name}?`
+    );
+
+    if (!confirmed) return;
+
+    const data = await apiRequest("/wallet/transfer", {
+      method: "POST",
+      body: JSON.stringify({
+        recipient_account_id: recipientAccountId,
+        amount,
+        description
+      })
+    });
+
+    alert(data.message || "Transfer successful.");
+
+    if ($("screenRecipientAccountId")) {
+      $("screenRecipientAccountId").value = "";
+    }
+
+    if ($("screenTransferAmount")) {
+      $("screenTransferAmount").value = "";
+    }
+
+    if ($("screenTransferDescription")) {
+      $("screenTransferDescription").value = "";
+    }
+
+    if ($("screenRecipientPreview")) {
+      $("screenRecipientPreview").classList.add("hidden");
+      $("screenRecipientPreview").innerHTML = "";
+    }
+
+    await loadBalance();
+
+  } catch (error) {
+    alert(error.message || "Transfer failed.");
+  }
+}
+
+
+async function loadScreenTransactions() {
+  const box = $("screenTransactions");
+
+  if (!box) return;
+
+  box.innerHTML =
+    '<p class="empty">Loading transactions...</p>';
+
+  try {
+    const data =
+      await apiRequest("/wallet/transactions?limit=50");
+
+    const transactions = data.transactions || [];
+
+    if (!transactions.length) {
+      box.innerHTML =
+        '<p class="empty">No transactions yet.</p>';
+      return;
+    }
+
+    box.innerHTML = transactions.map((tx) => {
+      const positive =
+        tx.type === "deposit" ||
+        tx.type === "transfer_received";
+
+      const sign = positive ? "+" : "-";
+
+      const date = tx.created_at
+        ? new Date(tx.created_at).toLocaleString()
+        : "";
+
+      return `
+        <div class="transaction">
+          <div>
+            <strong>${escapeHtml(tx.type)}</strong>
+            <span>${escapeHtml(tx.description || "")}</span>
+            <small>${escapeHtml(date)}</small>
+          </div>
+
+          <div class="${positive ? "positive" : "negative"}">
+            ${sign}${escapeHtml(tx.amount)}
+            ${escapeHtml(tx.currency)}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+  } catch (error) {
+    box.innerHTML =
+      `<p class="empty">${escapeHtml(error.message)}</p>`;
+  }
+}
+
