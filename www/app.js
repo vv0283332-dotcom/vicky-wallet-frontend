@@ -285,18 +285,16 @@ async function loadBalance() {
 
 async function deposit() {
   const value = $("depositAmount").value;
-  const description =
-    $("depositDescription").value.trim();
+  const description = $("depositDescription").value.trim();
 
   if (!value || Number(value) <= 0) {
-    setDashboardMessage(
-      "Enter a valid deposit amount.",
-      "error"
-    );
+    setDashboardMessage("Enter a valid deposit amount.", "error");
     return;
   }
 
   try {
+    setDashboardMessage("Opening secure payment checkout...", "success");
+
     const data = await apiRequest("/payments/deposit", {
       method: "POST",
       body: JSON.stringify({
@@ -305,19 +303,20 @@ async function deposit() {
       })
     });
 
+    if (!data.checkout_url) {
+      throw new Error("Payment checkout could not be created.");
+    }
+
     $("depositAmount").value = "";
     $("depositDescription").value = "";
 
-    setDashboardMessage(
-      data.message || "Deposit successful.",
-      "success"
-    );
-
-    await loadBalance();
-    await loadTransactions();
+    window.location.href = data.checkout_url;
 
   } catch (error) {
-    setDashboardMessage(error.message, "error");
+    setDashboardMessage(
+      error.message || "Unable to start payment.",
+      "error"
+    );
   }
 }
 
