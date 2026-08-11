@@ -163,6 +163,9 @@ async function login(event) {
 
     await loadBalance();
     await loadTransactions();
+    await loadEarnings();
+    await loadReferrals();
+    setupReferralUI();
     startNotificationPolling();
 
   } catch (error) {
@@ -271,6 +274,9 @@ async function loadCurrentUser() {
 
     await loadBalance();
     await loadTransactions();
+    await loadEarnings();
+    await loadReferrals();
+    setupReferralUI();
 
   } catch {
     logout(false);
@@ -1714,35 +1720,88 @@ async function loadReferrals() {
     const data = await apiRequest("/referrals");
     const referral = data.referral || {};
 
-    codeElement.textContent =
+    const code = String(
       referral.code ||
       currentUser?.referral_code ||
-      "Unavailable";
+      ""
+    ).trim().toUpperCase();
 
-    const totalElement =
-      document.getElementById("referralTotal");
+    codeElement.textContent = code || "Unavailable";
 
-    const rewardElement =
-      document.getElementById("referralRewards");
+    // Keep the authoritative server value in the current user object.
+    if (currentUser && code) {
+      currentUser.referral_code = code;
+    }
+
+    const totalElement = document.getElementById("referralTotal");
+    const rewardElement = document.getElementById("referralRewards");
 
     if (totalElement) {
-      totalElement.textContent =
-        String(referral.total || 0);
+      totalElement.textContent = String(
+        Number(referral.total || 0)
+      );
     }
 
     if (rewardElement) {
       rewardElement.textContent =
         `${Number(referral.total_rewards || 0).toFixed(2)} USD`;
     }
+
+    if (message) {
+      message.textContent = code
+        ? ""
+        : "Your referral code is not available yet.";
+    }
+
+    // Render the actual referral list when the optional container exists.
+    const list = document.getElementById("referralList");
+
+    if (list) {
+      const referrals = Array.isArray(data.referrals)
+        ? data.referrals
+        : [];
+
+      if (!referrals.length) {
+        list.innerHTML =
+          '<p class="empty">No referrals yet. Share your code to get started.</p>';
+      } else {
+        list.innerHTML = referrals.map(item => {
+          const name =
+            item.referred_user?.full_name || "Referred user";
+
+          const status =
+            String(item.status || "pending").replaceAll("_", " ");
+
+          const reward = Number(item.reward_amount || 0);
+          const currency = item.reward_currency || "USD";
+
+          return `
+            <div class="earning-item">
+              <div class="earning-item-main">
+                <strong>${escapeHtml(name)}</strong>
+                <small>${escapeHtml(status)}</small>
+              </div>
+              <div class="earning-item-right">
+                <strong>
+                  ${reward > 0 ? "+" : ""}${reward.toFixed(2)}
+                  ${escapeHtml(currency)}
+                </strong>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+    }
+
   } catch (error) {
     console.error("Referral loading error:", error);
 
-    if (message) {
-      message.textContent = "Unable to load referral information.";
-    }
+    codeElement.textContent =
+      currentUser?.referral_code || "Unavailable";
 
-    if (currentUser?.referral_code) {
-      codeElement.textContent = currentUser.referral_code;
+    if (message) {
+      message.textContent =
+        "Unable to load referral information.";
     }
   }
 }
