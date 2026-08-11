@@ -1693,6 +1693,50 @@ async function loadEarnings() {
 
 /* ==================== REFERRAL UI ==================== */
 
+
+async function loadReferrals() {
+  const codeElement = document.getElementById("referralCode");
+  const message = document.getElementById("referralMessage");
+
+  if (!codeElement) return;
+
+  try {
+    const data = await apiRequest("/referrals");
+    const referral = data.referral || {};
+
+    codeElement.textContent =
+      referral.code ||
+      currentUser?.referral_code ||
+      "Unavailable";
+
+    const totalElement =
+      document.getElementById("referralTotal");
+
+    const rewardElement =
+      document.getElementById("referralRewards");
+
+    if (totalElement) {
+      totalElement.textContent =
+        String(referral.total || 0);
+    }
+
+    if (rewardElement) {
+      rewardElement.textContent =
+        `${Number(referral.total_rewards || 0).toFixed(2)} USD`;
+    }
+  } catch (error) {
+    console.error("Referral loading error:", error);
+
+    if (message) {
+      message.textContent = "Unable to load referral information.";
+    }
+
+    if (currentUser?.referral_code) {
+      codeElement.textContent = currentUser.referral_code;
+    }
+  }
+}
+
 function setupReferralUI() {
   const copyButton = document.getElementById("copyReferralButton");
   const shareButton = document.getElementById("shareReferralButton");
@@ -1748,3 +1792,12 @@ function setupReferralUI() {
     }
   };
 }
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (token && currentUser) {
+    setupReferralUI();
+    loadReferrals();
+    loadEarnings();
+  }
+});
