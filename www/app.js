@@ -158,7 +158,6 @@ async function login(event) {
     showDashboard();
     updateDashboardAccountId();
     await checkOwnerAccess();
-    await checkOwnerAccess();
 
     setDashboardMessage("Login successful.", "success");
 
@@ -210,7 +209,6 @@ async function register(event) {
     showDashboard();
     updateDashboardAccountId();
     await checkOwnerAccess();
-    await checkOwnerAccess();
 
     setDashboardMessage(
       "Account created successfully.",
@@ -252,7 +250,6 @@ async function loadCurrentUser() {
 
     showDashboard();
     updateDashboardAccountId();
-    await checkOwnerAccess();
     await checkOwnerAccess();
 
     await loadBalance();
