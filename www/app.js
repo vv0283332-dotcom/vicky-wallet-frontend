@@ -226,7 +226,20 @@ async function register(event) {
 }
 
 function showDashboard() {
-  $("auth").classList.add("hidden");
+  const auth = $("auth");
+  const dashboard = $("dashboard");
+
+  if (auth) {
+    auth.classList.add("hidden");
+    auth.setAttribute("aria-hidden", "true");
+  }
+
+  if (dashboard) {
+    dashboard.classList.remove("hidden");
+    dashboard.setAttribute("aria-hidden", "false");
+    dashboard.style.display = "block";
+  }
+
   showDashboardScreen();
   $("logoutBtn").classList.remove("hidden");
 
