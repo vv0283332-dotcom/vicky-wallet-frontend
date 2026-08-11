@@ -2130,3 +2130,70 @@ body.logged-in #dashboard {
 .notification-footer button {
   width: 100%;
 }
+
+/* ===== VICKY PAY MONEY ACTIONS ===== */
+
+.vicky-action-panels {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 24px 0;
+  width: 100%;
+}
+
+.vicky-action-panels .action-card {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  padding: 20px !important;
+  border-radius: 18px;
+}
+
+.vicky-action-panels .action-card h3 {
+  display: block !important;
+  margin: 0 0 16px;
+}
+
+.vicky-action-panels .action-card input {
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box;
+  margin: 10px 0 !important;
+  min-height: 48px;
+}
+
+.vicky-action-panels .action-card button {
+  display: block !important;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 12px;
+}
+
+@media (max-width: 850px) {
+  .vicky-action-panels {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .vicky-action-panels {
+    gap: 14px;
+    margin: 16px 0;
+  }
+
+  .vicky-action-panels .action-card {
+    padding: 16px !important;
+  }
+}
+
+/* Make the dashboard action area clearly visible */
+.vicky-dashboard .vicky-action-panels {
+  position: relative;
+  z-index: 5;
+}
+
+.vicky-dashboard .vicky-action-panels .action-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid rgba(0,0,0,.08);
+}
+
