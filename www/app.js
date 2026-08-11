@@ -1,18 +1,27 @@
 
 function showLoginScreen() {
-  const auth = $("authSection");
+  const auth = $("auth");
   const dashboard = $("dashboard");
+  const logoutBtn = $("logoutBtn");
 
   if (auth) auth.classList.remove("hidden");
-  if (dashboard) dashboard.classList.add("hidden");
+  if (dashboard) {
+    dashboard.classList.add("hidden");
+    dashboard.setAttribute("aria-hidden", "true");
+  }
+  if (logoutBtn) logoutBtn.classList.add("hidden");
 }
 
 function showDashboardScreen() {
-  const auth = $("authSection");
+  const auth = $("auth");
   const dashboard = $("dashboard");
 
   if (auth) auth.classList.add("hidden");
-  if (dashboard) dashboard.classList.remove("hidden");
+
+  if (dashboard) {
+    dashboard.classList.remove("hidden");
+    dashboard.setAttribute("aria-hidden", "false");
+  }
 }
 
 const API = "https://vicky-wallet-api-iqm3.onrender.com";
@@ -219,7 +228,7 @@ async function register(event) {
 }
 
 function showDashboard() {
-  $("authSection").classList.add("hidden");
+  $("auth").classList.add("hidden");
   showDashboardScreen();
   $("logoutBtn").classList.remove("hidden");
 
@@ -230,7 +239,7 @@ function showDashboard() {
 }
 
 function showAuth() {
-  $("authSection").classList.remove("hidden");
+  $("auth").classList.remove("hidden");
   $("dashboard").classList.add("hidden");
   $("logoutBtn").classList.add("hidden");
 }
