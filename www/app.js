@@ -1238,8 +1238,8 @@ function setActiveBottomNav(index) {
 // Dashboard is never displayed until a valid session is restored.
 document.addEventListener("DOMContentLoaded", () => {
   const token =
-    localStorage.getItem("token") ||
-    sessionStorage.getItem("token");
+    localStorage.getItem("vicky_wallet_token") ||
+    sessionStorage.getItem("vicky_wallet_token");
 
   if (!token) {
     showLoginScreen();
@@ -1249,8 +1249,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("DOMContentLoaded", async () => {
   const token =
-    localStorage.getItem("token") ||
-    sessionStorage.getItem("token");
+    localStorage.getItem("vicky_wallet_token") ||
+    sessionStorage.getItem("vicky_wallet_token");
 
   if (!token) {
     showLoginScreen();
