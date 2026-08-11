@@ -224,17 +224,17 @@
 
       <div class="vicky-quick-actions">
 
-        <button onclick="deposit()">
+        <button type="button" onclick="toggleMoneyPanel('depositPanel')">
           <span>＋</span>
           <strong>Deposit</strong>
         </button>
 
-        <button onclick="withdraw()">
+        <button type="button" onclick="toggleMoneyPanel('withdrawPanel')">
           <span>↗</span>
           <strong>Withdraw</strong>
         </button>
 
-        <button onclick="transfer()">
+        <button type="button" onclick="toggleMoneyPanel('transferPanel')">
           <span>⇄</span>
           <strong>Transfer</strong>
         </button>
@@ -248,7 +248,7 @@
 
       <div class="vicky-action-panels">
 
-        <div class="card action-card">
+        <div id="depositPanel" class="card action-card collapsible-panel">
           <h3>Deposit Money</h3>
 
           <input
@@ -268,7 +268,7 @@
           <button class="primary" onclick="deposit()">Continue Deposit</button>
         </div>
 
-        <div class="card action-card">
+        <div id="withdrawPanel" class="card action-card collapsible-panel">
           <h3>Withdraw Money</h3>
 
           <input
@@ -288,7 +288,7 @@
           <button class="primary" onclick="withdraw()">Continue Withdrawal</button>
         </div>
 
-        <div class="card action-card transfer-card">
+        <div id="transferPanel" class="card action-card transfer-card collapsible-panel">
           <h3>Send Money</h3>
 
           <div class="account-id-box">

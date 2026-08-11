@@ -2197,3 +2197,32 @@ body.logged-in #dashboard {
   border: 1px solid rgba(0,0,0,.08);
 }
 
+
+/* ===== COLLAPSIBLE MONEY PANELS ===== */
+
+.vicky-action-panels {
+  display: block !important;
+}
+
+.collapsible-panel {
+  display: none !important;
+  margin: 16px 0;
+}
+
+.collapsible-panel.money-panel-open {
+  display: block !important;
+  animation: moneyPanelOpen .2s ease-out;
+}
+
+@keyframes moneyPanelOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

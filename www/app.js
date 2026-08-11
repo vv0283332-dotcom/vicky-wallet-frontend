@@ -283,6 +283,52 @@ async function loadBalance() {
   }
 }
 
+function openMoneyPanel(panel) {
+  const panels = [
+    $("depositPanel"),
+    $("withdrawPanel"),
+    $("transferPanel")
+  ];
+
+  panels.forEach((item) => {
+    if (item) item.classList.remove("money-panel-open");
+  });
+
+  const target = $(panel);
+
+  if (target) {
+    target.classList.add("money-panel-open");
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+}
+
+function toggleMoneyPanel(panel) {
+  const target = $(panel);
+
+  if (!target) return;
+
+  const isOpen = target.classList.contains("money-panel-open");
+
+  [
+    $("depositPanel"),
+    $("withdrawPanel"),
+    $("transferPanel")
+  ].forEach((item) => {
+    if (item) item.classList.remove("money-panel-open");
+  });
+
+  if (!isOpen) {
+    target.classList.add("money-panel-open");
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+}
+
 async function deposit() {
   const value = $("depositAmount").value;
   const description = $("depositDescription").value.trim();
