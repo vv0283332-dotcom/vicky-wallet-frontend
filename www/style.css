@@ -2661,3 +2661,195 @@ body.logged-in #dashboard {
     font-size: 21px;
   }
 }
+
+/* ==================== VICKY PAY EARNINGS ==================== */
+
+.vicky-earnings-card {
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 20px;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid rgba(0,0,0,.07);
+  box-shadow: 0 10px 30px rgba(0,0,0,.06);
+}
+
+.vicky-earnings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.vicky-earnings-header h3 {
+  margin: 4px 0 0;
+}
+
+.vicky-section-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  opacity: .55;
+}
+
+.vicky-earnings-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(34,197,94,.12);
+  font-size: 22px;
+}
+
+.vicky-earnings-balance {
+  padding: 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #111827, #1f2937);
+  color: white;
+  margin-bottom: 14px;
+}
+
+.vicky-earnings-balance span {
+  display: block;
+  font-size: 13px;
+  opacity: .75;
+  margin-bottom: 7px;
+}
+
+.vicky-earnings-balance strong {
+  display: block;
+  font-size: 30px;
+}
+
+.vicky-earnings-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.vicky-earnings-stats > div {
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.04);
+}
+
+.vicky-earnings-stats span,
+.earning-item small {
+  display: block;
+  font-size: 12px;
+  opacity: .65;
+}
+
+.vicky-earnings-stats strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 18px;
+}
+
+.vicky-referral-box {
+  padding: 16px;
+  border-radius: 15px;
+  background: rgba(59,130,246,.08);
+  margin-bottom: 18px;
+}
+
+.vicky-referral-box p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  opacity: .72;
+}
+
+.vicky-earnings-history-title {
+  margin-bottom: 10px;
+}
+
+.earning-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(0,0,0,.07);
+}
+
+.earning-item:last-child {
+  border-bottom: 0;
+}
+
+.earning-item-main {
+  min-width: 0;
+}
+
+.earning-item-main strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.earning-item-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.earning-positive {
+  color: #16a34a;
+}
+
+.earning-negative {
+  color: #dc2626;
+}
+
+@media (max-width: 520px) {
+  .vicky-earnings-card {
+    padding: 16px;
+  }
+
+  .vicky-earnings-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .earning-item {
+    align-items: flex-start;
+  }
+}
+
+.vicky-referral-code-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.vicky-referral-code-row span {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 12px;
+  border-radius: 10px;
+  background: rgba(0,0,0,.06);
+  font-weight: 800;
+  letter-spacing: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vicky-referral-code-row button,
+.vicky-share-referral {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.vicky-share-referral {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.referral-message {
+  margin: 8px 0 0;
+  font-size: 12px;
+  opacity: .7;
+}

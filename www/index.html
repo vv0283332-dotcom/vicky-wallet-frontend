@@ -55,6 +55,15 @@
         <label>Password</label>
         <input id="registerPassword" type="password" minlength="8" required placeholder="At least 8 characters">
 
+        <label>Referral code <span class="optional">(optional)</span></label>
+        <input
+          id="referralCodeInput"
+          type="text"
+          maxlength="30"
+          placeholder="Enter friend's referral code"
+          autocomplete="off"
+        >
+
         <label>Currency</label>
         <select id="currency">
           <option value="USD">USD</option>
@@ -221,6 +230,61 @@
       </div>
 
       <div id="dashboardMessage"></div>
+        <section id="earningsCard" class="vicky-earnings-card">
+          <div class="vicky-earnings-header">
+            <div>
+              <span class="vicky-section-label">EARNINGS</span>
+              <h3>Your Earnings</h3>
+            </div>
+            <span class="vicky-earnings-icon">💰</span>
+          </div>
+
+          <div class="vicky-earnings-balance">
+            <span>Available earnings</span>
+            <strong id="earningsAvailable">0.00</strong>
+          </div>
+
+          <div class="vicky-earnings-stats">
+            <div>
+              <span>Lifetime earned</span>
+              <strong id="lifetimeEarned">0.00</strong>
+            </div>
+            <div>
+              <span>Withdrawn</span>
+              <strong id="lifetimeWithdrawn">0.00</strong>
+            </div>
+          </div>
+
+          <div class="vicky-referral-box">
+            <div>
+              <strong>Referral rewards</strong>
+              <p>Invite people and earn rewards when they complete qualifying deposits.</p>
+
+              <div class="vicky-referral-code-row">
+                <span id="referralCode">Loading...</span>
+                <button type="button" id="copyReferralButton">
+                  Copy
+                </button>
+              </div>
+
+              <button type="button" id="shareReferralButton" class="vicky-share-referral">
+                Share referral
+              </button>
+
+              <p id="referralMessage" class="referral-message"></p>
+            </div>
+          </div>
+
+          <div class="vicky-earning-history">
+            <div class="vicky-earnings-history-title">
+              <strong>Earning history</strong>
+            </div>
+            <div id="earningsHistory">
+              <p class="empty">No earnings yet.</p>
+            </div>
+          </div>
+        </section>
+
 
       <div class="vicky-quick-actions">
 

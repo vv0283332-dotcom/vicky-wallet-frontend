@@ -179,6 +179,9 @@ async function register(event) {
   const email = $("registerEmail").value.trim();
   const password = $("registerPassword").value;
   const preferred_currency = $("currency").value;
+  const referral_code = ($("referralCodeInput")?.value || "")
+    .trim()
+    .toUpperCase();
 
   const button = $("registerButton");
 
@@ -192,7 +195,8 @@ async function register(event) {
         full_name,
         email,
         password,
-        preferred_currency
+        preferred_currency,
+        referral_code
       })
     });
 
@@ -1373,6 +1377,8 @@ function closeMoneyScreen() {
   if (dashboard && token && currentUser) {
     dashboard.classList.remove("hidden");
     dashboard.classList.remove("active");
+    loadEarnings();
+    setupReferralUI();
     dashboard.setAttribute("aria-hidden", "false");
   }
 
@@ -1620,3 +1626,125 @@ async function loadScreenTransactions() {
   }
 }
 
+
+/* ==================== USER EARNINGS ==================== */
+
+async function loadEarnings() {
+  const available = document.getElementById("earningsAvailable");
+  const lifetimeEarned = document.getElementById("lifetimeEarned");
+  const lifetimeWithdrawn = document.getElementById("lifetimeWithdrawn");
+  const historyBox = document.getElementById("earningsHistory");
+
+  if (!available || !lifetimeEarned || !lifetimeWithdrawn || !historyBox) {
+    return;
+  }
+
+  try {
+    const data = await apiRequest("/earnings");
+
+    const earnings = data.earnings || {};
+    const history = Array.isArray(data.history) ? data.history : [];
+
+    available.textContent = Number(earnings.available || 0).toFixed(2);
+    lifetimeEarned.textContent =
+      Number(earnings.lifetime_earned || 0).toFixed(2);
+    lifetimeWithdrawn.textContent =
+      Number(earnings.lifetime_withdrawn || 0).toFixed(2);
+
+    if (!history.length) {
+      historyBox.innerHTML =
+        '<p class="empty">No earnings yet.</p>';
+      return;
+    }
+
+    historyBox.innerHTML = history.map(item => {
+      const amount = Number(item.amount || 0);
+      const positive = amount >= 0;
+      const sign = positive ? "+" : "";
+
+      const date = item.created_at
+        ? new Date(item.created_at).toLocaleString()
+        : "";
+
+      return `
+        <div class="earning-item">
+          <div class="earning-item-main">
+            <strong>${escapeHtml(item.description || "Earning")}</strong>
+            <small>${escapeHtml(item.type || "earning")}</small>
+          </div>
+
+          <div class="earning-item-right">
+            <strong class="${positive ? "earning-positive" : "earning-negative"}">
+              ${sign}${amount.toFixed(2)} ${escapeHtml(item.currency || "")}
+            </strong>
+            <small>${escapeHtml(date)}</small>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+  } catch (error) {
+    console.error("Earnings error:", error);
+
+    historyBox.innerHTML =
+      '<p class="empty">Unable to load earnings.</p>';
+  }
+}
+
+/* ==================== REFERRAL UI ==================== */
+
+function setupReferralUI() {
+  const copyButton = document.getElementById("copyReferralButton");
+  const shareButton = document.getElementById("shareReferralButton");
+  const codeElement = document.getElementById("referralCode");
+  const message = document.getElementById("referralMessage");
+
+  if (!copyButton || !shareButton || !codeElement) return;
+
+  const user = currentUser || {};
+  const code = user.referral_code || "";
+
+  codeElement.textContent = code || "Unavailable";
+
+  copyButton.onclick = async () => {
+    if (!code) return;
+
+    try {
+      await navigator.clipboard.writeText(code);
+
+      if (message) {
+        message.textContent = "Referral code copied!";
+      }
+    } catch {
+      if (message) {
+        message.textContent = "Unable to copy referral code.";
+      }
+    }
+  };
+
+  shareButton.onclick = async () => {
+    if (!code) return;
+
+    const shareText =
+      `Join Vicky Wallet using my referral code: ${code}`;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "Vicky Wallet",
+          text: shareText
+        });
+      } else {
+        await navigator.clipboard.writeText(shareText);
+
+        if (message) {
+          message.textContent = "Referral message copied!";
+        }
+      }
+    } catch (error) {
+      if (error?.name !== "AbortError" && message) {
+        message.textContent = "Unable to share referral.";
+      }
+    }
+  };
+}
