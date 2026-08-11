@@ -1767,27 +1767,69 @@ function setupReferralUI() {
   };
 
   shareButton.onclick = async () => {
-    if (!code) return;
+    if (!code) {
+      if (message) {
+        message.textContent = "Referral code is unavailable.";
+      }
+      return;
+    }
 
     const shareText =
-      `Join Vicky Wallet using my referral code: ${code}`;
+      `Join me on Vicky Pay and use my referral code: ${code}`;
 
     try {
+      // Native Android/browser share sheet
       if (navigator.share) {
         await navigator.share({
-          title: "Vicky Wallet",
+          title: "Join Vicky Pay",
           text: shareText
         });
-      } else {
+
+        if (message) {
+          message.textContent = "Share opened successfully.";
+        }
+
+        return;
+      }
+
+      // Fallback: copy the complete referral message
+      if (navigator.clipboard) {
         await navigator.clipboard.writeText(shareText);
 
         if (message) {
-          message.textContent = "Referral message copied!";
+          message.textContent =
+            "Referral message copied. Paste it into WhatsApp, Telegram, Messenger, Facebook or another app.";
         }
+
+        return;
       }
+
+      // Last-resort copy method
+      const textarea = document.createElement("textarea");
+      textarea.value = shareText;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+
+      if (message) {
+        message.textContent =
+          "Referral message copied. Paste it into your social app.";
+      }
+
     } catch (error) {
-      if (error?.name !== "AbortError" && message) {
-        message.textContent = "Unable to share referral.";
+      if (error?.name === "AbortError") {
+        return;
+      }
+
+      console.error("Referral share error:", error);
+
+      if (message) {
+        message.textContent =
+          "Unable to open sharing. Please try again.";
       }
     }
   };
