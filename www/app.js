@@ -172,23 +172,31 @@ async function register(event) {
 async function restoreSession() {
   if (!token) {
     showAuth();
-    showLogin();
     return;
   }
 
   try {
     const data = await apiRequest("/auth/me");
-    currentUser = data.user || data;
+
+    if (!data || !data.user) {
+      throw new Error("Invalid session.");
+    }
+
+    currentUser = data.user;
     showDashboard();
-    await refreshDashboard();
-  } catch {
-    saveToken("");
-    currentUser = null;
+
+    await Promise.allSettled([
+      loadBalance(),
+      loadTransactions(),
+      loadAccounts()
+    ]);
+  } catch (error) {
+    console.error("Session restore failed:", error);
+    clearToken();
     showAuth();
     showLogin();
   }
 }
-
 async function logout() {
   try {
     if (token) {
