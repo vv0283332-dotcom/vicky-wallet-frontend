@@ -2979,3 +2979,73 @@ button,
 main {
   -webkit-overflow-scrolling: touch;
 }
+
+/* =========================================================
+   VICKY PAY — FINAL TRANSFER / ACCOUNT VISIBILITY FIX
+   ========================================================= */
+
+#dashboard .action-card input,
+#dashboard .action-card select,
+#dashboard .action-card .account-id-box,
+#dashboard .action-card .recipient-preview {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#dashboard .transfer-card {
+  display: block !important;
+  grid-column: 1 / -1 !important;
+  text-align: left !important;
+}
+
+#dashboard .transfer-card input,
+#dashboard .transfer-card select,
+#dashboard .transfer-card .account-id-box,
+#dashboard .transfer-card .recipient-preview {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+#dashboard .transfer-card input,
+#dashboard .transfer-card select {
+  min-height: 42px;
+  margin: 7px 0;
+  padding: 10px 12px;
+}
+
+#dashboard .transfer-card .account-id-box {
+  margin: 7px 0 9px;
+  padding: 10px 12px;
+}
+
+#dashboard .transfer-card .recipient-preview {
+  margin: 7px 0;
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: #f0faf6;
+  border: 1px solid #d8f0e5;
+}
+
+#dashboard .transfer-card button {
+  display: block !important;
+  width: 100% !important;
+  min-height: 42px;
+}
+
+@media (min-width: 700px) {
+  #dashboard .transfer-card {
+    grid-column: 1 / -1 !important;
+  }
+
+  #dashboard .transfer-card input,
+  #dashboard .transfer-card select,
+  #dashboard .transfer-card .account-id-box,
+  #dashboard .transfer-card .recipient-preview {
+    display: block !important;
+  }
+}
+
