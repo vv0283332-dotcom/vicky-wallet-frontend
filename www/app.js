@@ -377,20 +377,30 @@ async function deposit() {
   const description =
     $("depositDescription")?.value.trim() || "";
 
-  const sourceAccountId =
-    getVickyPayDepositAccountId(false);
+  const sourceAccount =
+    $("depositLinkedAccount")?.value || "";
 
-  if (!sourceAccountId) {
+  if (!value || Number(value) <= 0) {
     setDashboardMessage(
-      "Select a connected funding account.",
+      "Enter a valid deposit amount.",
       "error"
     );
     return;
   }
 
-  if (!value || Number(value) <= 0) {
+  if (!sourceAccount) {
     setDashboardMessage(
-      "Enter a valid deposit amount.",
+      "Select a connected funding account first.",
+      "error"
+    );
+    return;
+  }
+
+  const sourceAccountId = Number(sourceAccount);
+
+  if (!Number.isInteger(sourceAccountId) || sourceAccountId <= 0) {
+    setDashboardMessage(
+      "The selected funding account is invalid.",
       "error"
     );
     return;
@@ -406,8 +416,8 @@ async function deposit() {
       method: "POST",
       body: JSON.stringify({
         amount: Number(value),
-        description,
-        source_account_id: sourceAccountId
+        source_account_id: sourceAccountId,
+        description
       })
     });
 
@@ -1257,9 +1267,8 @@ async function loadDepositLinkedAccounts() {
 
   try {
     const token =
-      localStorage.getItem("token") ||
-      localStorage.getItem("authToken") ||
-      localStorage.getItem("vicky_pay_token");
+      localStorage.getItem("vicky_wallet_token") ||
+      sessionStorage.getItem("vicky_wallet_token");
 
     if (!token) {
       select.innerHTML =
@@ -1522,9 +1531,7 @@ function getVickyPayDepositAccountId(screen = false) {
   return accountId;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadVickyPayLinkedAccounts();
-});
+// Connected accounts are loaded by the authenticated startup flow.
 
 /* =========================================================
    END CONNECTED FUNDING ACCOUNT SYSTEM
@@ -1686,22 +1693,25 @@ function closeMoneyScreen() {
 }
 
 async function screenDeposit() {
-  const amount =
-    Number($("screenDepositAmount")?.value);
+  const amount = Number(
+    $("screenDepositAmount")?.value
+  );
 
   const description =
     $("screenDepositDescription")?.value.trim() || "";
 
-  const sourceAccountId =
-    getVickyPayDepositAccountId(true);
-
-  if (!sourceAccountId) {
-    alert("Select a connected funding account.");
-    return;
-  }
+  const sourceAccount =
+    $("depositLinkedAccount")?.value || "";
 
   if (!Number.isFinite(amount) || amount <= 0) {
     alert("Enter a valid deposit amount.");
+    return;
+  }
+
+  const sourceAccountId = Number(sourceAccount);
+
+  if (!Number.isInteger(sourceAccountId) || sourceAccountId <= 0) {
+    alert("Select a connected funding account first.");
     return;
   }
 
@@ -1710,8 +1720,8 @@ async function screenDeposit() {
       method: "POST",
       body: JSON.stringify({
         amount,
-        description,
-        source_account_id: sourceAccountId
+        source_account_id: sourceAccountId,
+        description
       })
     });
 
@@ -1732,6 +1742,7 @@ async function screenDeposit() {
     );
   }
 }
+
 
 
 async function screenWithdraw() {
