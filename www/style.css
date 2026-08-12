@@ -3049,3 +3049,23 @@ main {
   }
 }
 
+
+
+/* Vicky Pay startup state — final override */
+#auth {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#auth.hidden {
+  display: none !important;
+}
+
+#dashboard.hidden {
+  display: none !important;
+}
+
+#dashboard:not(.hidden) {
+  display: block !important;
+}
