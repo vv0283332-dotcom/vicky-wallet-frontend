@@ -2,281 +2,193 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111827">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Vicky Pay">
-  <meta name="format-detection" content="telephone=no">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
   <title>Vicky Pay</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="app">
+<div id="app">
 
-  <header class="topbar">
-    <div>
+  <section id="auth" class="auth">
+    <div class="brand">
+      <div class="logo">V</div>
       <h1>Vicky Pay</h1>
       <p>Simple. Secure. Yours.</p>
     </div>
-    <button id="logoutBtn" class="logout hidden" onclick="logout()">Logout</button>
-  </header>
 
-  <main>
+    <div id="message" class="message"></div>
 
-    
-<section id="depositScreen" class="money-screen hidden">
-        <div class="deposit-connected-account">
-          <label>Connected Funding Account</label>
-          <select id="screenDepositLinkedAccount" class="money-input">
-            <option value="">Loading connected accounts...</option>
-          </select>
-          <small id="screenDepositLinkedAccountStatus"></small>
+    <div class="auth-card">
+      <div class="tabs">
+        <button id="loginTab" class="tab active" onclick="showLogin()">Login</button>
+        <button id="registerTab" class="tab" onclick="showRegister()">Create account</button>
+      </div>
+
+      <form id="loginForm">
+        <label>Email</label>
+        <input id="loginEmail" type="email" autocomplete="email" required>
+
+        <label>Password</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" required>
+
+        <button id="loginButton" class="primary" type="submit">Login</button>
+      </form>
+
+      <form id="registerForm" class="hidden">
+        <label>Full name</label>
+        <input id="registerName" type="text" autocomplete="name" required>
+
+        <label>Email</label>
+        <input id="registerEmail" type="email" autocomplete="email" required>
+
+        <label>Password</label>
+        <input id="registerPassword" type="password" minlength="8" autocomplete="new-password" required>
+
+        <label>Currency</label>
+        <select id="registerCurrency">
+          <option value="NGN">NGN</option>
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+          <option value="XOF">XOF</option>
+        </select>
+
+        <button id="registerButton" class="primary" type="submit">Create account</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="dashboard" class="dashboard hidden">
+
+    <header class="topbar">
+      <div>
+        <small>Welcome back</small>
+        <strong id="userName">Vicky Pay</strong>
+      </div>
+      <button class="icon-button" onclick="logout()">↪</button>
+    </header>
+
+    <main>
+
+      <section class="balance-card">
+        <div class="balance-label">Available balance</div>
+        <div class="balance-row">
+          <strong id="balance">0.00</strong>
+          <button onclick="toggleBalance()">◉</button>
         </div>
+        <span id="currency">NGN</span>
+      </section>
 
-  <div class="money-screen-header">
-    <button type="button" class="back-button" onclick="closeMoneyScreen()">←</button>
-    <div>
-      <small>Vicky Pay</small>
-      <h2>Deposit Money</h2>
-    </div>
-  </div>
+      <div id="dashboardMessage" class="message"></div>
 
-  <div class="money-screen-card">
-    <div class="money-screen-icon">＋</div>
+      <section class="actions">
+        <button onclick="openMoney('deposit')">
+          <span>＋</span>
+          <b>Add money</b>
+        </button>
 
-    <h3>Add money to your wallet</h3>
-    <p>Choose how you want to fund your Vicky Pay wallet.</p>
+        <button onclick="openMoney('transfer')">
+          <span>↗</span>
+          <b>Send money</b>
+        </button>
 
-    <label>Funding Source</label>
-    <select id="depositFundingSource" class="money-input">
-      <option value="">Choose funding source</option>
-      <option value="bank">Bank Account</option>
-      <option value="card">Credit / Debit Card</option>
-      <option value="wallet">Other Wallet</option>
-    </select>
+        <button onclick="openMoney('withdraw')">
+          <span>↓</span>
+          <b>Withdraw</b>
+        </button>
 
-    <div id="depositLinkedAccountFields">
-      <label>Connected Account</label>
-      <select id="depositLinkedAccount" class="money-input">
-        <option value="">Loading connected accounts...</option>
-      </select>
-      <small id="depositLinkedAccountStatus"></small>
-    </div>
+        <button onclick="loadTransactions(true)">
+          <span>≡</span>
+          <b>History</b>
+        </button>
+      </section>
 
-    <div id="depositBankFields" class="hidden">
-      <label>Bank Name</label>
-      <input id="depositBankName" type="text"
-        placeholder="Enter bank name">
+      <section class="quick">
+        <h3>Quick actions</h3>
+        <div class="quick-grid">
+          <button>Airtime</button>
+          <button>Data</button>
+          <button>Electricity</button>
+          <button>Bills</button>
+        </div>
+      </section>
 
-      <label>Bank Account Number</label>
-      <input id="depositBankAccount" type="text"
-        inputmode="numeric"
-        placeholder="Enter account number">
-    </div>
+      <section class="transactions">
+        <div class="section-head">
+          <h3>Recent transactions</h3>
+          <button onclick="loadTransactions(true)">See all</button>
+        </div>
+        <div id="transactionsList"></div>
+      </section>
 
-    <div id="depositCardFields" class="hidden">
-      <div class="recipient-preview">
-        <strong>Credit / Debit Card</strong>
-        <span>Secure card payment will be used to fund your wallet.</span>
+      <section class="profile-card">
+        <h3>Account</h3>
+        <p id="profileEmail"></p>
+        <button onclick="loadAccounts()">Connected accounts</button>
+        <button onclick="loadReferrals()">Referrals</button>
+      </section>
+
+    </main>
+  </section>
+
+  <div id="moneyModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="close" onclick="closeMoney()">×</button>
+
+      <h2 id="moneyTitle">Add money</h2>
+
+      <div id="depositPanel">
+        <label>Amount</label>
+        <input id="depositAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
+
+        <label>Payment method</label>
+        <select id="depositMethod">
+          <option value="card">Credit / Debit Card</option>
+          <option value="bank">Bank</option>
+          <option value="wallet">Mobile Wallet</option>
+        </select>
+
+        <label>Description</label>
+        <input id="depositDescription" placeholder="Optional">
+
+        <button class="primary" onclick="deposit()">Continue</button>
+      </div>
+
+      <div id="transferPanel" class="hidden">
+        <label>Recipient</label>
+        <input id="transferRecipient" placeholder="Email or account ID">
+
+        <label>Amount</label>
+        <input id="transferAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
+
+        <label>Description</label>
+        <input id="transferDescription" placeholder="Optional">
+
+        <button class="primary" onclick="transfer()">Send money</button>
+      </div>
+
+      <div id="withdrawPanel" class="hidden">
+        <label>Amount</label>
+        <input id="withdrawAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
+
+        <label>Withdrawal account</label>
+        <select id="withdrawAccount">
+          <option value="">Choose account</option>
+        </select>
+
+        <button class="primary" onclick="withdraw()">Withdraw</button>
       </div>
     </div>
-
-    <div id="depositWalletFields" class="hidden">
-      <label>Wallet Provider</label>
-      <input id="depositWalletProvider" type="text"
-        placeholder="e.g. MTN, Moov, Airtel">
-
-      <label>Wallet Number / Account</label>
-      <input id="depositWalletAccount" type="text"
-        placeholder="Enter wallet number">
-    </div>
-
-    <label>Amount</label>
-    <input id="depositAmount"
-      type="number"
-      min="0.01"
-      step="0.01"
-      placeholder="0.00"
-      inputmode="decimal">
-
-    <label>Description</label>
-    <input id="depositDescription"
-      type="text"
-      placeholder="Description (optional)">
-
-    <button class="primary money-submit"
-      type="button"
-      onclick="deposit()">
-      Continue Deposit
-    </button>
-
-    <div id="depositScreenMessage"></div>
-  </div>
-</section>
-
-
-<section id="withdrawScreen" class="money-screen hidden">
-  <div class="money-screen-header">
-    <button type="button" class="back-button" onclick="closeMoneyScreen()">←</button>
-    <div>
-      <small>Vicky Pay</small>
-      <h2>Withdraw Money</h2>
-    </div>
   </div>
 
-  <div class="money-screen-card">
-    <div class="money-screen-icon">↗</div>
-    <h3>Withdraw from your wallet</h3>
-    <p>Enter the amount you want to withdraw.</p>
-
-    <div class="available-balance">
-      Available balance:
-      <strong id="withdrawAvailableBalance">0.00 USD</strong>
-    </div>
-
-    <label>Amount</label>
-    <input
-      id="withdrawAmount"
-      type="number"
-      min="0.01"
-      step="0.01"
-      placeholder="0.00"
-      inputmode="decimal"
-    >
-
-    <label>Description</label>
-    <input
-      id="withdrawDescription"
-      type="text"
-      placeholder="Description (optional)"
-    >
-
-    <button class="primary money-submit" type="button" onclick="withdraw()">
-      Continue Withdrawal
-    </button>
-
-    <div id="withdrawScreenMessage"></div>
-  </div>
-</section>
-
-<section id="transferScreen" class="money-screen hidden">
-  <div class="money-screen-header">
-    <button type="button" class="back-button" onclick="closeMoneyScreen()">←</button>
-    <div>
-      <small>Vicky Pay</small>
-      <h2>Send Money</h2>
-    </div>
-  </div>
-
-  <div class="money-screen-card">
-    <div class="money-screen-icon">⇄</div>
-    <h3>Send money</h3>
-    <p>Send money securely to another Vicky Pay account.</p>
-
-    <div class="account-id-box">
-      <span>My Account ID</span>
-      <strong id="transferScreenAccountId">-</strong>
-      <button type="button" onclick="copyAccountId()">Copy ID</button>
-    </div>
-
-    <label>Recipient Account ID</label>
-    <input
-      id="recipientAccountId"
-      type="text"
-      placeholder="VW-12345678"
-      maxlength="11"
-      autocomplete="off"
-      oninput="clearRecipientPreview()"
-    >
-
-    <button
-      type="button"
-      class="secondary"
-      onclick="findRecipient()"
-    >
-      Find Recipient
-    </button>
-
-    <div id="recipientPreview" class="recipient-preview hidden"></div>
-
-    <label>Amount</label>
-    <input
-      id="transferAmount"
-      type="number"
-      min="0.01"
-      step="0.01"
-      placeholder="0.00"
-      inputmode="decimal"
-    >
-
-    <label>Description</label>
-    <input
-      id="transferDescription"
-      type="text"
-      placeholder="Description (optional)"
-    >
-
-    <button class="primary money-submit" type="button" onclick="transfer()">
-      Send Money
-    </button>
-
-    <div id="transferScreenMessage"></div>
-  </div>
-</section>
-
-<section id="historyScreen" class="money-screen hidden">
-  <div class="money-screen-header">
-    <button type="button" class="back-button" onclick="closeMoneyScreen()">←</button>
-    <div>
-      <small>Vicky Pay</small>
-      <h2>Transaction History</h2>
-    </div>
-  </div>
-
-  <div class="money-screen-card history-screen-card">
-    <div class="money-screen-icon">↻</div>
-    <h3>Wallet activity</h3>
-    <p>Your recent deposits, withdrawals and transfers.</p>
-
-    <div id="historyScreenTransactions">
-      <p class="empty">Loading transactions...</p>
-    </div>
-  </div>
-</section>
-
-
-
-      <nav class="mobile-bottom-nav" aria-label="Main navigation">
-        <button class="bottom-nav-item active" onclick="scrollToDashboard()">
-          <span>⌂</span>
-          <small>Home</small>
-        </button>
-        <button class="bottom-nav-item" onclick="scrollToTransactions()">
-          <span>▤</span>
-          <small>Transactions</small>
-        </button>
-        <button class="bottom-nav-item" onclick="openMoneyScreen('depositScreen')">
-          <span>＋</span>
-          <small>Deposit</small>
-        </button>
-        <button class="bottom-nav-item" onclick="openProfile()">
-          <span>●</span>
-          <small>Profile</small>
-        </button>
-      </nav>
-
-    </section>
-
-  </main>
-
-  <footer>
-    <p>© 2026 Vicky Pay</p>
-  </footer>
+  <nav class="bottom-nav">
+    <button class="active">⌂<span>Home</span></button>
+    <button onclick="openMoney('deposit')">＋<span>Add</span></button>
+    <button onclick="openMoney('transfer')">↗<span>Send</span></button>
+    <button onclick="loadTransactions(true)">≡<span>History</span></button>
+  </nav>
 
 </div>
 
