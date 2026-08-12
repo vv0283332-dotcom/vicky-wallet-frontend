@@ -373,49 +373,27 @@ function setupExternalFunding() {
 }
 
 async function deposit() {
-  const value = $("depositAmount")?.value;
-  const description =
-    $("depositDescription")?.value.trim() || "";
-
-  const sourceAccountId =
-    getVickyPayDepositAccountId(false);
-
-  if (!sourceAccountId) {
-    setDashboardMessage(
-      "Select a connected funding account.",
-      "error"
-    );
-    return;
-  }
+  const value = $("depositAmount").value;
+  const description = $("depositDescription").value.trim();
 
   if (!value || Number(value) <= 0) {
-    setDashboardMessage(
-      "Enter a valid deposit amount.",
-      "error"
-    );
+    setDashboardMessage("Enter a valid deposit amount.", "error");
     return;
   }
 
   try {
-    setDashboardMessage(
-      "Opening secure payment checkout...",
-      "success"
-    );
+    setDashboardMessage("Opening secure payment checkout...", "success");
 
     const data = await apiRequest("/payments/deposit", {
       method: "POST",
       body: JSON.stringify({
         amount: Number(value),
-        description,
-        source_account_id: sourceAccountId
+        description
       })
     });
 
     if (!data.checkout_url) {
-      throw new Error(
-        data.message ||
-        "Payment checkout could not be created."
-      );
+      throw new Error("Payment checkout could not be created.");
     }
 
     $("depositAmount").value = "";
@@ -425,8 +403,7 @@ async function deposit() {
 
   } catch (error) {
     setDashboardMessage(
-      error.message ||
-      "Unable to start payment.",
+      error.message || "Unable to start payment.",
       "error"
     );
   }
@@ -1242,295 +1219,6 @@ function setActiveBottomNav(index) {
 }
 
 
-
-/* =========================================================
-   VICKY PAY — CONNECTED ACCOUNT DEPOSIT FIX
-   ========================================================= */
-
-async function loadDepositLinkedAccounts() {
-  const select = document.getElementById("depositLinkedAccount");
-  const status = document.getElementById("depositLinkedAccountStatus");
-
-  if (!select) return;
-
-  select.innerHTML = '<option value="">Loading connected accounts...</option>';
-
-  try {
-    const token =
-      localStorage.getItem("token") ||
-      localStorage.getItem("authToken") ||
-      localStorage.getItem("vicky_pay_token");
-
-    if (!token) {
-      select.innerHTML =
-        '<option value="">Please sign in first</option>';
-
-      if (status) {
-        status.textContent =
-          "Sign in to use a connected funding account.";
-      }
-
-      return;
-    }
-
-    const response = await fetch(
-      `${API}/linked-accounts`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json"
-        }
-      }
-    );
-
-    const data = await response.json().catch(() => ({}));
-
-    if (!response.ok) {
-      throw new Error(
-        data.error ||
-        data.message ||
-        "Unable to load connected accounts"
-      );
-    }
-
-    const accounts =
-      Array.isArray(data)
-        ? data
-        : Array.isArray(data.accounts)
-          ? data.accounts
-          : Array.isArray(data.data)
-            ? data.data
-            : [];
-
-    const connected = accounts.filter(
-      account =>
-        String(account.status || "connected").toLowerCase() ===
-        "connected"
-    );
-
-    if (!connected.length) {
-      select.innerHTML =
-        '<option value="">No connected accounts</option>';
-
-      if (status) {
-        status.textContent =
-          "Connect a bank account before making a funded deposit.";
-      }
-
-      return;
-    }
-
-    select.innerHTML =
-      '<option value="">Choose connected account</option>';
-
-    for (const account of connected) {
-      const option = document.createElement("option");
-
-      option.value = String(account.id);
-
-      const name =
-        account.account_name ||
-        account.bank_name ||
-        account.provider ||
-        "Connected account";
-
-      const number =
-        account.masked_account_number ||
-        account.account_number ||
-        "";
-
-      const currency =
-        account.currency ||
-        "";
-
-      option.textContent =
-        [name, number, currency]
-          .filter(Boolean)
-          .join(" • ");
-
-      select.appendChild(option);
-    }
-
-    if (status) {
-      status.textContent =
-        `${connected.length} connected account${connected.length === 1 ? "" : "s"} available.`;
-    }
-
-  } catch (error) {
-    console.error(
-      "Failed to load deposit linked accounts:",
-      error
-    );
-
-    select.innerHTML =
-      '<option value="">Unable to load accounts</option>';
-
-    if (status) {
-      status.textContent =
-        error.message ||
-        "Unable to load connected accounts.";
-    }
-  }
-}
-
-function getSelectedDepositLinkedAccountId() {
-  const select =
-    document.getElementById("depositLinkedAccount");
-
-  if (!select) return null;
-
-  const value =
-    String(select.value || "").trim();
-
-  if (!value) return null;
-
-  const id = Number(value);
-
-  return Number.isInteger(id) && id > 0
-    ? id
-    : null;
-}
-
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-    loadDepositLinkedAccounts();
-  }
-);
-
-/* =========================================================
-   END CONNECTED ACCOUNT DEPOSIT FIX
-   ========================================================= */
-
-
-
-/* =========================================================
-   VICKY PAY — CONNECTED FUNDING ACCOUNT SYSTEM
-   ========================================================= */
-
-async function loadVickyPayLinkedAccounts() {
-  const selects = [
-    document.getElementById("depositLinkedAccount"),
-    document.getElementById("screenDepositLinkedAccount")
-  ].filter(Boolean);
-
-  if (!selects.length) return;
-
-  selects.forEach(select => {
-    select.innerHTML =
-      '<option value="">Loading connected accounts...</option>';
-  });
-
-  try {
-    const data = await apiRequest("/linked-accounts", {
-      method: "GET"
-    });
-
-    const accounts =
-      Array.isArray(data)
-        ? data
-        : Array.isArray(data.accounts)
-          ? data.accounts
-          : Array.isArray(data.data)
-            ? data.data
-            : [];
-
-    const connected = accounts.filter(account =>
-      String(account.status || "connected").toLowerCase() === "connected"
-    );
-
-    selects.forEach(select => {
-      select.innerHTML =
-        '<option value="">Choose connected account</option>';
-
-      connected.forEach(account => {
-        const option = document.createElement("option");
-
-        option.value = String(account.id);
-
-        const name =
-          account.account_name ||
-          account.bank_name ||
-          account.provider ||
-          "Connected account";
-
-        const number =
-          account.masked_account_number ||
-          account.account_number ||
-          "";
-
-        const currency =
-          account.currency ||
-          "";
-
-        option.textContent =
-          [name, number, currency]
-            .filter(Boolean)
-            .join(" • ");
-
-        select.appendChild(option);
-      });
-
-      if (!connected.length) {
-        select.innerHTML =
-          '<option value="">No connected accounts</option>';
-      }
-    });
-
-    const statuses = [
-      document.getElementById("depositLinkedAccountStatus"),
-      document.getElementById("screenDepositLinkedAccountStatus")
-    ].filter(Boolean);
-
-    statuses.forEach(status => {
-      status.textContent = connected.length
-        ? `${connected.length} connected account${connected.length === 1 ? "" : "s"} available.`
-        : "No connected funding account is available.";
-    });
-
-  } catch (error) {
-    console.error("Unable to load connected accounts:", error);
-
-    selects.forEach(select => {
-      select.innerHTML =
-        '<option value="">Unable to load accounts</option>';
-    });
-
-    const statuses = [
-      document.getElementById("depositLinkedAccountStatus"),
-      document.getElementById("screenDepositLinkedAccountStatus")
-    ].filter(Boolean);
-
-    statuses.forEach(status => {
-      status.textContent =
-        error.message || "Unable to load connected accounts.";
-    });
-  }
-}
-
-function getVickyPayDepositAccountId(screen = false) {
-  const id = screen
-    ? document.getElementById("screenDepositLinkedAccount")?.value
-    : document.getElementById("depositLinkedAccount")?.value;
-
-  const accountId = Number(id);
-
-  if (!Number.isInteger(accountId) || accountId <= 0) {
-    return null;
-  }
-
-  return accountId;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  loadVickyPayLinkedAccounts();
-});
-
-/* =========================================================
-   END CONNECTED FUNDING ACCOUNT SYSTEM
-   ========================================================= */
-
-
 // Vicky Pay authentication gate.
 // Dashboard is never displayed until a valid session is restored.
 document.addEventListener("DOMContentLoaded", () => {
@@ -1686,19 +1374,9 @@ function closeMoneyScreen() {
 }
 
 async function screenDeposit() {
-  const amount =
-    Number($("screenDepositAmount")?.value);
-
+  const amount = Number($("screenDepositAmount")?.value);
   const description =
     $("screenDepositDescription")?.value.trim() || "";
-
-  const sourceAccountId =
-    getVickyPayDepositAccountId(true);
-
-  if (!sourceAccountId) {
-    alert("Select a connected funding account.");
-    return;
-  }
 
   if (!Number.isFinite(amount) || amount <= 0) {
     alert("Enter a valid deposit amount.");
@@ -1710,26 +1388,23 @@ async function screenDeposit() {
       method: "POST",
       body: JSON.stringify({
         amount,
-        description,
-        source_account_id: sourceAccountId
+        description
       })
     });
 
+    /*
+     * Real Flutterwave deposit:
+     * send the user to the secure checkout page.
+     */
     if (data.checkout_url) {
       window.location.href = data.checkout_url;
       return;
     }
 
-    alert(
-      data.message ||
-      "Deposit initialized."
-    );
+    alert(data.message || "Deposit initialized.");
 
   } catch (error) {
-    alert(
-      error.message ||
-      "Unable to start deposit."
-    );
+    alert(error.message || "Unable to start deposit.");
   }
 }
 

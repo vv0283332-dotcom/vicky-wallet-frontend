@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111827">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Vicky Pay">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <title>Vicky Pay</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <header class="topbar">
+    <div>
+      <h1>Vicky Pay</h1>
+      <p>Simple. Secure. Yours.</p>
+    </div>
+    <button id="logoutBtn" class="logout hidden" onclick="logout()">Logout</button>
+  </header>
+
+  <main>
+
+    <section id="auth" class="auth-screen card">
+
+      <div class="tabs">
+        <button id="loginTab" class="tab active" onclick="showLogin()">Login</button>
+        <button id="registerTab" class="tab" onclick="showRegister()">Register</button>
+      </div>
+
+      <div id="message"></div>
+
+      <form id="loginForm" onsubmit="login(event)">
+        <h2>Welcome back</h2>
+
+        <label>Email</label>
+        <input id="loginEmail" type="email" required placeholder="you@example.com">
+
+        <label>Password</label>
+        <input id="loginPassword" type="password" required placeholder="Your password">
+
+        <button id="loginButton" class="primary" type="submit">
+          Login
+        </button>
+      </form>
+
+      <form id="registerForm" class="hidden" onsubmit="register(event)">
+        <h2>Create your account</h2>
+
+        <label>Full name</label>
+        <input id="fullName" type="text" required placeholder="Your full name">
+
+        <label>Email</label>
+        <input id="registerEmail" type="email" required placeholder="you@example.com">
+
+        <label>Password</label>
+        <input id="registerPassword" type="password" minlength="8" required placeholder="At least 8 characters">
+
+        <label>Referral code <span class="optional">(optional)</span></label>
+        <input
+          id="referralCodeInput"
+          type="text"
+          maxlength="30"
+          placeholder="Enter friend's referral code"
+          autocomplete="off"
+        >
+
+        <label>Currency</label>
+        <select id="currency">
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+          <option value="NGN">NGN</option>
+          <option value="XOF">XOF</option>
+          <option value="GHS">GHS</option>
+        </select>
+
+        <button id="registerButton" class="primary" type="submit">
+          Create Account
+        </button>
+      </form>
+
+    </section>
+
+    <section id="dashboard" class="hidden vicky-dashboard" aria-hidden="true">
+
+      <div class="vicky-topbar">
+        <div class="vicky-user">
+          <div class="vicky-avatar" id="dashboardAvatar">V</div>
+          <div>
+            <small>Welcome back</small>
+            <h2 id="userName">User</h2>
+          </div>
+        </div>
+
+        <div class="vicky-top-actions">
+          <button
+  id="notificationButton"
+  class="vicky-icon-btn notification-button"
+  onclick="toggleNotifications()"
+  aria-label="Notifications"
+>
+  🔔
+  <span id="notificationBadge" class="notification-badge hidden">0</span>
+</button>
+
+<button class="vicky-icon-btn" onclick="openProfile()" aria-label="Profile">
+            👤
+          </button>
+
+          <button
+            id="ownerButton"
+            class="vicky-icon-btn owner-button hidden"
+            onclick="openOwnerDashboard()"
+            aria-label="Owner"
+          >
+            👑
+          </button>
+        </div>
+      </div>
+
+      <div id="notificationPanel" class="notification-panel hidden">
+        <div class="notification-header">
+          <div>
+            <h2>Notifications</h2>
+            <small id="notificationSummary">No new notifications</small>
+          </div>
+          <button class="close-profile" onclick="toggleNotifications()">×</button>
+        </div>
+
+        <div id="notificationsList" class="notifications-list">
+          <p class="empty">No notifications yet.</p>
+        </div>
+
+        <div class="notification-footer">
+          <button
+            class="secondary"
+            onclick="markAllNotificationsRead()"
+          >
+            Mark all as read
+          </button>
+        </div>
+      </div>
+
+      <div id="profilePanel" class="profile-panel hidden">
+        <div class="profile-header">
+          <h2>My Profile</h2>
+          <button class="close-profile" onclick="closeProfile()">×</button>
+        </div>
+
+        <div class="profile-avatar" id="profileAvatar">V</div>
+
+        <div class="profile-info">
+          <div>
+            <span>Full Name</span>
+            <strong id="profileName">-</strong>
+          </div>
+          <div>
+            <span>Email</span>
+            <strong id="profileEmail">-</strong>
+          </div>
+          <div>
+            <span>Currency</span>
+            <strong id="profileCurrency">-</strong>
+          </div>
+          <div>
+            <span>Account ID</span>
+            <strong id="profileId">-</strong>
+          </div>
+          <div>
+            <span>Member Since</span>
+            <strong id="profileCreated">-</strong>
+          </div>
+        </div>
+
+        <button class="primary" onclick="editProfile()">✏️ Edit Profile</button>
+        <button class="secondary" onclick="closeProfile()">Close Profile</button>
+
+        <div id="editProfileForm" class="edit-profile-form hidden">
+          <h3>Edit Profile</h3>
+
+          <input id="editFullName" type="text" placeholder="Full name">
+          <input id="editEmail" type="email" placeholder="Email">
+
+          <select id="editCurrency">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="NGN">NGN</option>
+            <option value="GHS">GHS</option>
+            <option value="XOF">XOF</option>
+          </select>
+
+          <hr>
+
+          <h4>Change Password</h4>
+
+          <input
+            id="currentPassword"
+            type="password"
+            placeholder="Current password"
+          >
+
+          <input
+            id="newPassword"
+            type="password"
+            minlength="8"
+            placeholder="New password (optional)"
+          >
+
+          <button id="saveProfileButton" class="primary" onclick="saveProfile()">
+            Save Changes
+          </button>
+
+          <div id="profileEditMessage"></div>
+        </div>
+      </div>
+
+      <div class="vicky-balance-card">
+        <div class="vicky-balance-top">
+          <span>Total Balance</span>
+          <button onclick="loadBalance()">↻</button>
+        </div>
+
+        <div id="balance" class="vicky-balance">0.00</div>
+
+        <div class="vicky-balance-bottom">
+          <span id="currencyLabel">USD</span>
+          <span>Vicky Pay</span>
+        </div>
+      </div>
+
+      <div id="dashboardMessage"></div>
+        <section id="earningsCard" class="vicky-earnings-card">
+          <div class="vicky-earnings-header">
+            <div>
+              <span class="vicky-section-label">EARNINGS</span>
+              <h3>Your Earnings</h3>
+            </div>
+            <span class="vicky-earnings-icon">💰</span>
+          </div>
+
+          <div class="vicky-earnings-balance">
+            <span>Available earnings</span>
+            <strong id="earningsAvailable">0.00</strong>
+          </div>
+
+          <div class="vicky-earnings-stats">
+            <div>
+              <span>Lifetime earned</span>
+              <strong id="lifetimeEarned">0.00</strong>
+            </div>
+            <div>
+              <span>Withdrawn</span>
+              <strong id="lifetimeWithdrawn">0.00</strong>
+            </div>
+          </div>
+
+          <div class="vicky-referral-box">
+            <div>
+              <strong>Referral rewards</strong>
+              <p>Invite people and earn rewards when they complete qualifying deposits.</p>
+
+              <div class="vicky-referral-code-row">
+                <span id="referralCode">Loading...</span>
+                <button type="button" id="copyReferralButton">
+                  Copy
+                </button>
+              </div>
+
+              <button type="button" id="shareReferralButton" class="vicky-share-referral">
+                Share referral
+              </button>
+
+              <p id="referralMessage" class="referral-message"></p>
+            </div>
+          </div>
+
+          <div class="vicky-earning-history">
+            <div class="vicky-earnings-history-title">
+              <strong>Earning history</strong>
+            </div>
+            <div id="earningsHistory">
+              <p class="empty">No earnings yet.</p>
+            </div>
+          </div>
+        </section>
+
+
+      <div class="vicky-quick-actions">
+
+        <button type="button" onclick="openMoneyScreen('depositScreen')">
+          <span>＋</span>
+          <strong>Deposit</strong>
+        </button>
+
+        <button type="button" onclick="openMoneyScreen('withdrawScreen')">
+          <span>↗</span>
+          <strong>Withdraw</strong>
+        </button>
+
+        <button type="button" onclick="openMoneyScreen('transferScreen')">
+          <span>⇄</span>
+          <strong>Transfer</strong>
+        </button>
+
+        <button type="button" onclick="openMoneyScreen('historyScreen')">
+          <span>↻</span>
+          <strong>History</strong>
+        </button>
+
+      </div>
+
+      
+
+      <div class="vicky-transactions-card">
+
+        <div class="vicky-transactions-header">
+          <div>
+            <small>Wallet activity</small>
+            <h2>Recent Transactions</h2>
+          </div>
+
+          <button type="button" onclick="openMoneyScreen('historyScreen')">See all</button>
+        </div>
+
+        <div id="transactions">
+          <p class="empty">No transactions yet.</p>
+        </div>
+
+      </div>
+
+      
+<!-- =========================================================
+     VICKY PAY MONEY SCREENS
+     ========================================================= -->
+
+
+
+
+
+
+
+
+
+<section id="ownerDashboard" class="owner-dashboard hidden">
+
+        <div class="owner-header">
+          <div>
+            <span>Vicky Pay</span>
+            <h2>👑 Owner Dashboard</h2>
+          </div>
+
+          <button onclick="closeOwnerDashboard()">Close</button>
+        </div>
+
+        <div id="ownerMessage"></div>
+
+        <div class="owner-stats">
+          <div class="owner-stat">
+            <span>Total Users</span>
+            <strong id="adminUsers">0</strong>
+          </div>
+
+          <div class="owner-stat">
+            <span>Total Balance</span>
+            <strong id="adminBalance">0.00</strong>
+          </div>
+
+          <div class="owner-stat">
+            <span>Transactions</span>
+            <strong id="adminTransactions">0</strong>
+          </div>
+
+          <div class="owner-stat">
+            <span>Deposits</span>
+            <strong id="adminDeposits">0.00</strong>
+          </div>
+
+          <div class="owner-stat">
+            <span>Withdrawals</span>
+            <strong id="adminWithdrawals">0.00</strong>
+          </div>
+
+          <div class="owner-stat">
+            <span>Transfers</span>
+            <strong id="adminTransfers">0.00</strong>
+          </div>
+        </div>
+
+        <div class="card owner-section">
+          <div class="section-title">
+            <h2>Users</h2>
+            <button onclick="loadAdminUsers()">Refresh</button>
+          </div>
+
+          <div id="adminUsersList">
+            <p class="empty">Loading users...</p>
+          </div>
+        </div>
+
+        <div class="card owner-section">
+          <div class="section-title">
+            <h2>Recent Transactions</h2>
+            <button onclick="loadAdminTransactions()">Refresh</button>
+          </div>
+
+          <div id="adminTransactionsList">
+            <p class="empty">Loading transactions...</p>
+          </div>
+        </div>
+
+      </section>
+
+    </section>
+
+<section id="depositScreen" class="money-screen hidden">
+  <div class="money-screen-header">
+    <button type="button" class="back-button" onclick="closeMoneyScreen()">←</button>
+    <div>
+      <small>Vicky Pay</small>
+      <h2>Deposit Money</h2>
+    </div>
+  </div>
+
+  <div class="money-screen-card">
+    <div class="money-screen-icon">＋</div>
+
+    <h3>Add money to your wallet</h3>
+    <p>Choose where the money is coming from and enter the amount.</p>
+
+    <label>Fund From</label>
+    <select id="depositFundingSource" class="money-input">
+      <option value="">Select funding source</option>
+      <option value="bank">🏦 Bank Account</option>
+      <option value="card">💳 Credit / Debit Card</option>
+      <option value="wallet">👛 Other Wallet</option>
+    </select>
+
+    <div id="depositBankFields" class="hidden">
+      <label>Bank Account</label>
+      <input
+        id="depositBankAccount"
+        type="text"
+        inputmode="numeric"
+        autocomplete="off"
+        placeholder="Enter bank account number"
+      >
+
+      <label>Bank Name</label>
+      <input
+        id="depositBankName"
+        type="text"
+        autocomplete="off"
+        placeholder="Enter bank name"
+      >
+    </div>
+
+    <div id="depositCardFields" class="hidden">
+      <div class="recipient-preview">
+        <strong>Secure Card Payment</strong>
+        <span>You will be redirected to secure payment processing.</span>
+      </div>
+    </div>
+
+    <div id="depositWalletFields" class="hidden">
+      <label>Wallet / Account</label>
+      <input
+        id="depositWalletAccount"
+        type="text"
+        autocomplete="off"
+        placeholder="Enter wallet account or phone number"
+      >
+
+      <label>Wallet Provider</label>
+      <input
+        id="depositWalletProvider"
+        type="text"
+        autocomplete="off"
+        placeholder="e.g. MTN, Moov, Airtel, etc."
+      >
+    </div>
+
+    <label>Amount</label>
+    <input
+      id="depositAmount"
+      type="number"
+      min="0.01"
+      step="0.01"
+      placeholder="0.00"
+      inputmode="decimal"
+    >
+
+    <label>Description</label>
+    <input
+      id="depositDescription"
+      type="text"
+      placeholder="Description (optional)"
+    >
+
+    <button
+      class="primary money-submit"
+      type="button"
+      onclick="deposit()"
+    >
+      Continue Deposit
+    </button>
+
+    <div id="depositScreenMessage"></div>
+  </div>
+</section>
+
+<section id="withdrawScreen" class="money-screen hidden">
+  <div class="money-screen-header">
+    <button type="button" class="back-button" onclick="closeMoneyScreen()">←</button>
+    <div>
+      <small>Vicky Pay</small>
+      <h2>Withdraw Money</h2>
+    </div>
+  </div>
+
+  <div class="money-screen-card">
+    <div class="money-screen-icon">↗</div>
+    <h3>Withdraw from your wallet</h3>
+    <p>Enter the amount you want to withdraw.</p>
+
+    <div class="available-balance">
+      Available balance:
+      <strong id="withdrawAvailableBalance">0.00 USD</strong>
+    </div>
+
+    <label>Amount</label>
+    <input
+      id="withdrawAmount"
+      type="number"
+      min="0.01"
+      step="0.01"
+      placeholder="0.00"
+      inputmode="decimal"
+    >
+
+    <label>Description</label>
+    <input
+      id="withdrawDescription"
+      type="text"
+      placeholder="Description (optional)"
+    >
+
+    <button class="primary money-submit" type="button" onclick="withdraw()">
+      Continue Withdrawal
+    </button>
+
+    <div id="withdrawScreenMessage"></div>
+  </div>
+</section>
+
+<section id="transferScreen" class="money-screen hidden">
+  <div class="money-screen-header">
+    <button type="button" class="back-button" onclick="closeMoneyScreen()">←</button>
+    <div>
+      <small>Vicky Pay</small>
+      <h2>Send Money</h2>
+    </div>
+  </div>
+
+  <div class="money-screen-card">
+    <div class="money-screen-icon">⇄</div>
+    <h3>Send money</h3>
+    <p>Send money securely to another Vicky Pay account.</p>
+
+    <div class="account-id-box">
+      <span>My Account ID</span>
+      <strong id="transferScreenAccountId">-</strong>
+      <button type="button" onclick="copyAccountId()">Copy ID</button>
+    </div>
+
+    <label>Recipient Account ID</label>
+    <input
+      id="recipientAccountId"
+      type="text"
+      placeholder="VW-12345678"
+      maxlength="11"
+      autocomplete="off"
+      oninput="clearRecipientPreview()"
+    >
+
+    <button
+      type="button"
+      class="secondary"
+      onclick="findRecipient()"
+    >
+      Find Recipient
+    </button>
+
+    <div id="recipientPreview" class="recipient-preview hidden"></div>
+
+    <label>Amount</label>
+    <input
+      id="transferAmount"
+      type="number"
+      min="0.01"
+      step="0.01"
+      placeholder="0.00"
+      inputmode="decimal"
+    >
+
+    <label>Description</label>
+    <input
+      id="transferDescription"
+      type="text"
+      placeholder="Description (optional)"
+    >
+
+    <button class="primary money-submit" type="button" onclick="transfer()">
+      Send Money
+    </button>
+
+    <div id="transferScreenMessage"></div>
+  </div>
+</section>
+
+<section id="historyScreen" class="money-screen hidden">
+  <div class="money-screen-header">
+    <button type="button" class="back-button" onclick="closeMoneyScreen()">←</button>
+    <div>
+      <small>Vicky Pay</small>
+      <h2>Transaction History</h2>
+    </div>
+  </div>
+
+  <div class="money-screen-card history-screen-card">
+    <div class="money-screen-icon">↻</div>
+    <h3>Wallet activity</h3>
+    <p>Your recent deposits, withdrawals and transfers.</p>
+
+    <div id="historyScreenTransactions">
+      <p class="empty">Loading transactions...</p>
+    </div>
+  </div>
+</section>
+
+
+
+      <nav class="mobile-bottom-nav" aria-label="Main navigation">
+        <button class="bottom-nav-item active" onclick="scrollToDashboard()">
+          <span>⌂</span>
+          <small>Home</small>
+        </button>
+        <button class="bottom-nav-item" onclick="scrollToTransactions()">
+          <span>▤</span>
+          <small>Transactions</small>
+        </button>
+        <button class="bottom-nav-item" onclick="openMoneyScreen('depositScreen')">
+          <span>＋</span>
+          <small>Deposit</small>
+        </button>
+        <button class="bottom-nav-item" onclick="openProfile()">
+          <span>●</span>
+          <small>Profile</small>
+        </button>
+      </nav>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2026 Vicky Pay</p>
+  </footer>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

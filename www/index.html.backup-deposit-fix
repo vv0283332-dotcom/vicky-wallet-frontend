@@ -30,14 +30,6 @@
 
     
 <section id="depositScreen" class="money-screen hidden">
-        <div class="deposit-connected-account">
-          <label>Connected Funding Account</label>
-          <select id="screenDepositLinkedAccount" class="money-input">
-            <option value="">Loading connected accounts...</option>
-          </select>
-          <small id="screenDepositLinkedAccountStatus"></small>
-        </div>
-
   <div class="money-screen-header">
     <button type="button" class="back-button" onclick="closeMoneyScreen()">←</button>
     <div>
@@ -59,14 +51,6 @@
       <option value="card">Credit / Debit Card</option>
       <option value="wallet">Other Wallet</option>
     </select>
-
-    <div id="depositLinkedAccountFields">
-      <label>Connected Account</label>
-      <select id="depositLinkedAccount" class="money-input">
-        <option value="">Loading connected accounts...</option>
-      </select>
-      <small id="depositLinkedAccountStatus"></small>
-    </div>
 
     <div id="depositBankFields" class="hidden">
       <label>Bank Name</label>
