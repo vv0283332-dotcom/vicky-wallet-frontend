@@ -60,77 +60,162 @@
     </div>
   </section>
 
-  <section id="dashboard" class="dashboard hidden">
-    <header class="topbar">
+  
+<section id="dashboard" class="dashboard hidden">
+
+  <header class="vp-header">
+    <div class="vp-user">
+      <div class="vp-avatar">V</div>
       <div>
         <small>Welcome back</small>
-        <h2 id="userName">Vicky Pay</h2>
+        <strong id="userName">Vicky Pay</strong>
       </div>
-      <button id="logoutButton" class="icon-button" type="button">↪</button>
-    </header>
+    </div>
+    <button class="vp-icon-btn" onclick="logout()" aria-label="Logout">↪</button>
+  </header>
 
-    <main>
-      <div id="dashboardMessage" class="message"></div>
+  <main class="vp-main">
 
-      <section class="balance-card">
-        <div class="balance-label">Available balance</div>
-        <div class="balance-row">
-          <strong id="balance">0.00</strong>
-          <button id="balanceToggle" type="button">◉</button>
-        </div>
+    <section class="vp-balance-card">
+      <div class="vp-balance-top">
+        <span>Available Balance</span>
+        <button onclick="toggleBalance()" class="vp-eye">◉</button>
+      </div>
+
+      <div class="vp-balance">
         <span id="currency">NGN</span>
-      </section>
+        <strong id="balance">0.00</strong>
+      </div>
 
-      <section class="actions">
-        <button data-action="deposit"><span>＋</span><b>Add Money</b></button>
-        <button data-action="transfer"><span>↗</span><b>Send Money</b></button>
-        <button data-action="withdraw"><span>↓</span><b>Withdraw</b></button>
-        <button data-action="history"><span>≡</span><b>History</b></button>
-      </section>
+      <div class="vp-balance-footer">
+        <span>Vicky Pay Wallet</span>
+        <span>•••• 0000</span>
+      </div>
+    </section>
 
-      <section class="quick-card">
+    <div id="dashboardMessage" class="message"></div>
+
+    <section class="vp-actions">
+      <button onclick="openMoney('deposit')">
+        <span class="vp-action-icon">＋</span>
+        <b>Add Money</b>
+      </button>
+
+      <button onclick="openMoney('transfer')">
+        <span class="vp-action-icon">↗</span>
+        <b>Transfer</b>
+      </button>
+
+      <button onclick="openMoney('withdraw')">
+        <span class="vp-action-icon">↓</span>
+        <b>Withdraw</b>
+      </button>
+
+      <button onclick="loadTransactions(true)">
+        <span class="vp-action-icon">≡</span>
+        <b>Transactions</b>
+      </button>
+    </section>
+
+    <section class="vp-section">
+      <div class="vp-section-title">
         <h3>Quick Services</h3>
-        <div class="quick-grid">
-          <button type="button">Airtime</button>
-          <button type="button">Data</button>
-          <button type="button">Electricity</button>
-          <button type="button">More</button>
-        </div>
-      </section>
+        <span>More</span>
+      </div>
 
-      <section class="card">
-        <div class="section-head">
-          <h3>Recent transactions</h3>
-          <button id="historyButton" type="button">See all</button>
-        </div>
-        <div id="transactionsList" class="transactions-list">
-          <div class="empty">No transactions yet.</div>
-        </div>
-      </section>
+      <div class="vp-services">
+        <button>
+          <span>📱</span>
+          <b>Airtime</b>
+        </button>
 
-      <section class="card">
-        <h3>Account</h3>
-        <div class="account-row">
-          <span>Email</span>
-          <strong id="profileEmail">—</strong>
-        </div>
-        <div class="account-row">
-          <span>Currency</span>
-          <strong id="profileCurrency">—</strong>
-        </div>
-        <button class="secondary full" id="accountsButton" type="button">Connected Accounts</button>
-        <button class="secondary full" id="notificationsButton" type="button">Notifications</button>
-        <button class="secondary full" id="profileButton" type="button">Profile</button>
-      </section>
-    </main>
+        <button>
+          <span>🌐</span>
+          <b>Data</b>
+        </button>
 
-    <nav class="bottom-nav">
-      <button class="nav-active" data-nav="home">⌂<span>Home</span></button>
-      <button data-nav="deposit">＋<span>Add</span></button>
-      <button data-nav="transfer">↗<span>Send</span></button>
-      <button data-nav="history">≡<span>History</span></button>
-    </nav>
-  </section>
+        <button>
+          <span>⚡</span>
+          <b>Electricity</b>
+        </button>
+
+        <button>
+          <span>💳</span>
+          <b>Bills</b>
+        </button>
+
+        <button>
+          <span>🏦</span>
+          <b>Bank</b>
+        </button>
+
+        <button onclick="loadReferrals()">
+          <span>🎁</span>
+          <b>Rewards</b>
+        </button>
+      </div>
+    </section>
+
+    <section class="vp-section">
+      <div class="vp-section-title">
+        <h3>Recent Transactions</h3>
+        <button onclick="loadTransactions(true)">See all</button>
+      </div>
+
+      <div id="transactionsList" class="vp-transactions"></div>
+    </section>
+
+    <section class="vp-account">
+      <div class="vp-section-title">
+        <h3>My Account</h3>
+      </div>
+
+      <div class="vp-account-row">
+        <div>
+          <small>Email</small>
+          <strong id="profileEmail"></strong>
+        </div>
+      </div>
+
+      <button class="vp-account-button" onclick="loadAccounts()">
+        <span>🏦</span>
+        <span>Connected accounts</span>
+        <b>›</b>
+      </button>
+
+      <button class="vp-account-button" onclick="loadReferrals()">
+        <span>🎁</span>
+        <span>Referral & rewards</span>
+        <b>›</b>
+      </button>
+    </section>
+
+  </main>
+
+  <nav class="vp-bottom-nav">
+    <button class="active">
+      <span>⌂</span>
+      <small>Home</small>
+    </button>
+
+    <button onclick="openMoney('deposit')">
+      <span>＋</span>
+      <small>Add Money</small>
+    </button>
+
+    <button onclick="openMoney('transfer')">
+      <span>↗</span>
+      <small>Transfer</small>
+    </button>
+
+    <button onclick="loadTransactions(true)">
+      <span>≡</span>
+      <small>History</small>
+    </button>
+  </nav>
+
+</section>
+
 
   <section id="moneyScreen" class="screen hidden">
     <header class="screen-header">

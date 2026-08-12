@@ -471,3 +471,305 @@ main {
     font-size: 29px;
   }
 }
+
+
+/* =========================================================
+   VICKY PAY — OPay-style Wallet Dashboard
+   ========================================================= */
+
+.dashboard {
+  min-height: 100vh;
+  background: #f5f7fa;
+  padding-bottom: 88px;
+}
+
+.vp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 18px 14px;
+  background: #fff;
+}
+
+.vp-user {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.vp-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #00a86b;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.vp-user small {
+  display: block;
+  color: #8b929b;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.vp-user strong {
+  display: block;
+  color: #17202a;
+  font-size: 15px;
+}
+
+.vp-icon-btn {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: #f1f3f5;
+  color: #27313b;
+  font-size: 20px;
+}
+
+.vp-main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 14px 14px 20px;
+}
+
+.vp-balance-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  padding: 20px;
+  background: linear-gradient(135deg, #00a86b, #008f5b);
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(0,0,0,.12);
+}
+
+.vp-balance-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  opacity: .9;
+  font-size: 13px;
+}
+
+.vp-eye {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 18px;
+}
+
+.vp-balance {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin: 12px 0 20px;
+}
+
+.vp-balance strong {
+  font-size: 32px;
+  letter-spacing: -.7px;
+}
+
+.vp-balance span {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.vp-balance-footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 13px;
+  border-top: 1px solid rgba(255,255,255,.22);
+  font-size: 11px;
+  opacity: .85;
+}
+
+.vp-actions {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 8px;
+  margin: 14px 0;
+  padding: 14px 8px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 3px 15px rgba(0,0,0,.04);
+}
+
+.vp-actions button {
+  border: 0;
+  background: transparent;
+  color: #26313a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+}
+
+.vp-action-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e9f8f2;
+  color: #00a86b;
+  font-size: 22px;
+}
+
+.vp-section,
+.vp-account {
+  margin-top: 14px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 16px;
+}
+
+.vp-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 13px;
+}
+
+.vp-section-title h3 {
+  margin: 0;
+  color: #202a33;
+  font-size: 15px;
+}
+
+.vp-section-title button,
+.vp-section-title span {
+  border: 0;
+  background: transparent;
+  color: #00a86b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.vp-services {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 12px 6px;
+}
+
+.vp-services button {
+  border: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  color: #303a43;
+  font-size: 11px;
+}
+
+.vp-services button span {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: #f2f5f7;
+  font-size: 19px;
+}
+
+.vp-transactions {
+  min-height: 50px;
+}
+
+.vp-account-row {
+  padding: 5px 0 14px;
+  border-bottom: 1px solid #eef0f2;
+}
+
+.vp-account-row small {
+  display: block;
+  color: #9198a0;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.vp-account-row strong {
+  font-size: 13px;
+  color: #26313a;
+  word-break: break-word;
+}
+
+.vp-account-button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 30px 1fr 20px;
+  align-items: center;
+  gap: 8px;
+  padding: 15px 0;
+  border: 0;
+  border-bottom: 1px solid #eef0f2;
+  background: transparent;
+  text-align: left;
+  color: #27313b;
+}
+
+.vp-account-button span:first-child {
+  font-size: 18px;
+}
+
+.vp-account-button b {
+  color: #a0a6ac;
+  font-size: 20px;
+}
+
+.vp-bottom-nav {
+  position: fixed;
+  z-index: 50;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  max-width: 680px;
+  margin: auto;
+  padding: 8px 5px calc(8px + env(safe-area-inset-bottom));
+  background: rgba(255,255,255,.97);
+  border-top: 1px solid #e9ecef;
+  box-shadow: 0 -5px 20px rgba(0,0,0,.05);
+}
+
+.vp-bottom-nav button {
+  border: 0;
+  background: transparent;
+  color: #8b9299;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 18px;
+}
+
+.vp-bottom-nav button small {
+  font-size: 10px;
+}
+
+.vp-bottom-nav button.active {
+  color: #00a86b;
+  font-weight: 700;
+}
+
+@media (min-width: 600px) {
+  .vp-main {
+    padding-top: 22px;
+  }
+
+  .vp-actions {
+    gap: 18px;
+  }
+
+  .vp-services {
+    grid-template-columns: repeat(6,1fr);
+  }
+}
