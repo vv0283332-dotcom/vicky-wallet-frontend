@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#0b57d0">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>Vicky Pay</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div id="app">
 
-  <section id="auth" class="auth">
+  <section id="auth" class="auth-screen">
     <div class="brand">
       <div class="logo">V</div>
       <h1>Vicky Pay</h1>
       <p>Simple. Secure. Yours.</p>
     </div>
 
-    <div id="message" class="message"></div>
+    <div id="authMessage" class="message"></div>
 
     <div class="auth-card">
       <div class="tabs">
-        <button id="loginTab" class="tab active" onclick="showLogin()">Login</button>
-        <button id="registerTab" class="tab" onclick="showRegister()">Create account</button>
+        <button id="loginTab" class="tab active" type="button">Login</button>
+        <button id="registerTab" class="tab" type="button">Create account</button>
       </div>
 
       <form id="loginForm">
@@ -33,7 +33,7 @@
         <label>Password</label>
         <input id="loginPassword" type="password" autocomplete="current-password" required>
 
-        <button id="loginButton" class="primary" type="submit">Login</button>
+        <button class="primary" id="loginButton" type="submit">Login</button>
       </form>
 
       <form id="registerForm" class="hidden">
@@ -49,149 +49,193 @@
         <label>Currency</label>
         <select id="registerCurrency">
           <option value="NGN">NGN</option>
+          <option value="XOF">XOF</option>
           <option value="USD">USD</option>
           <option value="EUR">EUR</option>
           <option value="GBP">GBP</option>
-          <option value="XOF">XOF</option>
         </select>
 
-        <button id="registerButton" class="primary" type="submit">Create account</button>
+        <button class="primary" id="registerButton" type="submit">Create account</button>
       </form>
     </div>
   </section>
 
   <section id="dashboard" class="dashboard hidden">
-
     <header class="topbar">
       <div>
         <small>Welcome back</small>
-        <strong id="userName">Vicky Pay</strong>
+        <h2 id="userName">Vicky Pay</h2>
       </div>
-      <button class="icon-button" onclick="logout()">↪</button>
+      <button id="logoutButton" class="icon-button" type="button">↪</button>
     </header>
 
     <main>
+      <div id="dashboardMessage" class="message"></div>
 
       <section class="balance-card">
         <div class="balance-label">Available balance</div>
         <div class="balance-row">
           <strong id="balance">0.00</strong>
-          <button onclick="toggleBalance()">◉</button>
+          <button id="balanceToggle" type="button">◉</button>
         </div>
         <span id="currency">NGN</span>
       </section>
 
-      <div id="dashboardMessage" class="message"></div>
-
       <section class="actions">
-        <button onclick="openMoney('deposit')">
-          <span>＋</span>
-          <b>Add money</b>
-        </button>
-
-        <button onclick="openMoney('transfer')">
-          <span>↗</span>
-          <b>Send money</b>
-        </button>
-
-        <button onclick="openMoney('withdraw')">
-          <span>↓</span>
-          <b>Withdraw</b>
-        </button>
-
-        <button onclick="loadTransactions(true)">
-          <span>≡</span>
-          <b>History</b>
-        </button>
+        <button data-action="deposit"><span>＋</span><b>Add Money</b></button>
+        <button data-action="transfer"><span>↗</span><b>Send Money</b></button>
+        <button data-action="withdraw"><span>↓</span><b>Withdraw</b></button>
+        <button data-action="history"><span>≡</span><b>History</b></button>
       </section>
 
-      <section class="quick">
-        <h3>Quick actions</h3>
+      <section class="quick-card">
+        <h3>Quick Services</h3>
         <div class="quick-grid">
-          <button>Airtime</button>
-          <button>Data</button>
-          <button>Electricity</button>
-          <button>Bills</button>
+          <button type="button">Airtime</button>
+          <button type="button">Data</button>
+          <button type="button">Electricity</button>
+          <button type="button">More</button>
         </div>
       </section>
 
-      <section class="transactions">
+      <section class="card">
         <div class="section-head">
           <h3>Recent transactions</h3>
-          <button onclick="loadTransactions(true)">See all</button>
+          <button id="historyButton" type="button">See all</button>
         </div>
-        <div id="transactionsList"></div>
+        <div id="transactionsList" class="transactions-list">
+          <div class="empty">No transactions yet.</div>
+        </div>
       </section>
 
-      <section class="profile-card">
+      <section class="card">
         <h3>Account</h3>
-        <p id="profileEmail"></p>
-        <button onclick="loadAccounts()">Connected accounts</button>
-        <button onclick="loadReferrals()">Referrals</button>
+        <div class="account-row">
+          <span>Email</span>
+          <strong id="profileEmail">—</strong>
+        </div>
+        <div class="account-row">
+          <span>Currency</span>
+          <strong id="profileCurrency">—</strong>
+        </div>
+        <button class="secondary full" id="accountsButton" type="button">Connected Accounts</button>
+        <button class="secondary full" id="notificationsButton" type="button">Notifications</button>
+        <button class="secondary full" id="profileButton" type="button">Profile</button>
       </section>
-
     </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-active" data-nav="home">⌂<span>Home</span></button>
+      <button data-nav="deposit">＋<span>Add</span></button>
+      <button data-nav="transfer">↗<span>Send</span></button>
+      <button data-nav="history">≡<span>History</span></button>
+    </nav>
   </section>
 
-  <div id="moneyModal" class="modal hidden">
-    <div class="modal-card">
-      <button class="close" onclick="closeMoney()">×</button>
+  <section id="moneyScreen" class="screen hidden">
+    <header class="screen-header">
+      <button class="back" id="backButton" type="button">←</button>
+      <div>
+        <small>Vicky Pay</small>
+        <h2 id="screenTitle">Add Money</h2>
+      </div>
+    </header>
 
-      <h2 id="moneyTitle">Add money</h2>
+    <div id="screenMessage" class="message"></div>
 
-      <div id="depositPanel">
-        <label>Amount</label>
-        <input id="depositAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
+    <div id="depositPanel" class="panel hidden">
+      <div class="panel-icon">＋</div>
+      <h3>Add money to your wallet</h3>
+      <p>Choose a funding method.</p>
 
-        <label>Payment method</label>
-        <select id="depositMethod">
-          <option value="card">Credit / Debit Card</option>
-          <option value="bank">Bank</option>
-          <option value="wallet">Mobile Wallet</option>
+      <label>Funding source</label>
+      <select id="depositMethod">
+        <option value="card">Credit / Debit Card</option>
+        <option value="bank">Bank Account</option>
+        <option value="wallet">Other Wallet</option>
+      </select>
+
+      <div id="depositAccountWrap">
+        <label>Connected account</label>
+        <select id="depositAccount">
+          <option value="">Choose connected account</option>
         </select>
-
-        <label>Description</label>
-        <input id="depositDescription" placeholder="Optional">
-
-        <button class="primary" onclick="deposit()">Continue</button>
+        <small id="depositAccountStatus"></small>
       </div>
 
-      <div id="transferPanel" class="hidden">
-        <label>Recipient</label>
-        <input id="transferRecipient" placeholder="Email or account ID">
+      <label>Amount</label>
+      <input id="depositAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
 
-        <label>Amount</label>
-        <input id="transferAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
+      <label>Description</label>
+      <input id="depositDescription" type="text" placeholder="Optional">
 
-        <label>Description</label>
-        <input id="transferDescription" placeholder="Optional">
-
-        <button class="primary" onclick="transfer()">Send money</button>
-      </div>
-
-      <div id="withdrawPanel" class="hidden">
-        <label>Amount</label>
-        <input id="withdrawAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
-
-        <label>Withdrawal account</label>
-        <select id="withdrawAccount">
-          <option value="">Choose account</option>
-        </select>
-
-        <button class="primary" onclick="withdraw()">Withdraw</button>
-      </div>
+      <button class="primary" id="depositButton" type="button">Continue</button>
     </div>
-  </div>
 
-  <nav class="bottom-nav">
-    <button class="active">⌂<span>Home</span></button>
-    <button onclick="openMoney('deposit')">＋<span>Add</span></button>
-    <button onclick="openMoney('transfer')">↗<span>Send</span></button>
-    <button onclick="loadTransactions(true)">≡<span>History</span></button>
-  </nav>
+    <div id="transferPanel" class="panel hidden">
+      <div class="panel-icon">↗</div>
+      <h3>Send money</h3>
+
+      <label>Recipient account ID or email</label>
+      <input id="transferRecipient" type="text" placeholder="Recipient">
+
+      <label>Amount</label>
+      <input id="transferAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
+
+      <label>Description</label>
+      <input id="transferDescription" type="text" placeholder="Optional">
+
+      <button class="primary" id="transferButton" type="button">Send Money</button>
+    </div>
+
+    <div id="withdrawPanel" class="panel hidden">
+      <div class="panel-icon">↓</div>
+      <h3>Withdraw money</h3>
+
+      <label>Connected account</label>
+      <select id="withdrawAccount">
+        <option value="">Choose connected account</option>
+      </select>
+
+      <label>Amount</label>
+      <input id="withdrawAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
+
+      <button class="primary" id="withdrawButton" type="button">Withdraw</button>
+    </div>
+
+    <div id="historyPanel" class="panel hidden">
+      <div class="panel-icon">≡</div>
+      <h3>Transaction history</h3>
+      <div id="fullTransactions" class="transactions-list"></div>
+    </div>
+
+    <div id="accountsPanel" class="panel hidden">
+      <div class="panel-icon">🏦</div>
+      <h3>Connected accounts</h3>
+      <div id="accountsList" class="accounts-list"></div>
+    </div>
+
+    <div id="notificationsPanel" class="panel hidden">
+      <div class="panel-icon">🔔</div>
+      <h3>Notifications</h3>
+      <div id="notificationsList" class="transactions-list"></div>
+    </div>
+
+    <div id="profilePanel" class="panel hidden">
+      <div class="panel-icon">👤</div>
+      <h3>Your profile</h3>
+
+      <label>Full name</label>
+      <input id="profileName" type="text">
+
+      <label>Email</label>
+      <input id="profileEmailInput" type="email">
+
+      <button class="primary" id="profileSaveButton" type="button">Save Profile</button>
+    </div>
+  </section>
 
 </div>
-
 <script src="app.js"></script>
 </body>
 </html>

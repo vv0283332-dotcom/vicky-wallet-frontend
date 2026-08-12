@@ -2,11 +2,31 @@
   box-sizing: border-box;
 }
 
+:root {
+  --primary: #0b57d0;
+  --primary-dark: #0846aa;
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #172033;
+  --muted: #697386;
+  --border: #e4e8ef;
+  --danger: #d93025;
+  --success: #188038;
+  --shadow: 0 10px 30px rgba(25, 40, 70, .08);
+}
+
+html,
 body {
   margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
   font-family: Arial, Helvetica, sans-serif;
-  background: #f4f7fb;
-  color: #172033;
+}
+
+body {
+  min-height: 100vh;
 }
 
 button,
@@ -19,3053 +39,435 @@ button {
   cursor: pointer;
 }
 
-.app {
-  min-height: 100vh;
-}
-
-.topbar {
-  background: #171c3a;
-  color: white;
-  padding: 18px 6%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.topbar h1 {
-  margin: 0;
-  font-size: 25px;
-}
-
-.topbar p {
-  margin: 4px 0 0;
-  opacity: .75;
-  font-size: 13px;
-}
-
-main {
-  width: min(1100px, 92%);
-  margin: 30px auto;
-}
-
-.card {
-  background: white;
-  border-radius: 18px;
-  padding: 25px;
-  box-shadow: 0 8px 30px rgba(20, 30, 60, .08);
-  margin-bottom: 22px;
-}
-
-#authSection {
-  width: min(440px, 100%);
-  margin: 45px auto;
-}
-
-.tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 25px;
-}
-
-.tab {
-  flex: 1;
-  border: 0;
-  background: #eef1f8;
-  color: #444;
-  padding: 12px;
-  border-radius: 10px;
-}
-
-.tab.active {
-  background: #4b50e6;
-  color: white;
-}
-
-h2,
-h3 {
-  margin-top: 0;
-}
-
-label {
-  display: block;
-  font-size: 14px;
-  font-weight: bold;
-  margin: 14px 0 6px;
-}
-
-input,
-select {
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #dce1eb;
-  border-radius: 10px;
-  outline: none;
-  background: white;
-}
-
-input:focus,
-select:focus {
-  border-color: #4b50e6;
-}
-
-.primary {
-  width: 100%;
-  border: 0;
-  padding: 13px;
-  margin-top: 15px;
-  border-radius: 10px;
-  background: #4b50e6;
-  color: white;
-  font-weight: bold;
-}
-
-.primary:disabled {
+button:disabled {
   opacity: .6;
-}
-
-.logout {
-  border: 1px solid rgba(255,255,255,.3);
-  background: transparent;
-  color: white;
-  padding: 9px 15px;
-  border-radius: 9px;
+  cursor: not-allowed;
 }
 
 .hidden {
   display: none !important;
 }
 
-.message {
-  padding: 12px;
-  border-radius: 9px;
-  margin: 12px 0;
-  font-size: 14px;
+.auth-screen {
+  min-height: 100vh;
+  padding: 40px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.message.error {
-  background: #ffe7e7;
-  color: #a60000;
-}
-
-.message.success {
-  background: #e5f8ed;
-  color: #087332;
-}
-
-.welcome {
-  margin-bottom: 18px;
-}
-
-.welcome span {
-  color: #70798c;
-  font-size: 14px;
-}
-
-.welcome h2 {
-  margin: 5px 0;
-}
-
-.balance-card {
-  background: #171c3a;
-  color: white;
-  border-radius: 20px;
-  padding: 28px;
+.brand {
+  text-align: center;
   margin-bottom: 22px;
 }
 
-.balance-card > span {
-  opacity: .75;
-}
-
-#balance {
-  font-size: 38px;
-  font-weight: bold;
-  margin: 12px 0 4px;
-  word-break: break-word;
-}
-
-#currencyLabel {
-  opacity: .7;
-}
-
-.balance-card button {
-  display: block;
-  margin-top: 20px;
-  padding: 8px 14px;
-  border: 1px solid rgba(255,255,255,.3);
-  background: transparent;
+.logo {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 12px;
+  border-radius: 20px;
+  background: var(--primary);
   color: white;
-  border-radius: 8px;
-}
-
-.actions {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.action-card {
-  margin: 0;
-}
-
-.action-card h3 {
-  margin-bottom: 18px;
-}
-
-.transactions-card {
-  margin-top: 22px;
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.section-title button {
-  border: 0;
-  background: #eef1f8;
-  padding: 8px 12px;
-  border-radius: 8px;
-}
-
-.transaction {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  padding: 15px 0;
-  border-bottom: 1px solid #edf0f5;
-}
-
-.transaction:last-child {
-  border-bottom: 0;
-}
-
-.transaction strong {
-  display: block;
-  text-transform: capitalize;
-}
-
-.transaction span,
-.transaction small {
-  display: block;
-  color: #727b8c;
-  margin-top: 4px;
-}
-
-.positive {
-  color: #079447;
-  font-weight: bold;
-  white-space: nowrap;
-}
-
-.negative {
-  color: #d12b35;
-  font-weight: bold;
-  white-space: nowrap;
-}
-
-.empty {
-  color: #7a8291;
-  text-align: center;
-  padding: 25px;
-}
-
-footer {
-  text-align: center;
-  color: #7b8391;
-  padding: 25px;
-  font-size: 13px;
-}
-
-@media (max-width: 800px) {
-  .actions {
-    grid-template-columns: 1fr;
-  }
-
-  .action-card {
-    margin-bottom: 0;
-  }
-}
-
-@media (max-width: 500px) {
-  .topbar {
-    padding: 15px 4%;
-  }
-
-  .topbar h1 {
-    font-size: 21px;
-  }
-
-  main {
-    width: 94%;
-    margin: 20px auto;
-  }
-
-  .card {
-    padding: 18px;
-    border-radius: 15px;
-  }
-
-  #balance {
-    font-size: 30px;
-  }
-
-  .transaction {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .transaction > div:last-child {
-    align-self: flex-end;
-  }
-}
-
-.profile-button {
-  width: auto;
-  min-width: 110px;
-  padding: 10px 16px;
-  margin: 0;
-  cursor: pointer;
-}
-
-.profile-panel {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(100% - 40px);
-  max-width: 420px;
-  max-height: 90vh;
-  overflow-y: auto;
-  background: white;
-  padding: 24px;
-  border-radius: 18px;
-  box-shadow: 0 15px 50px rgba(0,0,0,.25);
-  z-index: 1000;
-}
-
-.profile-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.profile-header h2 {
-  margin: 0;
-}
-
-.close-profile {
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  margin: 0;
-  font-size: 28px;
-  line-height: 42px;
-  cursor: pointer;
-}
-
-.profile-avatar {
-  width: 80px;
-  height: 80px;
-  margin: 20px auto;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #4b4bff;
-  color: white;
+  place-items: center;
   font-size: 32px;
-  font-weight: bold;
+  font-weight: 800;
 }
 
-.profile-info {
-  display: grid;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.profile-info div {
-  padding: 12px;
-  background: #f7f7f7;
-  border-radius: 10px;
-}
-
-.profile-info span {
-  display: block;
-  font-size: 12px;
-  color: #777;
-  margin-bottom: 4px;
-}
-
-.profile-info strong {
-  display: block;
-  word-break: break-word;
-}
-
-@media (max-width: 500px) {
-  .welcome {
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .profile-button {
-    width: 100%;
-  }
-}
-
-.welcome {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.welcome > div:first-child {
-  flex: 1;
-}
-
-.profile-button {
-  width: auto;
-  min-width: 100px;
-  padding: 10px 14px;
+.brand h1 {
   margin: 0;
-  flex-shrink: 0;
-}
-
-@media (max-width: 500px) {
-  .welcome {
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .profile-button {
-    width: auto;
-  }
-}
-
-.edit-profile-form {
-  margin-top: 18px;
-  padding: 18px;
-  border-radius: 14px;
-  background: #f7f7f7;
-}
-
-.edit-profile-form h3,
-.edit-profile-form h4 {
-  margin-top: 0;
-}
-
-.edit-profile-form input,
-.edit-profile-form select {
-  width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 12px;
-}
-
-.edit-profile-form hr {
-  border: 0;
-  border-top: 1px solid #ddd;
-  margin: 18px 0;
-}
-
-.secondary {
-  width: 100%;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-#profileEditMessage {
-  margin-top: 12px;
-  font-size: 14px;
-}
-
-.welcome-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.owner-button {
-  width: auto;
-  min-width: 90px;
-  padding: 10px 14px;
-  margin: 0;
-  cursor: pointer;
-}
-
-.owner-dashboard {
-  margin-top: 20px;
-  padding: 20px;
-  border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 10px 35px rgba(0,0,0,.12);
-}
-
-.owner-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.owner-header h2 {
-  margin: 4px 0 0;
-}
-
-.owner-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.owner-stat {
-  padding: 18px;
-  border-radius: 14px;
-  background: #f7f7f7;
-}
-
-.owner-stat span {
-  display: block;
-  font-size: 13px;
-  color: #777;
-  margin-bottom: 8px;
-}
-
-.owner-stat strong {
-  font-size: 22px;
-}
-
-.owner-section {
-  margin-top: 18px;
-}
-
-.admin-user,
-.admin-transaction {
-  display: flex;
-  justify-content: space-between;
-  gap: 15px;
-  padding: 14px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.admin-user:last-child,
-.admin-transaction:last-child {
-  border-bottom: 0;
-}
-
-.admin-user small,
-.admin-transaction small {
-  display: block;
-  color: #777;
-  margin-top: 4px;
-}
-
-@media (max-width: 650px) {
-  .welcome-actions {
-    width: 100%;
-  }
-
-  .welcome-actions button {
-    flex: 1;
-  }
-
-  .owner-stats {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .admin-user,
-  .admin-transaction {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 400px) {
-  .owner-stats {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Put owner name and Profile button on the same row */
-.welcome {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.welcome > div {
-  flex: 1;
-}
-
-.profile-button {
-  width: auto !important;
-  min-width: 120px;
-  flex-shrink: 0;
-  margin: 0 !important;
-}
-
-@media (max-width: 600px) {
-  .welcome {
-    flex-wrap: nowrap;
-  }
-
-  .profile-button {
-    min-width: 105px;
-    padding: 10px 12px;
-  }
-}
-
-.account-id-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.04);
-}
-
-.account-id-box span {
-  width: 100%;
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-.account-id-box strong {
-  flex: 1;
-  font-size: 18px;
-  letter-spacing: 1px;
-}
-
-.account-id-box button {
-  padding: 8px 12px;
-}
-
-.recipient-preview {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: 10px 12px;
-  margin: 8px 0;
-  border-radius: 8px;
-  background: rgba(0, 128, 0, 0.08);
-}
-
-.recipient-preview strong {
-  font-size: 13px;
-}
-
-.recipient-preview span {
-  font-weight: 600;
-}
-
-.recipient-preview small {
-  opacity: 0.7;
-}
-
-
-/* ==================== FULL-SCREEN WALLET DASHBOARD ==================== */
-
-html,
-body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-}
-
-body {
-  min-height: 100vh;
-}
-
-#dashboard {
-  width: 100%;
-  height: 100vh;
-  min-height: 100vh;
-  box-sizing: border-box;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-#dashboard > * {
-  box-sizing: border-box;
-}
-
-#dashboard .transactions-card {
-  flex: 1 1 auto;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-#dashboard #transactions {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-}
-
-#dashboard #transactions::-webkit-scrollbar {
-  width: 5px;
-}
-
-@media (max-width: 768px) {
-  #dashboard {
-    height: 100dvh;
-    min-height: 100dvh;
-  }
-}
-
-
-/* =========================================================
-   VICKY WALLET — FULL DASHBOARD UI
-   ========================================================= */
-
-#dashboard {
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  min-height: 0 !important;
-  overflow: hidden !important;
-  display: flex;
-  flex-direction: column;
-}
-
-#dashboard .transactions-card {
-  flex: 1 1 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-#dashboard .transactions-card > * {
-  flex-shrink: 0;
-}
-
-#dashboard #transactions {
-  flex: 1 1 0;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 8px 4px 24px;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-}
-
-/* Transaction toolbar */
-
-.vicky-transaction-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 0;
-  flex-wrap: wrap;
-}
-
-.vicky-transaction-title {
-  margin-right: auto;
-  font-size: 1.05rem;
-  font-weight: 800;
-}
-
-.vicky-transaction-search {
-  width: min(220px, 100%);
-  min-height: 40px;
-  padding: 0 12px;
-  border: 1px solid rgba(128,128,128,.25);
-  border-radius: 12px;
-  background: rgba(128,128,128,.08);
-  color: inherit;
-  outline: none;
-  box-sizing: border-box;
-}
-
-.vicky-transaction-search:focus {
-  border-color: currentColor;
-}
-
-.vicky-transaction-filters {
-  display: flex;
-  gap: 6px;
-  width: 100%;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.vicky-transaction-filters::-webkit-scrollbar {
-  display: none;
-}
-
-.vicky-transaction-filter {
-  border: 1px solid rgba(128,128,128,.25);
-  background: rgba(128,128,128,.07);
-  color: inherit;
-  border-radius: 999px;
-  padding: 7px 13px;
-  font-size: .82rem;
-  font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.vicky-transaction-filter.active {
-  background: currentColor;
-  color: Canvas;
-}
-
-/* Transaction cards */
-
-#dashboard .transaction {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 68px;
-  margin: 7px 0;
-  padding: 12px 14px;
-  border-radius: 16px;
-  background: rgba(128,128,128,.075);
-  border: 1px solid rgba(128,128,128,.13);
-  box-sizing: border-box;
-  transition: transform .15s ease, background .15s ease;
-}
-
-#dashboard .transaction:active {
-  transform: scale(.985);
-}
-
-#dashboard .transaction strong {
-  font-weight: 800;
-}
-
-#dashboard .transaction small {
-  opacity: .7;
-}
-
-.vicky-tx-status {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  margin-top: 4px;
-  padding: 3px 7px;
-  border-radius: 999px;
-  font-size: .68rem;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.vicky-tx-status.completed {
-  background: rgba(34,197,94,.14);
-}
-
-.vicky-tx-status.pending,
-.vicky-tx-status.processing {
-  background: rgba(234,179,8,.16);
-}
-
-.vicky-tx-status.failed,
-.vicky-tx-status.cancelled {
-  background: rgba(239,68,68,.14);
-}
-
-.vicky-tx-empty {
-  text-align: center;
-  padding: 40px 20px;
-  opacity: .65;
-}
-
-@media (max-width: 600px) {
-  #dashboard {
-    height: 100dvh;
-  }
-
-  .vicky-transaction-toolbar {
-    padding: 8px 0;
-  }
-
-  .vicky-transaction-search {
-    width: 100%;
-  }
-
-  #dashboard .transaction {
-    min-height: 64px;
-    padding: 11px 12px;
-    border-radius: 14px;
-  }
-}
-
-
-/* =========================================================
-   VICKY WALLET — MOBILE FINTECH DASHBOARD
-   ========================================================= */
-
-:root {
-  --vicky-green: #00a86b;
-  --vicky-green-dark: #008f5b;
-  --vicky-green-soft: #e8f8f1;
-  --vicky-bg: #f5f7f8;
-  --vicky-card: #ffffff;
-  --vicky-text: #17201c;
-  --vicky-muted: #78817d;
-}
-
-.vicky-dashboard {
-  background: var(--vicky-bg);
-  color: var(--vicky-text);
-  box-sizing: border-box;
-  padding: 16px;
-  gap: 14px;
-}
-
-.vicky-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-}
-
-.vicky-user {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
-
-.vicky-user small {
-  color: var(--vicky-muted);
-  font-size: 12px;
-}
-
-.vicky-user h2 {
-  margin: 2px 0 0;
-  font-size: 18px;
-}
-
-.vicky-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--vicky-green);
-  color: white;
-  font-weight: 900;
-  font-size: 19px;
-}
-
-.vicky-top-actions {
-  display: flex;
-  gap: 7px;
-}
-
-.vicky-icon-btn {
-  width: 42px;
-  height: 42px;
-  border: 0;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 3px 12px rgba(0,0,0,.07);
-  cursor: pointer;
-  font-size: 18px;
-}
-
-.vicky-balance-card {
-  flex-shrink: 0;
-  border-radius: 20px;
-  padding: 20px;
-  color: white;
-  background: linear-gradient(135deg, #00a86b, #008f5b);
-  box-shadow: 0 10px 25px rgba(0,168,107,.20);
-}
-
-.vicky-balance-top,
-.vicky-balance-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.vicky-balance-top span,
-.vicky-balance-bottom {
-  opacity: .9;
-  font-size: 13px;
-}
-
-.vicky-balance-top button {
-  border: 0;
-  background: rgba(255,255,255,.16);
-  color: white;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-}
-
-.vicky-balance {
-  font-size: 34px;
-  font-weight: 900;
-  letter-spacing: -.8px;
-  margin: 14px 0;
-}
-
-.vicky-balance-bottom {
-  font-weight: 700;
-}
-
-.vicky-quick-actions {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.vicky-quick-actions button {
-  border: 0;
-  background: white;
-  border-radius: 15px;
-  padding: 12px 5px;
-  box-shadow: 0 3px 12px rgba(0,0,0,.045);
-  cursor: pointer;
-  color: var(--vicky-text);
-}
-
-.vicky-quick-actions span {
-  display: grid;
-  place-items: center;
-  margin: auto auto 6px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--vicky-green-soft);
-  color: var(--vicky-green-dark);
-  font-size: 20px;
-  font-weight: 900;
-}
-
-.vicky-quick-actions strong {
-  font-size: 11px;
-}
-
-.vicky-action-panels {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0,1fr));
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-.vicky-action-panels .card {
-  margin: 0;
-}
-
-.vicky-transactions-card {
-  min-height: 0;
-  flex: 1 1 0;
-  overflow: hidden;
-  background: white;
-  border-radius: 18px;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 3px 15px rgba(0,0,0,.045);
-}
-
-.vicky-transactions-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
-  padding-bottom: 10px;
-}
-
-.vicky-transactions-header small {
-  color: var(--vicky-muted);
-  font-size: 11px;
-}
-
-.vicky-transactions-header h2 {
-  margin: 2px 0 0;
-  font-size: 17px;
-}
-
-.vicky-transactions-header button {
-  border: 0;
-  background: transparent;
-  color: var(--vicky-green-dark);
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.vicky-transactions-card #transactions {
-  flex: 1 1 0;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 2px;
-  -webkit-overflow-scrolling: touch;
-}
-
-.vicky-transactions-card .transaction {
-  background: #fafbfb;
-  border: 1px solid #edf0ef;
-  border-radius: 14px;
-}
-
-@media (max-width: 760px) {
-
-  .vicky-dashboard {
-    padding: 12px;
-    gap: 10px;
-  }
-
-  .vicky-balance {
-    font-size: 30px;
-  }
-
-  .vicky-action-panels {
-    display: none;
-  }
-
-  .vicky-transactions-card {
-    flex: 1 1 0;
-  }
-
-}
-
-@media (min-width: 761px) {
-
-  .vicky-dashboard {
-    max-width: 1100px;
-    margin: auto;
-  }
-
-}
-
-
-/* =========================================================
-   VICKY WALLET — MODERN MOBILE FINTECH / OPAY-INSPIRED UI
-   ========================================================= */
-
-:root {
-  --vw-primary: #00a86b;
-  --vw-primary-dark: #008f5b;
-  --vw-bg: #f5f7f9;
-  --vw-card: #ffffff;
-  --vw-text: #17202a;
-  --vw-muted: #7b8794;
-  --vw-border: #e8edf1;
-  --vw-success: #16a34a;
-  --vw-danger: #dc2626;
-}
-
-body {
-  background: var(--vw-bg);
-  color: var(--vw-text);
-}
-
-#dashboard {
-  width: 100%;
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 0 14px 82px;
-}
-
-/* Header */
-
-#dashboard .welcome {
-  margin: 0 -14px;
-  padding: 18px 16px 14px;
-  background: var(--vw-primary);
-  color: white;
-  border-radius: 0 0 22px 22px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-#dashboard .welcome span {
-  color: rgba(255,255,255,.78);
-  font-size: 12px;
-}
-
-#dashboard .welcome h2 {
-  margin: 3px 0 0;
-  color: white;
-  font-size: 21px;
-}
-
-.welcome-actions {
-  display: flex;
-  gap: 7px;
-}
-
-.profile-button,
-.owner-button {
-  border: 0;
-  border-radius: 18px;
-  padding: 8px 11px;
-  background: rgba(255,255,255,.18);
-  color: white;
-  font-size: 12px;
-  backdrop-filter: blur(8px);
-}
-
-/* Balance */
-
-#dashboard .balance-card {
-  position: relative;
-  margin: 14px 0;
-  padding: 21px 20px;
-  min-height: 120px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, #00a86b, #008f5b);
-  color: white;
-  box-shadow: 0 10px 28px rgba(0, 120, 80, .18);
-}
-
-#dashboard .balance-card span {
-  font-size: 12px;
-  opacity: .8;
-}
-
-#dashboard #balance {
-  margin-top: 7px;
-  font-size: 31px;
-  font-weight: 800;
-  letter-spacing: -.7px;
-}
-
-#dashboard #currencyLabel {
-  opacity: .8;
-  font-size: 12px;
-}
-
-#dashboard .balance-card button {
-  position: absolute;
-  right: 15px;
-  top: 16px;
-  border: 1px solid rgba(255,255,255,.3);
-  background: rgba(255,255,255,.13);
-  color: white;
-  border-radius: 15px;
-  padding: 6px 10px;
-  font-size: 11px;
-}
-
-/* Quick actions */
-
-#dashboard .actions {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 9px;
-  margin: 14px 0;
-}
-
-#dashboard .action-card {
-  min-width: 0;
-  padding: 13px 8px;
-  border-radius: 15px;
-  background: white;
-  border: 1px solid var(--vw-border);
-  box-shadow: 0 3px 12px rgba(20,40,50,.04);
-  text-align: center;
-}
-
-#dashboard .action-card h3 {
-  margin: 0 0 9px;
-  font-size: 13px;
-}
-
-#dashboard .action-card input,
-#dashboard .action-card .account-id-box,
-#dashboard .action-card .recipient-preview {
-  display: none;
-}
-
-#dashboard .action-card button {
-  width: 100%;
-  min-height: 38px;
-  border: 0;
-  border-radius: 11px;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-#dashboard .action-card:first-child h3::before {
-  content: "＋ ";
-}
-
-#dashboard .action-card:nth-child(2) h3::before {
-  content: "↗ ";
-}
-
-#dashboard .transfer-card h3::before {
-  content: "➤ ";
-}
-
-/* Transfer form */
-
-#dashboard .transfer-card {
-  grid-column: 1 / -1;
-  text-align: left;
-}
-
-#dashboard .transfer-card input,
-#dashboard .transfer-card .account-id-box {
-  display: block;
-}
-
-#dashboard .transfer-card input {
-  width: 100%;
-  margin: 7px 0;
-}
-
-#dashboard .transfer-card .account-id-box {
-  margin-bottom: 9px;
-}
-
-/* Transactions */
-
-#dashboard .transactions-card {
-  margin-top: 14px;
-  padding: 15px;
-  border-radius: 17px;
-  background: white;
-  border: 1px solid var(--vw-border);
-  box-shadow: 0 3px 14px rgba(20,40,50,.04);
-}
-
-#dashboard .section-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-#dashboard .section-title h2 {
-  margin: 0;
-  font-size: 16px;
-}
-
-#dashboard .section-title button {
-  border: 0;
-  background: transparent;
-  color: var(--vw-primary);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-#dashboard .transaction {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 13px 2px;
-  border-bottom: 1px solid var(--vw-border);
-}
-
-#dashboard .transaction:last-child {
-  border-bottom: 0;
-}
-
-#dashboard .transaction strong {
-  font-size: 13px;
-}
-
-#dashboard .transaction span,
-#dashboard .transaction small {
-  color: var(--vw-muted);
-  font-size: 11px;
-}
-
-/* Messages */
-
-#dashboardMessage {
-  margin: 8px 0;
-  font-size: 12px;
-}
-
-/* Mobile fullscreen feel */
-
-@media (max-width: 480px) {
-  body {
-    overflow-x: hidden;
-  }
-
-  #dashboard {
-    min-height: calc(100vh - 20px);
-  }
-
-  footer {
-    display: none;
-  }
-}
-
-/* Larger screens */
-
-@media (min-width: 700px) {
-  #dashboard {
-    max-width: 900px;
-  }
-
-  #dashboard .actions {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  #dashboard .transfer-card {
-    grid-column: auto;
-  }
-
-  #dashboard .transfer-card input,
-  #dashboard .transfer-card .account-id-box {
-    display: none;
-  }
-}
-
-/* Bottom navigation */
-
-#dashboard::after {
-  content: "⌂   Wallet                 ⇄   Transactions                 ☻   Profile";
-  position: fixed;
-  z-index: 1000;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: min(100%, 480px);
-  padding: 14px 8px calc(14px + env(safe-area-inset-bottom));
-  background: rgba(255,255,255,.96);
-  border-top: 1px solid var(--vw-border);
-  color: var(--vw-muted);
-  text-align: center;
-  font-size: 11px;
-  font-weight: 600;
-  box-shadow: 0 -5px 20px rgba(0,0,0,.06);
-  backdrop-filter: blur(12px);
-  pointer-events: none;
-}
-
-/* Hide owner panel until opened */
-
-.owner-dashboard {
-  border-radius: 18px;
-}
-
-/* Cleaner inputs */
-
-#dashboard input,
-#dashboard select {
-  border: 1px solid var(--vw-border);
-  border-radius: 11px;
-  background: #fafcfd;
-}
-
-#dashboard input:focus,
-#dashboard select:focus {
-  border-color: var(--vw-primary);
-  outline: none;
-}
-
-/* Primary buttons */
-
-#dashboard .primary {
-  background: var(--vw-primary);
-  border-color: var(--vw-primary);
-  color: white;
-}
-
-#dashboard .primary:hover {
-  background: var(--vw-primary-dark);
-}
-
-/* Hide scrollbar visually while retaining functionality */
-
-#dashboard::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-
-
-/* =========================================================
-   ENABLE NORMAL DASHBOARD SCROLLING
-   ========================================================= */
-
-html,
-body {
-  height: auto;
-  min-height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-#dashboard {
-  height: auto;
-  min-height: 100vh;
-  max-height: none;
-  overflow: visible;
-  padding-bottom: 100px;
-}
-
-#dashboard .transactions-card,
-#dashboard .actions,
-#dashboard .owner-dashboard,
-#dashboard .owner-section {
-  overflow: visible;
-  max-height: none;
-}
-
-/* Keep bottom navigation visible while the page scrolls */
-#dashboard::after {
-  position: fixed;
-  bottom: 0;
-}
-
-/* Prevent content from being hidden behind bottom navigation */
-#dashboard {
-  padding-bottom: 110px;
-}
-
-
-/* ===== FINAL SCROLL FIX ===== */
-
-html {
-  height: auto !important;
-  min-height: 100% !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-}
-
-body {
-  height: auto !important;
-  min-height: 100vh !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  position: static !important;
-}
-
-body,
-main,
-#app,
-#dashboard,
-.dashboard,
-.dashboard-container,
-.page,
-.content {
-  max-height: none !important;
-  height: auto !important;
-  min-height: 0 !important;
-  overflow-y: visible !important;
-  overflow-x: visible !important;
-}
-
-#dashboard {
-  display: block !important;
-  position: relative !important;
-  padding-bottom: 120px !important;
-}
-
-#dashboard .transactions-card {
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-#transactions {
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-#dashboard .actions {
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-#ownerDashboard {
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-footer {
-  position: relative !important;
-}
-
-@media (max-width: 768px) {
-  html,
-  body {
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-
-  #dashboard {
-    min-height: 100vh !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
-}
-
-
-/* =========================================================
-   VICKY WALLET — CLASSIC PROFESSIONAL BANKING UI
-   ========================================================= */
-
-:root {
-  --vw-primary: #173b7a;
-  --vw-primary-dark: #102d5c;
-  --vw-accent: #2563eb;
-  --vw-bg: #f4f6f9;
-  --vw-card: #ffffff;
-  --vw-text: #172033;
-  --vw-muted: #6b7280;
-  --vw-border: #e5e7eb;
-  --vw-success: #16803c;
-  --vw-danger: #c62828;
-  --vw-shadow: 0 4px 18px rgba(20, 35, 60, .07);
-  --vw-radius: 16px;
-}
-
-/* Page */
-html,
-body {
-  background: var(--vw-bg) !important;
-  color: var(--vw-text) !important;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Arial,
-    sans-serif !important;
-}
-
-/* Main dashboard */
-#dashboard {
-  width: min(1100px, 100%) !important;
-  margin: 0 auto !important;
-  padding: 24px 18px 100px !important;
-}
-
-/* Header */
-.welcome {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 16px !important;
-  margin-bottom: 22px !important;
-}
-
-.welcome span {
-  color: var(--vw-muted) !important;
-  font-size: 13px !important;
-}
-
-.welcome h2 {
-  margin: 4px 0 0 !important;
-  color: var(--vw-text) !important;
-  font-size: 24px !important;
-  font-weight: 700 !important;
-}
-
-/* Balance */
-.balance-card {
-  position: relative !important;
-  background: linear-gradient(
-    135deg,
-    var(--vw-primary),
-    var(--vw-primary-dark)
-  ) !important;
-  color: white !important;
-  border-radius: 20px !important;
-  padding: 28px !important;
-  margin-bottom: 22px !important;
-  box-shadow: 0 10px 28px rgba(23, 59, 122, .20) !important;
-}
-
-.balance-card span {
-  color: rgba(255,255,255,.72) !important;
-  font-size: 13px !important;
-}
-
-.balance-card #balance {
-  margin: 8px 0 !important;
-  font-size: clamp(32px, 7vw, 48px) !important;
-  font-weight: 750 !important;
-  letter-spacing: -1px !important;
-}
-
-.balance-card small {
-  color: rgba(255,255,255,.75) !important;
-}
-
-.balance-card button {
-  position: absolute !important;
-  right: 20px !important;
-  bottom: 20px !important;
-  background: rgba(255,255,255,.12) !important;
-  border: 1px solid rgba(255,255,255,.25) !important;
-  color: white !important;
-  border-radius: 9px !important;
-  padding: 8px 12px !important;
-}
-
-/* Action cards */
-.actions {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 16px !important;
-  margin-bottom: 22px !important;
-}
-
-.action-card,
-.transactions-card,
-.owner-section {
-  background: var(--vw-card) !important;
-  border: 1px solid var(--vw-border) !important;
-  border-radius: var(--vw-radius) !important;
-  box-shadow: var(--vw-shadow) !important;
-}
-
-.action-card {
-  padding: 20px !important;
-}
-
-.action-card h3 {
-  margin-top: 0 !important;
-  color: var(--vw-text) !important;
-  font-size: 17px !important;
-}
-
-/* Inputs */
-#dashboard input,
-#dashboard select {
-  width: 100% !important;
-  box-sizing: border-box !important;
-  background: #f9fafb !important;
-  border: 1px solid var(--vw-border) !important;
-  border-radius: 10px !important;
-  padding: 12px 13px !important;
-  color: var(--vw-text) !important;
-  outline: none !important;
-}
-
-#dashboard input:focus,
-#dashboard select:focus {
-  border-color: var(--vw-accent) !important;
-  background: white !important;
-  box-shadow: 0 0 0 3px rgba(37,99,235,.10) !important;
-}
-
-/* Buttons */
-#dashboard button {
-  border-radius: 10px !important;
-  font-weight: 600 !important;
-  transition: .18s ease !important;
-}
-
-#dashboard button:hover {
-  transform: translateY(-1px);
-}
-
-#dashboard .primary {
-  background: var(--vw-primary) !important;
-  color: white !important;
-  border: none !important;
-}
-
-#dashboard .secondary {
-  background: #eef2f7 !important;
-  color: var(--vw-primary) !important;
-  border: 1px solid var(--vw-border) !important;
-}
-
-/* Transactions */
-.transactions-card {
-  padding: 20px !important;
-}
-
-.section-title {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 12px !important;
-}
-
-.section-title h2 {
-  margin: 0 !important;
-  font-size: 19px !important;
-  color: var(--vw-text) !important;
-}
-
-.transaction {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 15px !important;
-  padding: 15px 4px !important;
-  border-bottom: 1px solid var(--vw-border) !important;
-}
-
-.transaction:last-child {
-  border-bottom: none !important;
-}
-
-.transaction strong {
-  color: var(--vw-text) !important;
-}
-
-.transaction small,
-.transaction span {
-  color: var(--vw-muted) !important;
-}
-
-/* Account ID */
-.account-id-box {
-  background: #f6f8fb !important;
-  border: 1px solid var(--vw-border) !important;
-  border-radius: 10px !important;
-  padding: 12px !important;
-}
-
-/* Profile */
-.profile-panel {
-  background: white !important;
-  border: 1px solid var(--vw-border) !important;
-  border-radius: var(--vw-radius) !important;
-  box-shadow: var(--vw-shadow) !important;
-}
-
-/* Owner dashboard */
-.owner-dashboard {
-  background: var(--vw-bg) !important;
-}
-
-.owner-stat {
-  background: white !important;
-  border: 1px solid var(--vw-border) !important;
-  border-radius: 14px !important;
-  box-shadow: var(--vw-shadow) !important;
-}
-
-/* Normal scrolling */
-html,
-body {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  height: auto !important;
-  min-height: 100% !important;
-}
-
-#dashboard {
-  height: auto !important;
-  min-height: 100vh !important;
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-/* Mobile */
-@media (max-width: 800px) {
-  #dashboard {
-    padding: 18px 14px 100px !important;
-  }
-
-  .actions {
-    grid-template-columns: 1fr !important;
-  }
-
-  .welcome h2 {
-    font-size: 21px !important;
-  }
-
-  .balance-card {
-    padding: 22px !important;
-  }
-
-  .transaction {
-    align-items: flex-start !important;
-  }
-}
-
-@media (min-width: 801px) {
-  .transfer-card {
-    grid-column: span 1 !important;
-  }
-}
-
-
-/* Narrow, centered classic banking dashboard */
-#dashboard {
-  width: min(100%, 520px);
-  margin: 0 auto;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-#dashboard .welcome,
-#dashboard .balance-card,
-#dashboard .actions,
-#dashboard .transactions-card,
-#dashboard .profile-panel {
-  width: 100%;
-  max-width: 520px;
-  margin-left: auto;
-  margin-right: auto;
-  box-sizing: border-box;
-}
-
-#dashboard .actions {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-#dashboard .action-card {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-#dashboard .transactions-card {
-  margin-top: 16px;
-}
-
-@media (min-width: 768px) {
-  #dashboard {
-    width: min(100%, 560px);
-  }
-}
-
-
-/* Vicky Pay authentication screen separation */
-#dashboard.hidden {
-  display: none !important;
-}
-
-#auth.hidden {
-  display: none !important;
-}
-
-#auth:not(.hidden) {
-  display: block !important;
-  width: 100%;
-}
-
-#dashboard:not(.hidden) {
-  display: block !important;
-  width: 100%;
-}
-
-
-/* =========================================================
-   VICKY PAY AUTHENTICATION SCREEN
-   Login/Register and Dashboard are separate screens.
-   ========================================================= */
-
-#auth {
-  display: block;
-  width: 100%;
-}
-
-#auth.hidden {
-  display: none !important;
-}
-
-#dashboard {
-  display: block;
-  width: 100%;
-}
-
-#dashboard.hidden {
-  display: none !important;
-}
-
-/* Never allow the dashboard to appear while logged out. */
-body.logged-out #dashboard {
-  display: none !important;
-}
-
-body.logged-out #auth {
-  display: block !important;
-}
-
-/* Never show authentication screen after login. */
-body.logged-in #auth {
-  display: none !important;
-}
-
-body.logged-in #dashboard {
-  display: block !important;
-}
-
-
-/* =========================
-   VICKY PAY NOTIFICATIONS
-   ========================= */
-
-.notification-button {
-  position: relative;
-}
-
-.notification-badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background: #e53935;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #fff;
-}
-
-.notification-panel {
-  position: absolute;
-  top: 78px;
-  right: 18px;
-  width: min(390px, calc(100vw - 36px));
-  max-height: 620px;
-  z-index: 1000;
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 18px 55px rgba(0,0,0,.18);
-  overflow: hidden;
-}
-
-.notification-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px;
-  border-bottom: 1px solid #eee;
-}
-
-.notification-header h2 {
-  margin: 0 0 4px;
-}
-
-.notification-header small {
-  color: #777;
-}
-
-.notifications-list {
-  max-height: 430px;
-  overflow-y: auto;
-}
-
-.notification-item {
-  width: 100%;
-  border: 0;
-  border-bottom: 1px solid #eee;
-  background: #fff;
-  padding: 14px 16px;
-  display: flex;
-  gap: 12px;
-  text-align: left;
-  cursor: pointer;
-}
-
-.notification-item:hover {
-  background: #f7f9fc;
-}
-
-.notification-unread {
-  background: #eef5ff;
-}
-
-.notification-icon {
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
-  border-radius: 50%;
-  background: #f1f3f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-
-.notification-content {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.notification-content strong {
-  font-size: 14px;
-}
-
-.notification-content span {
-  font-size: 13px;
-  line-height: 1.35;
-  color: #555;
-}
-
-.notification-content small {
-  font-size: 11px;
-  color: #888;
-}
-
-.notification-footer {
-  padding: 12px 16px;
-  border-top: 1px solid #eee;
-}
-
-.notification-footer button {
-  width: 100%;
-}
-
-/* ===== VICKY PAY MONEY ACTIONS ===== */
-
-.vicky-action-panels {
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  margin: 24px 0;
-  width: 100%;
-}
-
-.vicky-action-panels .action-card {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  padding: 20px !important;
-  border-radius: 18px;
-}
-
-.vicky-action-panels .action-card h3 {
-  display: block !important;
-  margin: 0 0 16px;
-}
-
-.vicky-action-panels .action-card input {
-  display: block !important;
-  width: 100% !important;
-  box-sizing: border-box;
-  margin: 10px 0 !important;
-  min-height: 48px;
-}
-
-.vicky-action-panels .action-card button {
-  display: block !important;
-  width: 100%;
-  min-height: 48px;
-  margin-top: 12px;
-}
-
-@media (max-width: 850px) {
-  .vicky-action-panels {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 480px) {
-  .vicky-action-panels {
-    gap: 14px;
-    margin: 16px 0;
-  }
-
-  .vicky-action-panels .action-card {
-    padding: 16px !important;
-  }
-}
-
-/* Make the dashboard action area clearly visible */
-.vicky-dashboard .vicky-action-panels {
-  position: relative;
-  z-index: 5;
-}
-
-.vicky-dashboard .vicky-action-panels .action-card {
-  background: var(--card-bg, #ffffff);
-  border: 1px solid rgba(0,0,0,.08);
-}
-
-
-/* ===== COLLAPSIBLE MONEY PANELS ===== */
-
-.vicky-action-panels {
-  display: block !important;
-}
-
-.collapsible-panel {
-  display: none !important;
-  margin: 16px 0;
-}
-
-.collapsible-panel.money-panel-open {
-  display: block !important;
-  animation: moneyPanelOpen .2s ease-out;
-}
-
-@keyframes moneyPanelOpen {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-/* ===== FINAL VICKY PAY COLLAPSIBLE ACTION SYSTEM ===== */
-
-/* Override every previous action-panel rule */
-.vicky-action-panels {
-  display: block !important;
-  width: 100%;
-  margin: 15px 0 !important;
-}
-
-.vicky-action-panels .collapsible-panel {
-  display: none !important;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.vicky-action-panels .collapsible-panel.money-panel-open {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
-  animation: vickyMoneyOpen .2s ease-out;
-}
-
-@keyframes vickyMoneyOpen {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Mobile */
-@media (max-width: 760px) {
-  .vicky-action-panels {
-    display: block !important;
-  }
-
-  .vicky-action-panels .collapsible-panel {
-    margin: 12px 0 !important;
-  }
-}
-
-
-/* ===== VICKY PAY SEPARATE MONEY SCREENS ===== */
-
-.vicky-screen {
-  display: none;
-  min-height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
-  background: var(--vw-bg, #f5f7f9);
-}
-
-.vicky-screen.active {
-  display: block;
-}
-
-.vicky-screen-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.vicky-back {
-  width: 44px !important;
-  height: 44px !important;
-  min-width: 44px !important;
-  border-radius: 50% !important;
-  border: 0 !important;
-  cursor: pointer;
-  font-size: 22px;
-}
-
-.vicky-screen-card {
-  max-width: 600px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 20px;
-  padding: 22px;
-  box-shadow: 0 5px 25px rgba(0,0,0,.06);
-}
-
-.vicky-screen-card input {
-  width: 100%;
-  box-sizing: border-box;
-  min-height: 52px;
-  margin: 8px 0;
-  padding: 0 15px;
-  border-radius: 12px;
-}
-
-.vicky-screen-card .primary {
-  width: 100%;
-  min-height: 52px;
-  margin-top: 12px;
-}
-
-@media (max-width: 600px) {
-  .vicky-screen {
-    padding: 12px;
-  }
-
-  .vicky-screen-card {
-    padding: 18px;
-  }
-}
-
-
-/* =========================================================
-   VICKY PAY — SEPARATE FULL SCREENS
-   ========================================================= */
-
-.vicky-screen {
-  display: none !important;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  overflow-y: auto;
-  min-height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
-  background: var(--vw-bg, #f5f7f9);
-}
-
-.vicky-screen.active {
-  display: block !important;
-}
-
-.vicky-screen-header {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto 20px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.vicky-screen-header h2 {
-  margin: 2px 0 0;
-}
-
-.vicky-back {
-  width: 46px !important;
-  height: 46px !important;
-  min-width: 46px !important;
-  padding: 0 !important;
-  border: 0 !important;
-  border-radius: 50% !important;
-  background: #ffffff !important;
-  font-size: 24px !important;
-  cursor: pointer;
-  box-shadow: 0 3px 12px rgba(0,0,0,.08);
-}
-
-.vicky-screen-card {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  box-sizing: border-box;
-  padding: 22px;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 5px 25px rgba(0,0,0,.06);
-}
-
-.vicky-screen-card input {
-  display: block;
-  width: 100%;
-  min-height: 52px;
-  box-sizing: border-box;
-  margin: 10px 0;
-  padding: 0 15px;
-  border: 1px solid #dfe4e8;
-  border-radius: 12px;
-  font-size: 16px;
-}
-
-.vicky-screen-card .primary {
-  display: block;
-  width: 100%;
-  min-height: 52px;
-  margin-top: 14px;
-}
-
-.vicky-screen .account-id-box {
-  margin: 12px 0;
-}
-
-@media (max-width: 600px) {
-  .vicky-screen {
-    padding: 12px;
-  }
-
-  .vicky-screen-card {
-    padding: 18px;
-    border-radius: 16px;
-  }
-}
-
-
-/* ===== VICKY PAY FINAL SCREEN VISIBILITY FIX ===== */
-
-#dashboard {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  min-height: 100vh;
-}
-
-#dashboard.hidden {
-  display: none !important;
-}
-
-.money-screen {
-  width: 100%;
-  min-height: 100vh;
-  box-sizing: border-box;
-  padding: 20px;
-  background: var(--vw-bg, #f5f7f9);
-}
-
-.money-screen.hidden {
-  display: none !important;
-}
-
-.money-screen-card {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 24px;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 5px 25px rgba(0,0,0,.08);
-}
-
-.money-screen-header {
-  max-width: 600px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.back-button {
-  width: 45px;
-  height: 45px;
-  border: 0;
-  border-radius: 50%;
-  background: #fff;
-  font-size: 25px;
-  cursor: pointer;
-}
-
-.money-screen input {
-  width: 100%;
-  box-sizing: border-box;
-  min-height: 52px;
-  margin: 8px 0 16px;
-  padding: 14px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  font-size: 16px;
-}
-
-.money-submit {
-  width: 100%;
-  min-height: 52px;
-}
-
-.vicky-quick-actions {
-  display: grid !important;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-
-@media (max-width: 600px) {
-  .vicky-quick-actions {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* =========================================================
-   VICKY PAY — FULL SCREEN MONEY PAGES
-   ========================================================= */
-
-.money-screen {
-  display: none !important;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  width: 100%;
-  min-height: 100vh;
-  overflow-y: auto;
-  background: #f5f7f9;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.money-screen.active {
-  display: block !important;
-}
-
-.money-screen.hidden {
-  display: none !important;
-}
-
-.money-screen-header {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto 20px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.back-button {
-  width: 46px;
-  height: 46px;
-  border: 0;
-  border-radius: 50%;
-  background: white;
-  font-size: 25px;
-  cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0,0,0,.08);
-}
-
-.money-screen-header small {
-  display: block;
-  color: #7b8794;
-  font-size: 12px;
-}
-
-.money-screen-header h2 {
-  margin: 2px 0 0;
-  font-size: 24px;
-}
-
-.money-screen-card {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 24px;
-  box-sizing: border-box;
-  background: white;
-  border-radius: 22px;
-  box-shadow: 0 5px 25px rgba(0,0,0,.07);
-}
-
-.money-screen-card label {
-  display: block;
-  margin: 18px 0 7px;
-  font-weight: 700;
-  font-size: 13px;
-}
-
-.money-screen-card input {
-  width: 100%;
-  min-height: 52px;
-  padding: 14px;
-  box-sizing: border-box;
-  border: 1px solid #dfe5e9;
-  border-radius: 12px;
-  font-size: 16px;
-  outline: none;
-}
-
-.money-screen-card input:focus {
-  border-color: #00a86b;
-}
-
-.money-submit {
-  width: 100%;
-  min-height: 54px;
-  margin-top: 22px;
-  border-radius: 13px;
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.money-screen-icon {
-  width: 58px;
-  height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
-  border-radius: 18px;
-  background: #e9fff5;
-  color: #00a86b;
-  font-size: 28px;
-}
-
-.money-screen-card h3 {
-  margin: 0 0 8px;
-}
-
-.money-screen-card p {
-  color: #7b8794;
-  line-height: 1.5;
-}
-
-.available-balance {
-  margin: 18px 0;
-  padding: 15px;
-  border-radius: 12px;
-  background: #f5f7f9;
-}
-
-.available-balance strong {
-  display: block;
-  margin-top: 5px;
-  font-size: 18px;
-}
-
-@media (max-width: 600px) {
-  .money-screen {
-    padding: 14px;
-  }
-
-  .money-screen-card {
-    padding: 20px;
-    border-radius: 18px;
-  }
-
-  .money-screen-header h2 {
-    font-size: 21px;
-  }
-}
-
-/* ==================== VICKY PAY EARNINGS ==================== */
-
-.vicky-earnings-card {
-  margin: 20px 0;
-  padding: 20px;
-  border-radius: 20px;
-  background: var(--card-bg, #ffffff);
-  border: 1px solid rgba(0,0,0,.07);
-  box-shadow: 0 10px 30px rgba(0,0,0,.06);
-}
-
-.vicky-earnings-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-}
-
-.vicky-earnings-header h3 {
-  margin: 4px 0 0;
-}
-
-.vicky-section-label {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  opacity: .55;
-}
-
-.vicky-earnings-icon {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 14px;
-  background: rgba(34,197,94,.12);
-  font-size: 22px;
-}
-
-.vicky-earnings-balance {
-  padding: 18px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #111827, #1f2937);
-  color: white;
-  margin-bottom: 14px;
-}
-
-.vicky-earnings-balance span {
-  display: block;
-  font-size: 13px;
-  opacity: .75;
-  margin-bottom: 7px;
-}
-
-.vicky-earnings-balance strong {
-  display: block;
   font-size: 30px;
 }
 
-.vicky-earnings-stats {
+.brand p {
+  margin: 7px 0 0;
+  color: var(--muted);
+}
+
+.auth-card,
+.card,
+.panel {
+  background: var(--card);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+.auth-card {
+  width: min(100%, 430px);
+  padding: 20px;
+}
+
+.tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
 }
 
-.vicky-earnings-stats > div {
+.tab {
+  border: 0;
+  background: transparent;
+  padding: 14px 5px;
+  color: var(--muted);
+  font-weight: 700;
+  border-bottom: 3px solid transparent;
+}
+
+.tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+label {
+  display: block;
+  margin: 14px 0 7px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+input,
+select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 14px;
+  background: white;
+  color: var(--text);
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--primary);
+}
+
+.primary,
+.secondary {
+  width: 100%;
+  border-radius: 12px;
   padding: 14px;
-  border-radius: 14px;
-  background: rgba(0,0,0,.04);
+  margin-top: 18px;
+  font-weight: 700;
 }
 
-.vicky-earnings-stats span,
-.earning-item small {
+.primary {
+  border: 0;
+  background: var(--primary);
+  color: white;
+}
+
+.primary:hover {
+  background: var(--primary-dark);
+}
+
+.secondary {
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+}
+
+.full {
   display: block;
-  font-size: 12px;
-  opacity: .65;
 }
 
-.vicky-earnings-stats strong {
-  display: block;
-  margin-top: 5px;
-  font-size: 18px;
+.message {
+  min-height: 0;
+  margin: 8px 0;
+  padding: 0;
+  font-size: 14px;
 }
 
-.vicky-referral-box {
-  padding: 16px;
-  border-radius: 15px;
-  background: rgba(59,130,246,.08);
-  margin-bottom: 18px;
+.message:not(:empty) {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fff1f0;
+  color: var(--danger);
 }
 
-.vicky-referral-box p {
-  margin: 5px 0 0;
-  font-size: 13px;
-  opacity: .72;
+.message.success:not(:empty) {
+  background: #edf7ed;
+  color: var(--success);
 }
 
-.vicky-earnings-history-title {
-  margin-bottom: 10px;
+.dashboard {
+  min-height: 100vh;
+  padding-bottom: 90px;
 }
 
-.earning-item {
+.topbar {
+  background: white;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar small,
+.screen-header small {
+  color: var(--muted);
+}
+
+.topbar h2 {
+  margin: 4px 0 0;
+  font-size: 20px;
+}
+
+.icon-button {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 12px;
+  background: #edf3ff;
+  color: var(--primary);
+  font-size: 20px;
+}
+
+main {
+  width: min(100%, 760px);
+  margin: auto;
+  padding: 18px;
+}
+
+.balance-card {
+  border-radius: 22px;
+  padding: 24px;
+  color: white;
+  background: linear-gradient(135deg, #0b57d0, #2675e8);
+  box-shadow: var(--shadow);
+}
+
+.balance-label {
+  opacity: .85;
+  font-size: 14px;
+}
+
+.balance-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 13px 0;
-  border-bottom: 1px solid rgba(0,0,0,.07);
+  margin-top: 8px;
 }
 
-.earning-item:last-child {
+.balance-row strong {
+  font-size: 34px;
+}
+
+.balance-row button {
+  border: 0;
+  background: rgba(255,255,255,.15);
+  color: white;
+  border-radius: 10px;
+  padding: 8px 11px;
+}
+
+.balance-card > span {
+  display: inline-block;
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.actions button {
+  min-height: 92px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: white;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--shadow);
+}
+
+.actions span {
+  color: var(--primary);
+  font-size: 25px;
+}
+
+.quick-card,
+.card {
+  padding: 18px;
+  margin-top: 16px;
+}
+
+.quick-card h3,
+.card h3,
+.panel h3 {
+  margin-top: 0;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 9px;
+}
+
+.quick-grid button {
+  padding: 12px 5px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: white;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-head button {
+  border: 0;
+  background: transparent;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.transaction,
+.account-item,
+.account-row {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.transaction:last-child,
+.account-item:last-child {
   border-bottom: 0;
 }
 
-.earning-item-main {
-  min-width: 0;
-}
-
-.earning-item-main strong {
+.transaction small,
+.account-item small {
   display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  margin-top: 4px;
+  color: var(--muted);
 }
 
-.earning-item-right {
-  text-align: right;
-  flex-shrink: 0;
+.positive {
+  color: var(--success);
 }
 
-.earning-positive {
-  color: #16a34a;
+.negative {
+  color: var(--danger);
 }
 
-.earning-negative {
-  color: #dc2626;
+.empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 22px 5px;
 }
 
-@media (max-width: 520px) {
-  .vicky-earnings-card {
-    padding: 16px;
-  }
-
-  .vicky-earnings-stats {
-    grid-template-columns: 1fr;
-  }
-
-  .earning-item {
-    align-items: flex-start;
-  }
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 72px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: white;
+  border-top: 1px solid var(--border);
+  z-index: 20;
 }
 
-.vicky-referral-code-row {
+.bottom-nav button {
+  border: 0;
+  background: white;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.bottom-nav button.nav-active,
+.bottom-nav button:hover {
+  color: var(--primary);
+}
+
+.bottom-nav span {
+  font-size: 11px;
+}
+
+.screen {
+  min-height: 100vh;
+  padding-bottom: 30px;
+}
+
+.screen-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 14px;
+  gap: 14px;
+  padding: 18px;
+  background: white;
+  border-bottom: 1px solid var(--border);
 }
 
-.vicky-referral-code-row span {
-  flex: 1;
-  min-width: 0;
-  padding: 11px 12px;
-  border-radius: 10px;
-  background: rgba(0,0,0,.06);
-  font-weight: 800;
-  letter-spacing: 1px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.screen-header h2 {
+  margin: 4px 0 0;
 }
 
-.vicky-referral-code-row button,
-.vicky-share-referral {
+.back {
+  width: 42px;
+  height: 42px;
   border: 0;
-  border-radius: 10px;
-  padding: 11px 15px;
-  font-weight: 700;
-  cursor: pointer;
+  border-radius: 12px;
+  background: #edf3ff;
+  color: var(--primary);
+  font-size: 22px;
 }
 
-.vicky-share-referral {
-  width: 100%;
-  margin-top: 10px;
+.screen > .message,
+.panel {
+  width: min(calc(100% - 36px), 760px);
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.referral-message {
-  margin: 8px 0 0;
-  font-size: 12px;
-  opacity: .7;
+.screen > .message {
+  margin-top: 15px;
 }
 
-/* =========================================================
-   VICKY PAY — CROSS DEVICE / MOBILE COMPATIBILITY
-   ========================================================= */
-
-html {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-  scroll-behavior: smooth;
+.panel {
+  margin-top: 18px;
+  padding: 20px;
 }
 
-body {
-  min-height: 100dvh;
-  min-height: -webkit-fill-available;
-  overflow-x: hidden;
-  -webkit-tap-highlight-color: transparent;
+.panel-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: #edf3ff;
+  color: var(--primary);
+  display: grid;
+  place-items: center;
+  font-size: 25px;
 }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
-}
-
-button {
-  touch-action: manipulation;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-input,
-select,
-textarea {
-  max-width: 100%;
-  font-size: 16px;
-}
-
-/* iPhone/iPad safe areas */
-.app,
-.vicky-dashboard,
-.vicky-topbar,
-.bottom-nav {
-  padding-left: max(0px, env(safe-area-inset-left));
-  padding-right: max(0px, env(safe-area-inset-right));
-}
-
-.vicky-topbar {
-  padding-top: max(0px, env(safe-area-inset-top));
-}
-
-.bottom-nav {
-  padding-bottom: max(8px, env(safe-area-inset-bottom));
-}
-
-/* Prevent accidental horizontal scrolling */
-img,
-svg,
-video,
-canvas {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Comfortable touch targets */
-button,
-[role="button"] {
-  min-height: 44px;
-}
-
-@media (max-width: 768px) {
-  body {
-    width: 100%;
+@media (max-width: 500px) {
+  .actions {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .app {
-    width: 100%;
-    max-width: 100%;
+  .quick-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  main {
-    width: 100%;
+  .balance-row strong {
+    font-size: 29px;
   }
-
-  .card,
-  .auth-screen,
-  .vicky-dashboard {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  input,
-  select,
-  textarea {
-    width: 100%;
-    box-sizing: border-box;
-  }
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  h2 {
-    font-size: 1.25rem;
-  }
-
-  button {
-    min-height: 46px;
-  }
-}
-
-/* Landscape phones/tablets */
-@media (max-height: 500px) and (orientation: landscape) {
-  .auth-screen {
-    margin-top: 12px;
-    margin-bottom: 12px;
-  }
-}
-
-/* iOS momentum scrolling */
-.vicky-dashboard,
-main {
-  -webkit-overflow-scrolling: touch;
-}
-
-/* =========================================================
-   VICKY PAY — FINAL TRANSFER / ACCOUNT VISIBILITY FIX
-   ========================================================= */
-
-#dashboard .action-card input,
-#dashboard .action-card select,
-#dashboard .action-card .account-id-box,
-#dashboard .action-card .recipient-preview {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-#dashboard .transfer-card {
-  display: block !important;
-  grid-column: 1 / -1 !important;
-  text-align: left !important;
-}
-
-#dashboard .transfer-card input,
-#dashboard .transfer-card select,
-#dashboard .transfer-card .account-id-box,
-#dashboard .transfer-card .recipient-preview {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  width: 100% !important;
-  box-sizing: border-box;
-}
-
-#dashboard .transfer-card input,
-#dashboard .transfer-card select {
-  min-height: 42px;
-  margin: 7px 0;
-  padding: 10px 12px;
-}
-
-#dashboard .transfer-card .account-id-box {
-  margin: 7px 0 9px;
-  padding: 10px 12px;
-}
-
-#dashboard .transfer-card .recipient-preview {
-  margin: 7px 0;
-  padding: 10px 12px;
-  border-radius: 11px;
-  background: #f0faf6;
-  border: 1px solid #d8f0e5;
-}
-
-#dashboard .transfer-card button {
-  display: block !important;
-  width: 100% !important;
-  min-height: 42px;
-}
-
-@media (min-width: 700px) {
-  #dashboard .transfer-card {
-    grid-column: 1 / -1 !important;
-  }
-
-  #dashboard .transfer-card input,
-  #dashboard .transfer-card select,
-  #dashboard .transfer-card .account-id-box,
-  #dashboard .transfer-card .recipient-preview {
-    display: block !important;
-  }
-}
-
-
-
-/* Vicky Pay startup state — final override */
-#auth {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-#auth.hidden {
-  display: none !important;
-}
-
-#dashboard.hidden {
-  display: none !important;
-}
-
-#dashboard:not(.hidden) {
-  display: block !important;
 }
