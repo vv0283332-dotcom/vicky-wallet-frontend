@@ -38,10 +38,20 @@ async function apiRequest(path, options = {}) {
   if (options.body !== undefined) headers["Content-Type"] = "application/json";
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const response = await fetch(`${API}${path}`, {
-    ...options,
-    headers
-  });
+  let response;
+
+  try {
+    response = await fetch(`${API}${path}`, {
+      ...options,
+      headers
+    });
+  } catch (error) {
+    console.error("VIKI API FETCH FAILED:", error);
+
+    throw new Error(
+      `API connection failed: ${API}${path}`
+    );
+  }
 
   let data = {};
   try {
@@ -192,7 +202,8 @@ async function restoreSession() {
     ]);
   } catch (error) {
     console.error("Session restore failed:", error);
-    clearToken();
+    saveToken("");
+    currentUser = null;
     showAuth();
     showLogin();
   }
