@@ -95,9 +95,17 @@ function showDashboard() {
     currentUser.email ||
     "Vicky Pay";
 
-  $("profileEmail").textContent = currentUser.email || "—";
-  $("profileCurrency").textContent = currentUser.currency || "NGN";
-  $("currency").textContent = currentUser.currency || "NGN";
+  if ($("profileEmail")) {
+    $("profileEmail").textContent = currentUser.email || "—";
+  }
+
+  if ($("profileCurrency")) {
+    $("profileCurrency").textContent = currentUser.currency || "NGN";
+  }
+
+  if ($("currency")) {
+    $("currency").textContent = currentUser.currency || "NGN";
+  }
 }
 
 function showLogin() {
@@ -384,6 +392,20 @@ function closeScreen() {
   message("screenMessage");
 }
 
+/* Compatibility helpers for the Vicky Pay dashboard HTML */
+function openMoney(type) {
+  openScreen(type);
+}
+
+function toggleBalance() {
+  balanceVisible = !balanceVisible;
+  renderBalance();
+}
+
+async function loadReferrals() {
+  message("dashboardMessage", "Rewards and referrals are coming soon.", "success");
+}
+
 async function loadAccounts() {
   try {
     const data = await apiRequest("/linked-accounts");
@@ -666,25 +688,27 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-$("loginTab").addEventListener("click", showLogin);
-$("registerTab").addEventListener("click", showRegister);
-$("loginForm").addEventListener("submit", login);
-$("registerForm").addEventListener("submit", register);
-$("logoutButton").addEventListener("click", logout);
-$("balanceToggle").addEventListener("click", () => {
-  balanceVisible = !balanceVisible;
-  renderBalance();
-});
+function bind(id, event, handler) {
+  const element = $(id);
+  if (element) element.addEventListener(event, handler);
+}
 
-$("backButton").addEventListener("click", closeScreen);
-$("depositButton").addEventListener("click", deposit);
-$("transferButton").addEventListener("click", transfer);
-$("withdrawButton").addEventListener("click", withdraw);
-$("historyButton").addEventListener("click", () => openScreen("history"));
-$("accountsButton").addEventListener("click", () => openScreen("accounts"));
-$("notificationsButton").addEventListener("click", () => openScreen("notifications"));
-$("profileButton").addEventListener("click", () => openScreen("profile"));
-$("profileSaveButton").addEventListener("click", saveProfile);
+bind("loginTab", "click", showLogin);
+bind("registerTab", "click", showRegister);
+bind("loginForm", "submit", login);
+bind("registerForm", "submit", register);
+bind("logoutButton", "click", logout);
+bind("balanceToggle", "click", toggleBalance);
+
+bind("backButton", "click", closeScreen);
+bind("depositButton", "click", deposit);
+bind("transferButton", "click", transfer);
+bind("withdrawButton", "click", withdraw);
+bind("historyButton", "click", () => openScreen("history"));
+bind("accountsButton", "click", () => openScreen("accounts"));
+bind("notificationsButton", "click", () => openScreen("notifications"));
+bind("profileButton", "click", () => openScreen("profile"));
+bind("profileSaveButton", "click", saveProfile);
 
 document.querySelectorAll("[data-action]").forEach(button => {
   button.addEventListener("click", () => {
