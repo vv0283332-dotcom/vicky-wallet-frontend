@@ -497,20 +497,37 @@ async function deposit() {
   setBusy(button, true, "Continue");
 
   try {
-    const accountId = $("depositAccount").value || undefined;
+    const paymentMethod = $("depositMethod").value;
+    const accountId = $("depositAccount").value || "";
+
+    // A connected account is required only for bank funding.
+    if (paymentMethod === "bank" && !accountId) {
+      message(
+        "screenMessage",
+        "Select a valid connected bank account to fund this deposit."
+      );
+      setBusy(button, false, "Continue");
+      return;
+    }
+
+    const payload = {
+      amount,
+      currency: currentUser?.currency || "NGN",
+      provider: "flutterwave",
+      payment_method: paymentMethod,
+      description:
+        $("depositDescription").value.trim() ||
+        "Wallet deposit"
+    };
+
+    // Only send source_account_id when the user selected one.
+    if (accountId) {
+      payload.source_account_id = accountId;
+    }
 
     const data = await apiRequest("/payments/deposit", {
       method: "POST",
-      body: JSON.stringify({
-        amount,
-        currency: currentUser?.currency || "NGN",
-        provider: "flutterwave",
-        payment_method: $("depositMethod").value,
-        source_account_id: accountId,
-        description:
-          $("depositDescription").value.trim() ||
-          "Wallet deposit"
-      })
+      body: JSON.stringify(payload)
     });
 
     if (data.checkout_url) {
