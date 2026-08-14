@@ -773,3 +773,35 @@ main {
     grid-template-columns: repeat(6,1fr);
   }
 }
+
+.profile-photo-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.profile-avatar,
+.profile-avatar-placeholder {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+}
+
+.profile-avatar {
+  object-fit: cover;
+}
+
+.profile-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  background: #eee;
+}
+
+#profilePhotoMessage {
+  display: block;
+  margin: 8px 0 14px;
+}
+
