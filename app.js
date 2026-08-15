@@ -334,17 +334,17 @@ async function withdraw() {
 }
 
 async function transfer() {
-  const recipient_email =
-    $("recipientEmail").value.trim();
+  const recipient_id =
+    $("recipientEmail").value.trim().toUpperCase();
 
   const value = $("transferAmount").value;
 
   const description =
     $("transferDescription").value.trim();
 
-  if (!recipient_email) {
+  if (!recipient_id) {
     setDashboardMessage(
-      "Enter the recipient email.",
+      "Enter the recipient Vicky ID.",
       "error"
     );
     return;
@@ -358,11 +358,23 @@ async function transfer() {
     return;
   }
 
+  if (currentUser && currentUser.account_id &&
+      recipient_id.toLowerCase() ===
+      String(currentUser.account_id).toLowerCase()) {
+    setDashboardMessage(
+      "You cannot transfer money to yourself.",
+      "error"
+    );
+    return;
+  }
+
   try {
+    setDashboardMessage("Sending money...", "success");
+
     const data = await apiRequest("/wallet/transfer", {
       method: "POST",
       body: JSON.stringify({
-        recipient_email,
+        recipient_id,
         amount: Number(value),
         description
       })
@@ -373,7 +385,7 @@ async function transfer() {
     $("transferDescription").value = "";
 
     setDashboardMessage(
-      data.message || "Transfer successful.",
+      data.message || "Money sent successfully.",
       "success"
     );
 
@@ -381,7 +393,10 @@ async function transfer() {
     await loadTransactions();
 
   } catch (error) {
-    setDashboardMessage(error.message, "error");
+    setDashboardMessage(
+      error.message || "Transfer failed.",
+      "error"
+    );
   }
 }
 
@@ -474,7 +489,7 @@ function openProfile() {
     "USD";
 
   document.getElementById("profileId").textContent =
-    currentUser.id || "Not available";
+    (currentUser.account_id || currentUser.vicky_id || currentUser.id || "Not available");
 
   const created = currentUser.created_at;
 
