@@ -267,8 +267,8 @@
       <div class="panel-icon">↗</div>
       <h3>Send money</h3>
 
-      <label>Recipient account ID or email</label>
-      <input id="transferRecipient" type="text" placeholder="Recipient">
+      <label>Recipient Vicky Account ID</label>
+      <input id="transferRecipient" type="text" placeholder="VW-12345678" autocomplete="off">
 
       <label>Amount</label>
       <input id="transferAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
@@ -291,6 +291,10 @@
       <label>Amount</label>
       <input id="withdrawAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
 
+      <button class="primary" id="exchangeButton" type="button">
+        ⇄ Exchange
+      </button>
+
       <button class="primary" id="withdrawButton" type="button">Withdraw</button>
     </div>
 
@@ -312,6 +316,61 @@
       <div id="notificationsList" class="transactions-list"></div>
     </div>
 
+    <div id="exchangePanel" class="panel hidden">
+      <div class="panel-icon">⇄</div>
+      <h3>Exchange Currency</h3>
+
+      <label>From</label>
+      <select id="exchangeFrom">
+        <option value="USD">USD — US Dollar</option>
+        <option value="EUR">EUR — Euro</option>
+        <option value="GBP">GBP — British Pound</option>
+        <option value="NGN">NGN — Nigerian Naira</option>
+        <option value="GHS">GHS — Ghanaian Cedi</option>
+        <option value="KES">KES — Kenyan Shilling</option>
+        <option value="ZAR">ZAR — South African Rand</option>
+        <option value="XOF">XOF — West African CFA Franc</option>
+        <option value="CAD">CAD — Canadian Dollar</option>
+        <option value="AUD">AUD — Australian Dollar</option>
+        <option value="JPY">JPY — Japanese Yen</option>
+        <option value="CHF">CHF — Swiss Franc</option>
+      </select>
+
+      <label>To</label>
+      <select id="exchangeTo">
+        <option value="NGN">NGN — Nigerian Naira</option>
+        <option value="USD">USD — US Dollar</option>
+        <option value="EUR">EUR — Euro</option>
+        <option value="GBP">GBP — British Pound</option>
+        <option value="GHS">GHS — Ghanaian Cedi</option>
+        <option value="KES">KES — Kenyan Shilling</option>
+        <option value="ZAR">ZAR — South African Rand</option>
+        <option value="XOF">XOF — West African CFA Franc</option>
+        <option value="CAD">CAD — Canadian Dollar</option>
+        <option value="AUD">AUD — Australian Dollar</option>
+        <option value="JPY">JPY — Japanese Yen</option>
+        <option value="CHF">CHF — Swiss Franc</option>
+      </select>
+
+      <label>Amount</label>
+      <input id="exchangeAmount" type="number" min="0.01" step="0.01"
+             placeholder="Enter amount">
+
+      <div id="exchangeRate" class="exchange-rate">
+        Enter an amount to get the latest published rate.
+      </div>
+
+      <div id="exchangeResult" class="exchange-result"></div>
+
+      <button class="primary" id="getExchangeRateButton" type="button">
+        Get Exchange Rate
+      </button>
+
+      <button class="primary hidden" id="confirmExchangeButton" type="button">
+        Confirm Exchange
+      </button>
+    </div>
+
     <div id="profilePanel" class="panel hidden">
       <div class="panel-icon">👤</div>
       <h3>Your profile</h3>
@@ -327,6 +386,6 @@
   </section>
 
 </div>
-<script src="app.js?v=20260814-1" defer></script>
+<script src="app.js?v=20260815-exchange" defer></script>
 </body>
 </html>

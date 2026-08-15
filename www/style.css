@@ -805,3 +805,22 @@ main {
   margin: 8px 0 14px;
 }
 
+
+.exchange-rate,
+.exchange-result {
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.exchange-result {
+  font-weight: 700;
+}
+
+#exchangePanel select,
+#exchangePanel input {
+  width: 100%;
+  margin-bottom: 12px;
+}
+

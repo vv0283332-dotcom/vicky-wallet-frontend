@@ -334,23 +334,31 @@ async function withdraw() {
 }
 
 async function transfer() {
-  const recipient_email =
-    $("recipientEmail").value.trim();
+  const recipient_account_id =
+    $("transferRecipient").value.trim().toUpperCase();
 
-  const value = $("transferAmount").value;
+  const value = Number($("transferAmount").value);
 
   const description =
     $("transferDescription").value.trim();
 
-  if (!recipient_email) {
+  if (!recipient_account_id) {
     setDashboardMessage(
-      "Enter the recipient email.",
+      "Enter the recipient Vicky Account ID.",
       "error"
     );
     return;
   }
 
-  if (!value || Number(value) <= 0) {
+  if (!/^VW-[0-9]{8}$/.test(recipient_account_id)) {
+    setDashboardMessage(
+      "Invalid Vicky Account ID. Example: VW-12345678",
+      "error"
+    );
+    return;
+  }
+
+  if (!Number.isFinite(value) || value <= 0) {
     setDashboardMessage(
       "Enter a valid transfer amount.",
       "error"
@@ -362,18 +370,18 @@ async function transfer() {
     const data = await apiRequest("/wallet/transfer", {
       method: "POST",
       body: JSON.stringify({
-        recipient_email,
-        amount: Number(value),
+        recipient_account_id,
+        amount: value,
         description
       })
     });
 
-    $("recipientEmail").value = "";
+    $("transferRecipient").value = "";
     $("transferAmount").value = "";
     $("transferDescription").value = "";
 
     setDashboardMessage(
-      data.message || "Transfer successful.",
+      data.message || "Money sent successfully.",
       "success"
     );
 
@@ -381,7 +389,10 @@ async function transfer() {
     await loadTransactions();
 
   } catch (error) {
-    setDashboardMessage(error.message, "error");
+    setDashboardMessage(
+      error.message || "Transfer failed.",
+      "error"
+    );
   }
 }
 
