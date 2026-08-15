@@ -1,700 +1,11 @@
-"use strict";
+const API =
+  window.VICKY_API_URL ||
+  "https://vicky-wallet-api-iqm3.onrender.com";
 
-const API = "https://vicky-wallet-api-iqm3.onrender.com";
-const TOKEN_KEY = "vicky_wallet_token";
-
-let token = localStorage.getItem(TOKEN_KEY) || "";
+let token = localStorage.getItem("vicky_wallet_token");
 let currentUser = null;
-let currentBalance = 0;
-let balanceVisible = true;
 
-const $ = id => document.getElementById(id);
-
-function message(id, text = "", type = "error") {
-  const el = $(id);
-  if (!el) return;
-  el.textContent = text;
-  el.className = text ? `message ${type}` : "message";
-}
-
-function setBusy(button, busy, normalText) {
-  if (!button) return;
-  button.disabled = busy;
-  button.textContent = busy ? "Please wait..." : normalText;
-}
-
-function saveToken(value) {
-  token = value || "";
-  if (token) localStorage.setItem(TOKEN_KEY, token);
-  else localStorage.removeItem(TOKEN_KEY);
-}
-
-async function apiRequest(path, options = {}) {
-  const headers = {
-    Accept: "application/json",
-    ...(options.headers || {})
-  };
-
-  if (options.body !== undefined) headers["Content-Type"] = "application/json";
-  if (token) headers.Authorization = `Bearer ${token}`;
-
-  let response;
-
-  try {
-    response = await fetch(`${API}${path}`, {
-      ...options,
-      headers
-    });
-  } catch (error) {
-    console.error("VIKI API FETCH FAILED:", error);
-
-    throw new Error(
-      `API connection failed: ${API}${path}`
-    );
-  }
-
-  let data = {};
-  try {
-    data = await response.json();
-  } catch {}
-
-  if (response.status === 401) {
-    saveToken("");
-    currentUser = null;
-    showAuth();
-    throw new Error("Your session has expired. Please sign in again.");
-  }
-
-  if (!response.ok) {
-    throw new Error(
-      data.error ||
-      data.message ||
-      `Request failed (${response.status})`
-    );
-  }
-
-  return data;
-}
-
-function showAuth() {
-  $("auth").classList.remove("hidden");
-  $("dashboard").classList.add("hidden");
-  $("moneyScreen").classList.add("hidden");
-}
-
-function showDashboard() {
-  $("auth").classList.add("hidden");
-  $("moneyScreen").classList.add("hidden");
-  $("dashboard").classList.remove("hidden");
-
-  if (!currentUser) return;
-
-  $("userName").textContent =
-    currentUser.full_name ||
-    currentUser.name ||
-    currentUser.email ||
-    "Vicky Pay";
-
-  if ($("profileEmail")) {
-    $("profileEmail").textContent = currentUser.email || "—";
-  }
-
-  if ($("profileCurrency")) {
-    $("profileCurrency").textContent = currentUser.currency || "NGN";
-  }
-
-  if ($("currency")) {
-    $("currency").textContent = currentUser.currency || "NGN";
-  }
-}
-
-function showLogin() {
-  $("loginForm").classList.remove("hidden");
-  $("registerForm").classList.add("hidden");
-  $("loginTab").classList.add("active");
-  $("registerTab").classList.remove("active");
-  message("authMessage");
-}
-
-function showRegister() {
-  $("loginForm").classList.add("hidden");
-  $("registerForm").classList.remove("hidden");
-  $("loginTab").classList.remove("active");
-  $("registerTab").classList.add("active");
-  message("authMessage");
-}
-
-async function login(event) {
-  event.preventDefault();
-
-  const button = $("loginButton");
-  setBusy(button, true, "Login");
-
-  try {
-    const data = await apiRequest("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({
-        email: $("loginEmail").value.trim(),
-        password: $("loginPassword").value
-      })
-    });
-
-    if (!data.token) throw new Error("Authentication token was not returned.");
-
-    saveToken(data.token);
-    currentUser = data.user || null;
-
-    showDashboard();
-    await refreshDashboard();
-  } catch (error) {
-    message("authMessage", error.message);
-  } finally {
-    setBusy(button, false, "Login");
-  }
-}
-
-async function register(event) {
-  event.preventDefault();
-
-  const button = $("registerButton");
-  setBusy(button, true, "Create account");
-
-  try {
-    const data = await apiRequest("/auth/register", {
-      method: "POST",
-      body: JSON.stringify({
-        full_name: $("registerName").value.trim(),
-        email: $("registerEmail").value.trim(),
-        password: $("registerPassword").value,
-        currency: $("registerCurrency").value
-      })
-    });
-
-    if (data.token) {
-      saveToken(data.token);
-      currentUser = data.user || null;
-      showDashboard();
-      await refreshDashboard();
-    } else {
-      showLogin();
-      $("loginEmail").value = $("registerEmail").value.trim();
-      message("authMessage", "Account created. Please sign in.", "success");
-    }
-  } catch (error) {
-    message("authMessage", error.message);
-  } finally {
-    setBusy(button, false, "Create account");
-  }
-}
-
-async function restoreSession() {
-  if (!token) {
-    showAuth();
-    return;
-  }
-
-  try {
-    const data = await apiRequest("/auth/me");
-
-    if (!data || !data.user) {
-      throw new Error("Invalid session.");
-    }
-
-    currentUser = data.user;
-    showDashboard();
-
-    await Promise.allSettled([
-      loadBalance(),
-      loadTransactions(),
-      loadAccounts()
-    ]);
-  } catch (error) {
-    console.error("Session restore failed:", error);
-    saveToken("");
-    currentUser = null;
-    showAuth();
-    showLogin();
-  }
-}
-async function logout() {
-  try {
-    if (token) {
-      await fetch(`${API}/auth/logout`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json"
-        }
-      });
-    }
-  } catch {}
-
-  saveToken("");
-  currentUser = null;
-  currentBalance = 0;
-  showAuth();
-  showLogin();
-}
-
-function formatMoney(value) {
-  const amount = Number(value || 0);
-  const currency = currentUser?.currency || "NGN";
-
-  try {
-    return new Intl.NumberFormat(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(amount);
-  } catch {
-    return amount.toFixed(2);
-  }
-}
-
-async function loadBalance() {
-  const data = await apiRequest("/wallet/balance");
-
-  const balance =
-    data.balance ??
-    data.wallet?.balance ??
-    data.data?.balance ??
-    0;
-
-  currentBalance = Number(balance) || 0;
-  renderBalance();
-}
-
-function renderBalance() {
-  $("balance").textContent =
-    balanceVisible ? formatMoney(currentBalance) : "••••••";
-}
-
-async function loadTransactions() {
-  const data = await apiRequest("/wallet/transactions");
-
-  const transactions =
-    Array.isArray(data) ? data :
-    data.transactions || data.data || [];
-
-  renderTransactions(transactions);
-}
-
-function transactionText(transaction) {
-  return (
-    transaction.description ||
-    transaction.type ||
-    transaction.category ||
-    "Wallet transaction"
-  );
-}
-
-function transactionAmount(transaction) {
-  return Number(
-    transaction.amount ??
-    transaction.value ??
-    0
-  );
-}
-
-function renderTransactions(transactions) {
-  const containers = [
-    $("transactionsList"),
-    $("fullTransactions")
-  ].filter(Boolean);
-
-  for (const container of containers) {
-    container.innerHTML = "";
-
-    if (!transactions.length) {
-      container.innerHTML = '<div class="empty">No transactions yet.</div>';
-      continue;
-    }
-
-    for (const transaction of transactions.slice(0, 50)) {
-      const row = document.createElement("div");
-      row.className = "transaction";
-
-      const amount = transactionAmount(transaction);
-      const positive =
-        String(transaction.type || transaction.direction || "")
-          .toLowerCase()
-          .includes("deposit") ||
-        String(transaction.direction || "").toLowerCase() === "credit";
-
-      row.innerHTML = `
-        <div>
-          <strong>${escapeHtml(transactionText(transaction))}</strong>
-          <small>${escapeHtml(
-            transaction.created_at ||
-            transaction.createdAt ||
-            transaction.date ||
-            ""
-          )}</small>
-        </div>
-        <strong class="${positive ? "positive" : "negative"}">
-          ${positive ? "+" : "-"}${formatMoney(Math.abs(amount))}
-        </strong>
-      `;
-
-      container.appendChild(row);
-    }
-  }
-}
-
-async function refreshDashboard() {
-  await Promise.allSettled([
-    loadBalance(),
-    loadTransactions(),
-    loadAccounts()
-  ]);
-}
-
-function openScreen(type) {
-  $("dashboard").classList.add("hidden");
-  $("moneyScreen").classList.remove("hidden");
-
-  for (const id of [
-    "depositPanel",
-    "transferPanel",
-    "withdrawPanel",
-    "historyPanel",
-    "accountsPanel",
-    "notificationsPanel",
-    "profilePanel"
-  ]) {
-    $(id).classList.add("hidden");
-  }
-
-  const map = {
-    deposit: ["depositPanel", "Add Money"],
-    transfer: ["transferPanel", "Send Money"],
-    withdraw: ["withdrawPanel", "Withdraw"],
-    history: ["historyPanel", "Transaction History"],
-    accounts: ["accountsPanel", "Connected Accounts"],
-    notifications: ["notificationsPanel", "Notifications"],
-    profile: ["profilePanel", "Profile"]
-  };
-
-  const item = map[type] || map.deposit;
-  $(item[0]).classList.remove("hidden");
-  $("screenTitle").textContent = item[1];
-
-  message("screenMessage");
-
-  if (type === "accounts") loadAccounts();
-  if (type === "history") loadTransactions();
-  if (type === "notifications") loadNotifications();
-  if (type === "profile") populateProfile();
-}
-
-function closeScreen() {
-  $("moneyScreen").classList.add("hidden");
-  $("dashboard").classList.remove("hidden");
-  message("screenMessage");
-}
-
-/* Compatibility helpers for the Vicky Pay dashboard HTML */
-function openMoney(type) {
-  openScreen(type);
-}
-
-function toggleBalance() {
-  balanceVisible = !balanceVisible;
-  renderBalance();
-}
-
-async function loadReferrals() {
-  message("dashboardMessage", "Rewards and referrals are coming soon.", "success");
-}
-
-async function loadAccounts() {
-  try {
-    const data = await apiRequest("/linked-accounts");
-    const accounts =
-      Array.isArray(data) ? data :
-      data.accounts || data.data || [];
-
-    renderAccounts(accounts);
-  } catch (error) {
-    renderAccounts([]);
-    if (!$("accountsPanel").classList.contains("hidden")) {
-      message("screenMessage", error.message);
-    }
-  }
-}
-
-function renderAccounts(accounts) {
-  const lists = [
-    $("accountsList"),
-    $("depositAccount"),
-    $("withdrawAccount")
-  ];
-
-  if ($("accountsList")) {
-    $("accountsList").innerHTML = "";
-
-    if (!accounts.length) {
-      $("accountsList").innerHTML =
-        '<div class="empty">No connected accounts.</div>';
-    }
-
-    for (const account of accounts) {
-      const item = document.createElement("div");
-      item.className = "account-item";
-
-      item.innerHTML = `
-        <strong>${escapeHtml(
-          account.account_name ||
-          account.bank_name ||
-          account.provider ||
-          "Connected account"
-        )}</strong>
-        <small>${escapeHtml(
-          account.masked_account_number ||
-          account.account_number ||
-          account.currency ||
-          ""
-        )}</small>
-      `;
-
-      $("accountsList").appendChild(item);
-    }
-  }
-
-  for (const select of lists.slice(1)) {
-    if (!select) continue;
-
-    select.innerHTML =
-      '<option value="">Choose connected account</option>';
-
-    for (const account of accounts) {
-      if (
-        account.status &&
-        String(account.status).toLowerCase() !== "connected"
-      ) continue;
-
-      const option = document.createElement("option");
-      option.value = account.id;
-      option.textContent =
-        account.account_name ||
-        account.bank_name ||
-        account.provider ||
-        "Connected account";
-
-      select.appendChild(option);
-    }
-  }
-}
-
-async function deposit() {
-  const amount = Number($("depositAmount").value);
-
-  if (!Number.isFinite(amount) || amount <= 0) {
-    message("screenMessage", "Enter a valid deposit amount.");
-    return;
-  }
-
-  const button = $("depositButton");
-  setBusy(button, true, "Continue");
-
-  try {
-    const paymentMethod = $("depositMethod").value;
-    const accountId = $("depositAccount").value || "";
-
-    // A connected account is required only for bank funding.
-    if (paymentMethod === "bank" && !accountId) {
-      message(
-        "screenMessage",
-        "Select a valid connected bank account to fund this deposit."
-      );
-      setBusy(button, false, "Continue");
-      return;
-    }
-
-    const payload = {
-      amount,
-      currency: currentUser?.currency || "NGN",
-      provider: "flutterwave",
-      payment_method: paymentMethod,
-      description:
-        $("depositDescription").value.trim() ||
-        "Wallet deposit"
-    };
-
-    // Only send source_account_id when the user selected one.
-    if (accountId) {
-      payload.source_account_id = accountId;
-    }
-
-    const data = await apiRequest("/payments/deposit", {
-      method: "POST",
-      body: JSON.stringify(payload)
-    });
-
-    if (data.checkout_url) {
-      window.location.href = data.checkout_url;
-      return;
-    }
-
-    message(
-      "screenMessage",
-      data.message || "Deposit started.",
-      "success"
-    );
-
-    await refreshDashboard();
-  } catch (error) {
-    message("screenMessage", error.message);
-  } finally {
-    setBusy(button, false, "Continue");
-  }
-}
-
-async function transfer() {
-  const recipient = $("transferRecipient").value.trim();
-  const amount = Number($("transferAmount").value);
-
-  if (!recipient || !Number.isFinite(amount) || amount <= 0) {
-    message("screenMessage", "Enter a valid recipient and amount.");
-    return;
-  }
-
-  const button = $("transferButton");
-  setBusy(button, true, "Send Money");
-
-  try {
-    const data = await apiRequest("/wallet/transfer", {
-      method: "POST",
-      body: JSON.stringify({
-        recipient,
-        email: recipient,
-        account_id: recipient,
-        amount,
-        description:
-          $("transferDescription").value.trim() ||
-          "Wallet transfer"
-      })
-    });
-
-    message(
-      "screenMessage",
-      data.message || "Transfer successful.",
-      "success"
-    );
-
-    $("transferRecipient").value = "";
-    $("transferAmount").value = "";
-    $("transferDescription").value = "";
-
-    await refreshDashboard();
-  } catch (error) {
-    message("screenMessage", error.message);
-  } finally {
-    setBusy(button, false, "Send Money");
-  }
-}
-
-async function withdraw() {
-  const amount = Number($("withdrawAmount").value);
-  const accountId = $("withdrawAccount").value;
-
-  if (!Number.isFinite(amount) || amount <= 0) {
-    message("screenMessage", "Enter a valid withdrawal amount.");
-    return;
-  }
-
-  if (!accountId) {
-    message("screenMessage", "Choose a connected account.");
-    return;
-  }
-
-  const button = $("withdrawButton");
-  setBusy(button, true, "Withdraw");
-
-  try {
-    const data = await apiRequest("/wallet/withdraw", {
-      method: "POST",
-      body: JSON.stringify({
-        amount,
-        account_id: accountId
-      })
-    });
-
-    message(
-      "screenMessage",
-      data.message || "Withdrawal submitted.",
-      "success"
-    );
-
-    await refreshDashboard();
-  } catch (error) {
-    message("screenMessage", error.message);
-  } finally {
-    setBusy(button, false, "Withdraw");
-  }
-}
-
-async function loadNotifications() {
-  try {
-    const data = await apiRequest("/notifications");
-    const notifications =
-      Array.isArray(data) ? data :
-      data.notifications || data.data || [];
-
-    const list = $("notificationsList");
-    list.innerHTML = "";
-
-    if (!notifications.length) {
-      list.innerHTML = '<div class="empty">No notifications.</div>';
-      return;
-    }
-
-    for (const item of notifications) {
-      const row = document.createElement("div");
-      row.className = "transaction";
-      row.innerHTML = `
-        <div>
-          <strong>${escapeHtml(item.title || "Notification")}</strong>
-          <small>${escapeHtml(item.message || "")}</small>
-        </div>
-      `;
-      list.appendChild(row);
-    }
-  } catch (error) {
-    message("screenMessage", error.message);
-  }
-}
-
-function populateProfile() {
-  $("profileName").value =
-    currentUser?.full_name ||
-    currentUser?.name ||
-    "";
-
-  $("profileEmailInput").value =
-    currentUser?.email ||
-    "";
-}
-
-async function saveProfile() {
-  try {
-    const data = await apiRequest("/auth/profile", {
-      method: "PATCH",
-      body: JSON.stringify({
-        full_name: $("profileName").value.trim()
-      })
-    });
-
-    currentUser =
-      data.user ||
-      data ||
-      currentUser;
-
-    showDashboard();
-    message("dashboardMessage", "Profile updated.", "success");
-  } catch (error) {
-    message("screenMessage", error.message);
-  }
-}
+const $ = (id) => document.getElementById(id);
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -705,46 +16,704 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function bind(id, event, handler) {
-  const element = $(id);
-  if (element) element.addEventListener(event, handler);
+function setMessage(text, type = "error") {
+  const box = $("message");
+  if (!box) return;
+
+  box.className = text ? `message ${type}` : "";
+  box.textContent = text || "";
 }
 
-bind("loginTab", "click", showLogin);
-bind("registerTab", "click", showRegister);
-bind("loginForm", "submit", login);
-bind("registerForm", "submit", register);
-bind("logoutButton", "click", logout);
-bind("balanceToggle", "click", toggleBalance);
+function setDashboardMessage(text, type = "error") {
+  const box = $("dashboardMessage");
+  if (!box) return;
 
-bind("backButton", "click", closeScreen);
-bind("depositButton", "click", deposit);
-bind("transferButton", "click", transfer);
-bind("withdrawButton", "click", withdraw);
-bind("historyButton", "click", () => openScreen("history"));
-bind("accountsButton", "click", () => openScreen("accounts"));
-bind("notificationsButton", "click", () => openScreen("notifications"));
-bind("profileButton", "click", () => openScreen("profile"));
-bind("profileSaveButton", "click", saveProfile);
+  box.className = text ? `message ${type}` : "";
+  box.textContent = text || "";
+}
 
-document.querySelectorAll("[data-action]").forEach(button => {
-  button.addEventListener("click", () => {
-    const action = button.dataset.action;
-    if (action === "history") openScreen("history");
-    else openScreen(action);
+function showLogin() {
+  $("loginForm").classList.remove("hidden");
+  $("registerForm").classList.add("hidden");
+
+  $("loginTab").classList.add("active");
+  $("registerTab").classList.remove("active");
+
+  setMessage("");
+}
+
+function showRegister() {
+  $("loginForm").classList.add("hidden");
+  $("registerForm").classList.remove("hidden");
+
+  $("loginTab").classList.remove("active");
+  $("registerTab").classList.add("active");
+
+  setMessage("");
+}
+
+function setLoading(button, loading, text) {
+  button.disabled = loading;
+
+  if (loading) {
+    button.dataset.originalText = button.textContent;
+    button.textContent = text;
+  } else {
+    button.textContent = button.dataset.originalText || text;
+  }
+}
+
+async function apiRequest(path, options = {}) {
+  const headers = {
+    ...(options.headers || {})
+  };
+
+  if (options.body && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API}${path}`, {
+    ...options,
+    headers
   });
-});
 
-document.querySelectorAll("[data-nav]").forEach(button => {
-  button.addEventListener("click", () => {
-    const action = button.dataset.nav;
-    if (action === "home") {
-      closeScreen();
+  let data;
+
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok) {
+    if (response.status === 401 && token) {
+      token = null;
+      currentUser = null;
+      localStorage.removeItem("vicky_wallet_token");
+    }
+
+    throw new Error(
+      data.error ||
+      data.message ||
+      `Request failed (${response.status})`
+    );
+  }
+
+  return data;
+}
+
+async function login(event) {
+  event.preventDefault();
+
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+
+  const button = $("loginButton");
+
+  setMessage("");
+  setLoading(button, true, "Logging in...");
+
+  try {
+    const data = await apiRequest("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        password
+      })
+    });
+
+    token = data.token || data.access_token;
+
+    if (!token) {
+      throw new Error("Server did not return an authentication token");
+    }
+
+    localStorage.setItem("vicky_wallet_token", token);
+
+    currentUser = data.user;
+
+    showDashboard();
+    await checkOwnerAccess();
+
+    setDashboardMessage("Login successful.", "success");
+
+    await loadBalance();
+    await loadTransactions();
+
+  } catch (error) {
+    setMessage(error.message, "error");
+  } finally {
+    setLoading(button, false, "Login");
+  }
+}
+
+async function register(event) {
+  event.preventDefault();
+
+  const full_name = $("fullName").value.trim();
+  const email = $("registerEmail").value.trim();
+  const password = $("registerPassword").value;
+  const preferred_currency = $("currency").value;
+
+  const button = $("registerButton");
+
+  setMessage("");
+  setLoading(button, true, "Creating...");
+
+  try {
+    const data = await apiRequest("/auth/register", {
+      method: "POST",
+      body: JSON.stringify({
+        full_name,
+        email,
+        password,
+        preferred_currency
+      })
+    });
+
+    token = data.token || data.access_token;
+
+    if (!token) {
+      throw new Error("Server did not return an authentication token");
+    }
+
+    localStorage.setItem("vicky_wallet_token", token);
+
+    currentUser = data.user;
+
+    showDashboard();
+    await checkOwnerAccess();
+
+    setDashboardMessage(
+      "Account created successfully.",
+      "success"
+    );
+
+    await loadBalance();
+    await loadTransactions();
+
+  } catch (error) {
+    setMessage(error.message, "error");
+  } finally {
+    setLoading(button, false, "Create Account");
+  }
+}
+
+function showDashboard() {
+  $("authSection").classList.add("hidden");
+  $("dashboard").classList.remove("hidden");
+  $("logoutBtn").classList.remove("hidden");
+
+  if (currentUser) {
+    $("userName").textContent =
+      currentUser.full_name || currentUser.email;
+  }
+}
+
+function showAuth() {
+  $("authSection").classList.remove("hidden");
+  $("dashboard").classList.add("hidden");
+  $("logoutBtn").classList.add("hidden");
+}
+
+async function loadCurrentUser() {
+  try {
+    const data = await apiRequest("/auth/me");
+
+    currentUser = data.user;
+
+    showDashboard();
+    await checkOwnerAccess();
+
+    await loadBalance();
+    await loadTransactions();
+
+  } catch {
+    logout(false);
+  }
+}
+
+async function loadBalance() {
+  try {
+    const data = await apiRequest("/wallet/balance");
+
+    const balance = Number(data.balance || 0);
+    const currency = data.currency || "USD";
+
+    $("balance").textContent =
+      new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency
+      }).format(balance);
+
+    $("currencyLabel").textContent = currency;
+
+  } catch (error) {
+    setDashboardMessage(error.message, "error");
+  }
+}
+
+async function deposit() {
+  const value = $("depositAmount").value;
+  const description =
+    $("depositDescription").value.trim();
+
+  if (!value || Number(value) <= 0) {
+    setDashboardMessage(
+      "Enter a valid deposit amount.",
+      "error"
+    );
+    return;
+  }
+
+  try {
+    const data = await apiRequest("/wallet/deposit", {
+      method: "POST",
+      body: JSON.stringify({
+        amount: Number(value),
+        description
+      })
+    });
+
+    $("depositAmount").value = "";
+    $("depositDescription").value = "";
+
+    setDashboardMessage(
+      data.message || "Deposit successful.",
+      "success"
+    );
+
+    await loadBalance();
+    await loadTransactions();
+
+  } catch (error) {
+    setDashboardMessage(error.message, "error");
+  }
+}
+
+async function withdraw() {
+  const value = $("withdrawAmount").value;
+  const description =
+    $("withdrawDescription").value.trim();
+
+  if (!value || Number(value) <= 0) {
+    setDashboardMessage(
+      "Enter a valid withdrawal amount.",
+      "error"
+    );
+    return;
+  }
+
+  try {
+    const data = await apiRequest("/wallet/withdraw", {
+      method: "POST",
+      body: JSON.stringify({
+        amount: Number(value),
+        description
+      })
+    });
+
+    $("withdrawAmount").value = "";
+    $("withdrawDescription").value = "";
+
+    setDashboardMessage(
+      data.message || "Withdrawal successful.",
+      "success"
+    );
+
+    await loadBalance();
+    await loadTransactions();
+
+  } catch (error) {
+    setDashboardMessage(error.message, "error");
+  }
+}
+
+async function transfer() {
+  const recipient_email =
+    $("recipientEmail").value.trim();
+
+  const value = $("transferAmount").value;
+
+  const description =
+    $("transferDescription").value.trim();
+
+  if (!recipient_email) {
+    setDashboardMessage(
+      "Enter the recipient email.",
+      "error"
+    );
+    return;
+  }
+
+  if (!value || Number(value) <= 0) {
+    setDashboardMessage(
+      "Enter a valid transfer amount.",
+      "error"
+    );
+    return;
+  }
+
+  try {
+    const data = await apiRequest("/wallet/transfer", {
+      method: "POST",
+      body: JSON.stringify({
+        recipient_email,
+        amount: Number(value),
+        description
+      })
+    });
+
+    $("recipientEmail").value = "";
+    $("transferAmount").value = "";
+    $("transferDescription").value = "";
+
+    setDashboardMessage(
+      data.message || "Transfer successful.",
+      "success"
+    );
+
+    await loadBalance();
+    await loadTransactions();
+
+  } catch (error) {
+    setDashboardMessage(error.message, "error");
+  }
+}
+
+async function loadTransactions() {
+  try {
+    const data =
+      await apiRequest("/wallet/transactions?limit=50");
+
+    const transactions = data.transactions || [];
+    const box = $("transactions");
+
+    if (!transactions.length) {
+      box.innerHTML =
+        '<p class="empty">No transactions yet.</p>';
       return;
     }
-    if (action === "history") openScreen("history");
-    else openScreen(action);
-  });
+
+    box.innerHTML = transactions.map(tx => {
+
+      const positive =
+        tx.type === "deposit" ||
+        tx.type === "transfer_received";
+
+      const sign = positive ? "+" : "-";
+
+      const date = tx.created_at
+        ? new Date(tx.created_at).toLocaleString()
+        : "";
+
+      return `
+        <div class="transaction">
+          <div>
+            <strong>${escapeHtml(tx.type)}</strong>
+            <span>${escapeHtml(tx.description || "")}</span>
+            <small>${escapeHtml(date)}</small>
+          </div>
+
+          <div class="${positive ? "positive" : "negative"}">
+            ${sign}${escapeHtml(tx.amount)} ${escapeHtml(tx.currency)}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+  } catch (error) {
+    $("transactions").innerHTML =
+      `<p class="empty">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+function logout(showMessage = true) {
+  token = null;
+  currentUser = null;
+
+  localStorage.removeItem("vicky_wallet_token");
+
+  showAuth();
+  showLogin();
+
+  if (showMessage) {
+    setMessage("You have been logged out.", "success");
+  }
+}
+
+window.addEventListener("load", () => {
+  if (token) {
+    loadCurrentUser();
+  } else {
+    showAuth();
+  }
 });
 
-document.addEventListener("DOMContentLoaded", restoreSession);
+function openProfile() {
+  if (!currentUser) {
+    setMessage("Please log in first.", "error");
+    return;
+  }
+
+  const panel = document.getElementById("profilePanel");
+
+  document.getElementById("profileName").textContent =
+    currentUser.full_name || "Not available";
+
+  document.getElementById("profileEmail").textContent =
+    currentUser.email || "Not available";
+
+  document.getElementById("profileCurrency").textContent =
+    currentUser.currency ||
+    currentUser.preferred_currency ||
+    "USD";
+
+  document.getElementById("profileId").textContent =
+    currentUser.id || "Not available";
+
+  const created = currentUser.created_at;
+
+  document.getElementById("profileCreated").textContent =
+    created
+      ? new Date(created).toLocaleDateString()
+      : "Not available";
+
+  const name =
+    currentUser.full_name ||
+    currentUser.email ||
+    "V";
+
+  document.getElementById("profileAvatar").textContent =
+    name.charAt(0).toUpperCase();
+
+  panel.classList.remove("hidden");
+}
+
+function closeProfile() {
+  document.getElementById("profilePanel").classList.add("hidden");
+}
+
+function editProfile() {
+  if (!currentUser) return;
+
+  document.getElementById("editFullName").value =
+    currentUser.full_name || "";
+
+  document.getElementById("editEmail").value =
+    currentUser.email || "";
+
+  document.getElementById("editCurrency").value =
+    currentUser.currency || "USD";
+
+  document.getElementById("currentPassword").value = "";
+  document.getElementById("newPassword").value = "";
+
+  document.getElementById("profileEditMessage").textContent = "";
+
+  document.getElementById("editProfileForm").classList.remove("hidden");
+}
+
+async function saveProfile() {
+  const button = document.getElementById("saveProfileButton");
+  const message = document.getElementById("profileEditMessage");
+
+  const full_name =
+    document.getElementById("editFullName").value.trim();
+
+  const email =
+    document.getElementById("editEmail").value.trim();
+
+  const currency =
+    document.getElementById("editCurrency").value;
+
+  const current_password =
+    document.getElementById("currentPassword").value;
+
+  const new_password =
+    document.getElementById("newPassword").value;
+
+  message.textContent = "";
+
+  if (!full_name) {
+    message.textContent = "Full name is required.";
+    return;
+  }
+
+  if (!email || !email.includes("@")) {
+    message.textContent = "Enter a valid email.";
+    return;
+  }
+
+  if (new_password && new_password.length < 8) {
+    message.textContent =
+      "New password must contain at least 8 characters.";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Saving...";
+
+  try {
+    const data = await apiRequest("/auth/profile", {
+      method: "PATCH",
+      body: JSON.stringify({
+        full_name,
+        email,
+        currency,
+        current_password,
+        new_password
+      })
+    });
+
+    if (!data.token || !data.user) {
+      throw new Error("Invalid server response.");
+    }
+
+    token = data.token || data.access_token;
+    currentUser = data.user;
+
+    localStorage.setItem("vicky_wallet_token", token);
+
+    document.getElementById("profileEditMessage").textContent =
+      "Profile updated successfully.";
+
+    document.getElementById("editProfileForm")
+      .classList.add("hidden");
+
+    openProfile();
+
+    setDashboardMessage(
+      "Profile updated successfully.",
+      "success"
+    );
+
+    await loadBalance();
+
+  } catch (error) {
+    message.textContent = error.message;
+  } finally {
+    button.disabled = false;
+    button.textContent = "Save Changes";
+  }
+}
+
+async function checkOwnerAccess() {
+  const button = document.getElementById("ownerButton");
+
+  if (!button || !token || !currentUser) {
+    return;
+  }
+
+  try {
+    await apiRequest("/admin/stats");
+    button.classList.remove("hidden");
+  } catch {
+    button.classList.add("hidden");
+  }
+}
+
+async function openOwnerDashboard() {
+  const panel = document.getElementById("ownerDashboard");
+
+  if (!panel) return;
+
+  panel.classList.remove("hidden");
+
+  document.getElementById("ownerMessage").textContent =
+    "Loading owner dashboard...";
+
+  try {
+    await loadAdminStats();
+    await loadAdminUsers();
+    await loadAdminTransactions();
+
+    document.getElementById("ownerMessage").textContent =
+      "Owner dashboard loaded.";
+  } catch (error) {
+    document.getElementById("ownerMessage").textContent =
+      error.message || "Unable to load owner dashboard.";
+  }
+}
+
+function closeOwnerDashboard() {
+  document.getElementById("ownerDashboard")
+    .classList.add("hidden");
+}
+
+async function loadAdminStats() {
+  const data = await apiRequest("/admin/stats");
+
+  document.getElementById("adminUsers").textContent =
+    data.users ?? 0;
+
+  document.getElementById("adminBalance").textContent =
+    Number(data.total_balance || 0).toFixed(2);
+
+  document.getElementById("adminTransactions").textContent =
+    data.transactions ?? 0;
+
+  document.getElementById("adminDeposits").textContent =
+    Number(data.deposits?.total || 0).toFixed(2);
+
+  document.getElementById("adminWithdrawals").textContent =
+    Number(data.withdrawals?.total || 0).toFixed(2);
+
+  document.getElementById("adminTransfers").textContent =
+    Number(data.transfers?.total || 0).toFixed(2);
+}
+
+async function loadAdminUsers() {
+  const box = document.getElementById("adminUsersList");
+
+  const data = await apiRequest("/admin/users?limit=100");
+
+  if (!data.users || data.users.length === 0) {
+    box.innerHTML = '<p class="empty">No users found.</p>';
+    return;
+  }
+
+  box.innerHTML = data.users.map(user => `
+    <div class="admin-user">
+      <div>
+        <strong>${escapeHtml(user.full_name)}</strong>
+        <small>${escapeHtml(user.email)}</small>
+      </div>
+
+      <div>
+        <strong>${Number(user.balance).toFixed(2)} ${escapeHtml(user.currency)}</strong>
+        <small>${new Date(user.created_at).toLocaleDateString()}</small>
+      </div>
+    </div>
+  `).join("");
+}
+
+async function loadAdminTransactions() {
+  const box = document.getElementById("adminTransactionsList");
+
+  const data = await apiRequest("/admin/transactions?limit=100");
+
+  if (!data.transactions || data.transactions.length === 0) {
+    box.innerHTML = '<p class="empty">No transactions found.</p>';
+    return;
+  }
+
+  box.innerHTML = data.transactions.map(item => `
+    <div class="admin-transaction">
+      <div>
+        <strong>${escapeHtml(item.type)}</strong>
+        <small>${escapeHtml(item.email || "")}</small>
+      </div>
+
+      <div>
+        <strong>${Number(item.amount).toFixed(2)} ${escapeHtml(item.currency)}</strong>
+        <small>${new Date(item.created_at).toLocaleString()}</small>
+      </div>
+    </div>
+  `).join("");
+}
+

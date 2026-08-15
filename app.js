@@ -1,4 +1,6 @@
-const API = "https://vicky-wallet-api-iqm3.onrender.com";
+const API =
+  window.VICKY_API_URL ||
+  "https://vicky-wallet-api-iqm3.onrender.com";
 
 let token = localStorage.getItem("vicky_wallet_token");
 let currentUser = null;
@@ -88,6 +90,12 @@ async function apiRequest(path, options = {}) {
   }
 
   if (!response.ok) {
+    if (response.status === 401 && token) {
+      token = null;
+      currentUser = null;
+      localStorage.removeItem("vicky_wallet_token");
+    }
+
     throw new Error(
       data.error ||
       data.message ||
@@ -118,7 +126,7 @@ async function login(event) {
       })
     });
 
-    token = data.token;
+    token = data.token || data.access_token;
 
     if (!token) {
       throw new Error("Server did not return an authentication token");
@@ -167,7 +175,7 @@ async function register(event) {
       })
     });
 
-    token = data.token;
+    token = data.token || data.access_token;
 
     if (!token) {
       throw new Error("Server did not return an authentication token");
@@ -566,7 +574,7 @@ async function saveProfile() {
       throw new Error("Invalid server response.");
     }
 
-    token = data.token;
+    token = data.token || data.access_token;
     currentUser = data.user;
 
     localStorage.setItem("vicky_wallet_token", token);
