@@ -267,16 +267,35 @@
       <div class="panel-icon">↗</div>
       <h3>Send money</h3>
 
-      <label>Recipient Vicky Account ID</label>
-      <input id="transferRecipient" type="text" placeholder="VW-12345678" autocomplete="off">
+      <label>Recipient email</label>
+      <input
+        id="transferRecipient"
+        type="email"
+        placeholder="recipient@example.com"
+        autocomplete="email"
+      >
+
+      <div id="transferRecipientInfo" class="hidden"></div>
 
       <label>Amount</label>
-      <input id="transferAmount" type="number" min="0.01" step="0.01" placeholder="0.00">
+      <input
+        id="transferAmount"
+        type="number"
+        min="0.01"
+        step="0.01"
+        placeholder="0.00"
+      >
 
       <label>Description</label>
-      <input id="transferDescription" type="text" placeholder="Optional">
+      <input
+        id="transferDescription"
+        type="text"
+        placeholder="Optional"
+      >
 
-      <button class="primary" id="transferButton" type="button">Send Money</button>
+      <button class="primary" id="transferButton" type="button">
+        Send Money
+      </button>
     </div>
 
     <div id="withdrawPanel" class="panel hidden">
@@ -386,6 +405,6 @@
   </section>
 
 </div>
-<script src="app.js?v=20260815-exchange" defer></script>
+<script src="app.js?v=20260818-email-transfer" defer></script>
 </body>
 </html>

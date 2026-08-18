@@ -334,25 +334,17 @@ async function withdraw() {
 }
 
 async function transfer() {
-  const recipient_account_id =
-    $("transferRecipient").value.trim().toUpperCase();
+  const recipient_email =
+    $("transferRecipient").value.trim().toLowerCase();
 
   const value = Number($("transferAmount").value);
 
   const description =
     $("transferDescription").value.trim();
 
-  if (!recipient_account_id) {
+  if (!recipient_email || !recipient_email.includes("@")) {
     setDashboardMessage(
-      "Enter the recipient Vicky Account ID.",
-      "error"
-    );
-    return;
-  }
-
-  if (!/^VW-[0-9]{8}$/.test(recipient_account_id)) {
-    setDashboardMessage(
-      "Invalid Vicky Account ID. Example: VW-12345678",
+      "Enter the recipient's email address.",
       "error"
     );
     return;
@@ -366,11 +358,32 @@ async function transfer() {
     return;
   }
 
+  const button = $("transferButton");
+
   try {
+    button.disabled = true;
+    button.textContent = "Checking recipient...";
+
+    const recipient = await apiRequest(
+      `/wallet/recipient?email=${encodeURIComponent(recipient_email)}`
+    );
+
+    const confirmed =
+      window.confirm(
+        `Send ${value} ${recipient.currency} to ` +
+        `${recipient.full_name} (${recipient.email})?`
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    button.textContent = "Sending...";
+
     const data = await apiRequest("/wallet/transfer", {
       method: "POST",
       body: JSON.stringify({
-        recipient_account_id,
+        recipient_email,
         amount: value,
         description
       })
@@ -379,6 +392,13 @@ async function transfer() {
     $("transferRecipient").value = "";
     $("transferAmount").value = "";
     $("transferDescription").value = "";
+
+    const info = $("transferRecipientInfo");
+
+    if (info) {
+      info.textContent = "";
+      info.classList.add("hidden");
+    }
 
     setDashboardMessage(
       data.message || "Money sent successfully.",
@@ -393,6 +413,9 @@ async function transfer() {
       error.message || "Transfer failed.",
       "error"
     );
+  } finally {
+    button.disabled = false;
+    button.textContent = "Send Money";
   }
 }
 
