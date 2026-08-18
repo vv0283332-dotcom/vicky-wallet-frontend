@@ -334,17 +334,17 @@ async function withdraw() {
 }
 
 async function transfer() {
-  const recipient_email =
-    $("transferRecipient").value.trim().toLowerCase();
+  const recipient_account_id =
+    $("transferRecipient").value.trim().toUpperCase();
 
   const value = Number($("transferAmount").value);
 
   const description =
     $("transferDescription").value.trim();
 
-  if (!recipient_email || !recipient_email.includes("@")) {
+  if (!/^VW-[0-9]{8}$/.test(recipient_account_id)) {
     setDashboardMessage(
-      "Enter the recipient's email address.",
+      "Enter a valid Vicky Account ID, for example VW-12345678.",
       "error"
     );
     return;
@@ -365,14 +365,13 @@ async function transfer() {
     button.textContent = "Checking recipient...";
 
     const recipient = await apiRequest(
-      `/wallet/recipient?email=${encodeURIComponent(recipient_email)}`
+      `/wallet/recipient/${encodeURIComponent(recipient_account_id)}`
     );
 
-    const confirmed =
-      window.confirm(
-        `Send ${value} ${recipient.currency} to ` +
-        `${recipient.full_name} (${recipient.email})?`
-      );
+    const confirmed = window.confirm(
+      `Send ${value} ${recipient.currency} to ` +
+      `${recipient.full_name} (${recipient.account_id})?`
+    );
 
     if (!confirmed) {
       return;
@@ -383,7 +382,7 @@ async function transfer() {
     const data = await apiRequest("/wallet/transfer", {
       method: "POST",
       body: JSON.stringify({
-        recipient_email,
+        recipient_account_id,
         amount: value,
         description
       })
@@ -413,6 +412,7 @@ async function transfer() {
       error.message || "Transfer failed.",
       "error"
     );
+
   } finally {
     button.disabled = false;
     button.textContent = "Send Money";
